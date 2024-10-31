@@ -1,9 +1,10 @@
 //
-//  Giggle_swiftuiApp.swift
+//  Giggle.swift
 //  Giggle_swiftui
 //
 //  Created by user@91 on 30/10/24.
 //
+
 
 import SwiftUI
 
@@ -11,7 +12,7 @@ import SwiftUI
 struct Giggle_swiftuiApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CustomScreen() 
         }
     }
 }
