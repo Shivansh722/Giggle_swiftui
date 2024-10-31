@@ -14,4 +14,13 @@ struct Theme {
     static let onPrimaryColor = Color(hex: "F1FAEE")//white
     static let onSecondaryColor = Color(hex: "9B9B9B")
     
+    
 }
+
+//according to the approach without initialiser
+/*
+ struct Theme {
+ 
+    static let backgroundColor = Color.hex(colorCode: "232322")
+ 
+ */
