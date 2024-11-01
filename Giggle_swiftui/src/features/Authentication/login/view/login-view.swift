@@ -127,6 +127,8 @@ struct LoginView: View {
                 .padding(.bottom, 20)
             }
         }
+        .navigationBarBackButtonHidden(true) // Ensures the back button is hidden
+                .navigationBarHidden(true)
     }
 }
 

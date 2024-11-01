@@ -12,7 +12,7 @@ import SwiftUI
 struct Giggle_swiftuiApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView() 
+            SplashScreen() 
         }
     }
 }
