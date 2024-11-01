@@ -8,7 +8,7 @@ import SwiftUI
 
 struct Theme {
     static let backgroundColor = Color(hex: "201F1F")
-    static let primaryColor = Color(hex: "E63946")
+    static let primaryColor = Color(hex: "E63946")//soft red
     static let secondaryColor = Color(hex: "F9C74F")
     static let tertiaryColor = Color(hex: "")
     static let onPrimaryColor = Color(hex: "F1FAEE")//white
