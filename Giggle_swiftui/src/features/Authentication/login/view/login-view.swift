@@ -31,6 +31,8 @@ struct LoginView: View {
 
                 // Email TextField
                 CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
+                    .padding(.bottom, 12)
+                
                 
                 // Password TextField with visibility toggle
                 CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
@@ -42,9 +44,9 @@ struct LoginView: View {
                     action: {
                         // sign up action
                     },
-                    width: 260,
+                    width: 340,
                     height: 50,
-                    cornerRadius: 12
+                    cornerRadius: 6
                 )
                 .padding(.top, 20)
 

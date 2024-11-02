@@ -11,7 +11,7 @@ struct CustomTextField: View {
     var body: some View {
         ZStack {
             Color.white
-                .cornerRadius(20)
+                .cornerRadius(6)
             
             HStack {
                 if isSecure {
