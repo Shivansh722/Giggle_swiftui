@@ -13,6 +13,7 @@ struct CustomButton: View {
     var action: () -> Void //
     var width: CGFloat = .infinity
     var height: CGFloat = .infinity
+    var cornerRadius: CGFloat = 12
   
     
     var body: some View {
@@ -23,7 +24,8 @@ struct CustomButton: View {
                 .padding()
                 .frame(width: width, height: height)//use width and height param in respec files
                 .background(Theme.primaryColor)
-                .cornerRadius(10)
+                .cornerRadius(cornerRadius)
+                
             
             
         }

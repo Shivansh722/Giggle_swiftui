@@ -30,33 +30,22 @@ struct LoginView: View {
                     .padding(.bottom, 30)
 
                 // Email TextField
-//                TextField("Email", text: $email)
-//                    .padding()
-//                    .background(Color.white)
-//                    .cornerRadius(20)
-//                    .padding(.horizontal, 24)
-//                    .padding(.bottom, 10)
+                CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
                 
-                CustomTextField(placeholder: "Email",isSecure: false, text: $email, icon: "envelope")
-                
-
                 // Password TextField with visibility toggle
-                CustomTextField(placeholder: "Password",isSecure: true, text: $password,  icon: "lock")
+                CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
                     
-
-                // Sign Up button
-                Button(action: {
-                    // sign up action
-                }) {
-                    Text("SIGN UP")
-                        .fontWeight(.bold)
-                        .frame(width: 260, height: 30)
-                        .padding()
-                        .background(Theme.primaryColor)
-                        .foregroundColor(Theme.onPrimaryColor)
-                        .cornerRadius(6)
-                        .padding(.horizontal, 30)
-                }
+                // Sign Up button using CustomButton
+                CustomButton(
+                    title: "SIGN UP",
+                    backgroundColor: Theme.primaryColor,
+                    action: {
+                        // sign up action
+                    },
+                    width: 260,
+                    height: 50,
+                    cornerRadius: 12
+                )
                 .padding(.top, 20)
 
                 // Divider with OR text
@@ -114,7 +103,7 @@ struct LoginView: View {
             }
         }
         .navigationBarBackButtonHidden(true) // Ensures the back button is hidden
-                .navigationBarHidden(true)
+        .navigationBarHidden(true)
     }
 }
 
