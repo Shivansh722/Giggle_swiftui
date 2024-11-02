@@ -1,6 +1,6 @@
 # Giggle
 
-**Giggle** is a platform designed for pre-professionals and students seeking part-time job opportunities across various sectors. It empowers students to gain financial independence while enhancing their career experience by exploring roles within or outside their field of study. Whether it's a Computer Science student at the University of Edinburgh working as a barista or at a Domino’s to support living costs, Giggle enables users to build real-world skills and financial awareness before entering the full-time workforce.
+**Giggle** is a platform designed for pre-professionals and students seeking part-time job opportunities across various sectors. It empowers students to gain financial independence while enhancing their career experience by exploring roles within or outside their field of study. A concept that traditionally exists around the globe but majorily gets overlooked due to its unorganised market holding. Whether it's a Computer Science student at the University of Edinburgh working as a barista or at a Domino’s to support living costs, Giggle enables users to build real-world skills and financial awareness before entering the full-time workforce.
 
 ---
 
