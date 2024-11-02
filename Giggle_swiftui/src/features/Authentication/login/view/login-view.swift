@@ -30,33 +30,19 @@ struct LoginView: View {
                     .padding(.bottom, 30)
 
                 // Email TextField
-                TextField("Email", text: $email)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(20)
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 10)
+//                TextField("Email", text: $email)
+//                    .padding()
+//                    .background(Color.white)
+//                    .cornerRadius(20)
+//                    .padding(.horizontal, 24)
+//                    .padding(.bottom, 10)
+                
+                CustomTextField(placeholder: "Email",isSecure: false, text: $email, icon: "envelope")
                 
 
                 // Password TextField with visibility toggle
-                HStack {
-                    if isPasswordVisible {
-                        TextField("Password", text: $password)
-                    } else {
-                        SecureField("Password", text: $password)
-                    }
-
-                    Button(action: {
-                        isPasswordVisible.toggle()
-                    }) {
-                        Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-                            .foregroundColor(Color.gray)
-                    }
-                }
-                .padding()
-                .background(Color.white)
-                .cornerRadius(20)
-                .padding(.horizontal, 24)
+                CustomTextField(placeholder: "Password",isSecure: true, text: $password,  icon: "lock")
+                    
 
                 // Sign Up button
                 Button(action: {
