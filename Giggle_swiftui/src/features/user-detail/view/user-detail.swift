@@ -37,6 +37,11 @@ struct user_detail: View {
                 .padding(.top, 30)
                 
                 Spacer()
+                
+                Text("Fill Manually")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(Theme.secondaryColor)
             }
         }
     }
