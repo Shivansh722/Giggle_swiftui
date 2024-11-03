@@ -14,7 +14,7 @@ struct user_detail: View {
             Theme.backgroundColor
                 .edgesIgnoringSafeArea(.all)
             
-            VStack {
+            VStack() {
                 
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 5) {
@@ -35,6 +35,8 @@ struct user_detail: View {
                     Spacer()
                 }
                 .padding(.top, 30)
+                
+                Spacer()
             }
         }
     }
