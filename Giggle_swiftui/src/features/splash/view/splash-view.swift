@@ -26,7 +26,7 @@ struct SplashScreen: View {
                 }
                 
                 // Navigation Link
-                NavigationLink(destination: LoginView(), isActive: $isActive) {
+                NavigationLink(destination: RegisterView(), isActive: $isActive) {
                     EmptyView()
                 }
             }

@@ -1,19 +1,16 @@
 import SwiftUI
 
-struct LoginView: View {
+struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isPasswordVisible: Bool = false
     
-    //@State is for monitoring this variable for changes, n agar change hoga swift ui apne aap update karega view
-
     var body: some View {
         ZStack {
             Theme.backgroundColor
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
-                // Welcome text aligned to the top left
                 HStack {
                     Text("Welcome")
                         .font(.title)
@@ -24,22 +21,17 @@ struct LoginView: View {
                     Spacer()
                 }
 
-                // Logo centered below the welcome text
                 Image("logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 150)
                     .padding(.bottom, 30)
 
-                // Email TextField
                 CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
                     .padding(.bottom, 12)
                 
-                
-                // Password TextField with visibility toggle
                 CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
                     
-                // Sign Up button using CustomButton
                 CustomButton(
                     title: "SIGN UP",
                     backgroundColor: Theme.primaryColor,
@@ -52,7 +44,6 @@ struct LoginView: View {
                 )
                 .padding(.top, 20)
 
-                // Divider with OR text
                 HStack {
                     Divider()
                         .frame(width: 110, height: 1)
@@ -69,7 +60,6 @@ struct LoginView: View {
                 }
                 .padding(.vertical, 20)
 
-                // Social media login buttons (Google and Apple)
                 HStack(spacing: 30) {
                     Button(action: {
                         // Google login action
@@ -91,14 +81,11 @@ struct LoginView: View {
 
                 Spacer()
 
-                // Already a member? Login text
                 HStack {
                     Text("Already a member?")
                         .foregroundColor(Color.gray)
 
-                    Button(action: {
-                        // Login action
-                    }) {
+                    NavigationLink(destination: LoginView()) {
                         Text("Login")
                             .foregroundColor(Theme.primaryColor)
                     }
@@ -106,13 +93,13 @@ struct LoginView: View {
                 .padding(.bottom, 20)
             }
         }
-        .navigationBarBackButtonHidden(true) // Ensures the back button is hidden
+        .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
+struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        RegisterView()
     }
 }
