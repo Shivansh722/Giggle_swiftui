@@ -42,6 +42,11 @@ struct user_detail: View {
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(Theme.secondaryColor)
+                    .padding(.top, -300)
+                    .padding(.leading, -100)
+                Spacer()
+                
+                
             }
         }
     }
