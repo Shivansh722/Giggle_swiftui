@@ -46,6 +46,7 @@ struct user_detail: View {
                     .padding(.leading, -100)
                 Spacer()
                 
+                userCardCustomView()
                 
             }
         }

@@ -8,7 +8,7 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    // Top Welcome Text and Plane Icon
+                
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 5) {
                             HStack {
@@ -103,7 +103,7 @@ struct LoginView: View {
                 .padding(.horizontal, 20)
             }
         }
-        .navigationBarHidden(true) // Hide the navigation bar on this screen
+        .navigationBarHidden(true) 
     }
 }
 
