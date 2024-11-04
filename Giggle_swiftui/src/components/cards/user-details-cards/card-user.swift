@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct userCardCustomView: View {
+    
+    var imageName: String
+    var title: String
+
     var body: some View {
         VStack(spacing: 8) {
             
-            Image("clipboard.icon")
+            Image(imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
             
             
-            Text("Fill Form")
+            Text(title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white)
         }
@@ -29,5 +33,6 @@ struct userCardCustomView: View {
 }
 
 #Preview {
-    userCardCustomView()
+    
+    userCardCustomView(imageName: "clipboard.icon", title: "Fill Form")
 }

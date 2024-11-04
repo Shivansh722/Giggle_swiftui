@@ -46,7 +46,7 @@ struct user_detail: View {
                     .padding(.leading, -100)
                 Spacer()
                 
-                userCardCustomView()
+                userCardCustomView(imageName: "clipboard.icon", title: "Fill Form")
                 
             }
         }
