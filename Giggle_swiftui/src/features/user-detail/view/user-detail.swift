@@ -14,7 +14,7 @@ struct user_detail: View {
             Theme.backgroundColor
                 .edgesIgnoringSafeArea(.all)
             
-            VStack() {
+            VStack {
                 
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 5) {
@@ -34,23 +34,69 @@ struct user_detail: View {
                     
                     Spacer()
                 }
-                .padding(.top, 30)
+                .padding(.top, 20)
                 
                 Spacer()
                 
-                Text("Fill Manually")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(Theme.secondaryColor)
-                    .padding(.top, -300)
-                    .padding(.leading, -100)
+                VStack(spacing: 16) {
+                    // First Section: Fill Manually
+                    SectionTitleView(title: "Fill Manually", color: .yellow)
+                        .padding(.leading, -170)
+                    
+                    HStack(alignment: .center) {
+                        userCardCustomView(imageName: "clipboard.icon", title: "Fill Form")
+                            .padding(.leading, 20)
+                        
+                        Text("Take control of your job search with manual entry.")
+                            .font(.caption)
+                            .foregroundColor(Theme.tertiaryColor)
+                            .padding(.leading, 10)
+                    }
+                    
+                    CustomButton(title: "FILL MANUALLY", backgroundColor: .red, action: {
+                        // Action for Fill Manually button
+                    }, width: 320, height: 50)
+                    .padding(.horizontal, 20)
+                    
+                    HStack {
+                        Divider()
+                            .frame(width: 110, height: 1)
+                            .background(Color.gray)
+                            .padding(.leading, 30)
+
+                        Text("OR")
+                            .foregroundColor(Color.gray)
+
+                        Divider()
+                            .frame(width: 110, height: 1)
+                            .background(Color.gray)
+                            .padding(.trailing, 30)
+                    }
+                    .padding(.vertical, 20)
+                    
+                    // Second Section: Fill Automatically
+                    SectionTitleView(title: "Fill Automatically", color: .yellow)
+                        .padding(.leading, -120)
+                    
+                    HStack(alignment: .center) {
+                        userCardCustomView(imageName: "photo.icon", title: "Upload Resume")
+                            .padding(.leading, 20)
+                        
+                        Text("Giggle AI will extract your personal details from your resume, college ID, or any other document containing your information.")
+                            .font(.caption)
+                            .foregroundColor(Theme.tertiaryColor)
+                            .padding(.leading, 10)
+                    }
+                    
+                    CustomButton(title: "FILL AUTOMATICALLY", backgroundColor: .red, action: {
+                        // Action for Fill Automatically button
+                    }, width: 320, height: 50)
+                    .padding(.horizontal, 20)
+                }
+                
                 Spacer()
-                
-                userCardCustomView(imageName: "clipboard.icon", title: "Fill Form")
-                
-                userCardCustomView(imageName: "photo.icon", title: "Upload Resume") 
-                
             }
+            .padding(.top, 20)
         }
     }
 }
