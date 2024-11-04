@@ -48,7 +48,7 @@ struct user_detail: View {
                 
                 userCardCustomView(imageName: "clipboard.icon", title: "Fill Form")
                 
-                userCardCustomView(imageName: "photo.icon", title: "Upload Resume")
+                userCardCustomView(imageName: "photo.icon", title: "Upload Resume") 
                 
             }
         }
