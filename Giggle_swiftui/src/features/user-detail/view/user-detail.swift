@@ -1,21 +1,12 @@
-//
-//  user-detail.swift
-//  Giggle_swiftui
-//
-//  Created by user@91 on 03/11/24.
-//
-
 import SwiftUI
 
-struct user_detail: View {
+struct UserDetailView: View {
     var body: some View {
-        
         ZStack {
             Theme.backgroundColor
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 5) {
                         HStack {
@@ -98,9 +89,14 @@ struct user_detail: View {
             }
             .padding(.top, 20)
         }
+        
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
     }
 }
 
-#Preview {
-    user_detail()
+struct UserDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        UserDetailView()
+    }
 }
