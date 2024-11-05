@@ -31,7 +31,12 @@ struct LoginSimpleView: View {
                                 .scaledToFit()
                                 .frame(width: 400, height: 450) // Adjust width and height as needed
                                 .padding(.top, -140) // Adjust spacing as desired
-                           
+                            Image("logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 160, height: 140)
+                                .padding(.top, -150)
+                                .padding(.leading, 110)
                         }
                         .padding(.leading, 30)
                         
