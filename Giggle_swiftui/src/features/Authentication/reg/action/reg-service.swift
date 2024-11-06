@@ -25,14 +25,43 @@ class AppService {
         account = Account(client)
     }
     
+    //user banao function
+    
     func createUser(email: String, password: String) async throws ->  RequestStatus{
         
         do {
             _ = try await account.create(userId: ID.unique(), email: email, password: password)
+            return .success
         }
         catch {
             return .error(error.localizedDescription)
         }
-        return .success//abhi ke lie hi daala bas, will remove after commiting createUser function
+        
+    }
+    
+    //create email n pass
+    
+    func login(email: String, password: String) async throws ->  RequestStatus{
+        
+        do {
+            _ = try await account.createEmailPasswordSession(email: email, password: password)
+            return .success
+        }
+        catch {
+            return .error(error.localizedDescription)
+        }
+    }
+    
+    //logout or delete this particular session
+    
+    func logout() async throws ->  RequestStatus{
+        
+        do {
+            _ = try await account.deleteSession(sessionId: "currentSession")
+            return .success
+        }
+        catch {
+            return .error(error.localizedDescription)
+        }
     }
 }
