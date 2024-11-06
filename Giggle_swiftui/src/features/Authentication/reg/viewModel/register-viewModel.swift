@@ -1,7 +1,6 @@
 import Foundation
 
-@MainActor //attribute is used in Swift to ensure that all code within the marked class, struct,
-            //or function runs on the main thread
+@MainActor //@MainActor helps ensure that your RegisterViewModel operates safely with the UI by keeping all updates on the main thread
 
 class RegisterViewModel: ObservableObject {
     private let service: AppService
@@ -9,6 +8,10 @@ class RegisterViewModel: ObservableObject {
     @Published var alertMessage = ""
     @Published var isLoading = false
     @Published var isLoggedIn = false
+    
+    //@Published:
+    
+    //ObservableObject protocol, which allows SwiftUI views to observe and react to changes within this class
     
     init(service: AppService) {
         self.service = service

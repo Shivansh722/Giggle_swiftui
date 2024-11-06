@@ -14,22 +14,9 @@
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		1976F9DA2CDB1AC7006361DE /* Exceptions for "Giggle_swiftui" folder in "Giggle_swiftui" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Giggle-swiftui-Info.plist",
-			);
-			target = 19E9A9902CD20FA5009F768B /* Giggle_swiftui */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		19E9A9932CD20FA5009F768B /* Giggle_swiftui */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				1976F9DA2CDB1AC7006361DE /* Exceptions for "Giggle_swiftui" folder in "Giggle_swiftui" target */,
-			);
 			path = Giggle_swiftui;
 			sourceTree = "<group>";
 		};

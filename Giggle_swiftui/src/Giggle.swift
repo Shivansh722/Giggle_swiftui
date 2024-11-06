@@ -11,3 +11,4 @@ struct Giggle_swiftuiApp: App {
         }
     }
 }
+//@EnvironmentObject is used to share data across the entire view hierarchy by injecting an object at the root view
