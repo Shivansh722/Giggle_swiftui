@@ -2,7 +2,7 @@ import SwiftUI
 import Appwrite
 
 struct RegisterView: View {
-    @EnvironmentObject var viewModel: ViewModel // Only use EnvironmentObject here
+    @EnvironmentObject var viewModel: RegisterViewModel // Only use EnvironmentObject here
     @Environment(\.dismiss) var dismiss
     @State private var email: String = ""
     @State private var password: String = ""
@@ -135,6 +135,6 @@ struct RegisterView: View {
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
         RegisterView()
-            .environmentObject(ViewModel(service: AppService()))
+            .environmentObject(RegisterViewModel(service: AppService()))
     }
 }

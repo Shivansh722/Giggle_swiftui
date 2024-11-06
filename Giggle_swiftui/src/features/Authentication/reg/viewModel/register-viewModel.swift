@@ -1,7 +1,9 @@
 import Foundation
 
-@MainActor
-class ViewModel: ObservableObject {
+@MainActor //attribute is used in Swift to ensure that all code within the marked class, struct,
+            //or function runs on the main thread
+
+class RegisterViewModel: ObservableObject {
     private let service: AppService
     @Published var showAlert = false
     @Published var alertMessage = ""
