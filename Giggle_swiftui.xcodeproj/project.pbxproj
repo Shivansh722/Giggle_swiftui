@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1976F9DA2CDB1AC7006361DE /* Exceptions for "Giggle_swiftui" folder in "Giggle_swiftui" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Giggle-swiftui-Info.plist",
+			);
+			target = 19E9A9902CD20FA5009F768B /* Giggle_swiftui */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		19E9A9932CD20FA5009F768B /* Giggle_swiftui */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1976F9DA2CDB1AC7006361DE /* Exceptions for "Giggle_swiftui" folder in "Giggle_swiftui" target */,
+			);
 			path = Giggle_swiftui;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = Giggle_swiftui;
 			packageProductDependencies = (
+				1976F9D42CDA2AFF006361DE /* Appwrite */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -94,6 +113,9 @@
 			);
 			mainGroup = 19E9A9882CD20FA5009F768B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
 			projectDirPath = "";
@@ -254,6 +276,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Giggle_swiftui/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Giggle-swiftui-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +305,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Giggle_swiftui/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Giggle-swiftui-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -322,6 +346,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/appwrite/sdk-for-apple";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1976F9D42CDA2AFF006361DE /* Appwrite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
+			productName = Appwrite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 19E9A9892CD20FA5009F768B /* Project object */;
 }

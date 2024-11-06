@@ -1,4 +1,5 @@
 import SwiftUI
+import Appwrite
 
 struct RegisterView: View {
     @State private var email: String = ""
@@ -7,6 +8,7 @@ struct RegisterView: View {
     @State private var isPasswordVisible: Bool = false
     @State private var navigateToUserDetail: Bool = false // State to manage navigation
     @State private var showPasswordMismatchAlert: Bool = false // State for alert
+    @State var client:Client = Giggle_swiftuiTests().client
 
     var body: some View {
         ZStack {
@@ -44,6 +46,7 @@ struct RegisterView: View {
                     backgroundColor: Theme.primaryColor,
                     action: {
                         if password == confirmPassword {
+                            print("client \(client)")
                             navigateToUserDetail = true
                         } else {
                             showPasswordMismatchAlert = true
@@ -99,7 +102,7 @@ struct RegisterView: View {
                     Text("Already a member?")
                         .foregroundColor(Color.gray)
 
-                    NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginSimpleView()) {
                         Text("Login")
                             .foregroundColor(Theme.primaryColor)
                     }
