@@ -43,4 +43,23 @@ class ViewModel: ObservableObject {
             showAlert.toggle()
         }
     }
+    
+    func login(email: String, password: String) async throws {
+        
+        isLoading = true
+        let status = try await service.login(email: email, password: password)
+        
+        switch status {
+        case .success:
+            isLoading = false
+            isLoggedIn = true
+            
+            
+        case .error(let message):
+            isLoading = false
+            hasError = true
+            alertMessage = message
+            showAlert.toggle()
+        }
+    }
 }
