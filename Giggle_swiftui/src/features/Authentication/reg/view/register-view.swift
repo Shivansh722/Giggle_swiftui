@@ -2,13 +2,14 @@ import SwiftUI
 import Appwrite
 
 struct RegisterView: View {
+    @EnvironmentObject var viewModel: ViewModel // Only use EnvironmentObject here
+    @Environment(\.dismiss) var dismiss
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var confirmPassword: String = "" // State for confirm password
+    @State private var confirmPassword: String = ""
     @State private var isPasswordVisible: Bool = false
-    @State private var navigateToUserDetail: Bool = false // State to manage navigation
-    @State private var showPasswordMismatchAlert: Bool = false // State for alert
-    @State var client:Client = Giggle_swiftuiTests().client
+    @State private var navigateToUserDetail: Bool = false
+    @State private var showPasswordMismatchAlert: Bool = false
 
     var body: some View {
         ZStack {
@@ -34,22 +35,23 @@ struct RegisterView: View {
 
                 CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
                     .padding(.bottom, 12)
-                
+
                 CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
                     .padding(.bottom, 12)
-                
-                CustomTextField(placeholder: "Confirm Password", isSecure: true, text: $confirmPassword, icon: "lock") // Confirm password field
+
+                CustomTextField(placeholder: "Confirm Password", isSecure: true, text: $confirmPassword, icon: "lock")
                     .padding(.bottom, 20)
 
                 CustomButton(
                     title: "SIGN UP",
                     backgroundColor: Theme.primaryColor,
                     action: {
-                        if password == confirmPassword {
-                            print("client \(client)")
-                            navigateToUserDetail = true
-                        } else {
-                            showPasswordMismatchAlert = true
+                        Task {
+                            if password == confirmPassword {
+                                await registerUser()
+                            } else {
+                                showPasswordMismatchAlert = true
+                            }
                         }
                     },
                     width: 340,
@@ -59,6 +61,9 @@ struct RegisterView: View {
                 .padding(.top, 20)
                 .alert(isPresented: $showPasswordMismatchAlert) {
                     Alert(title: Text("Error"), message: Text("Passwords do not match"), dismissButton: .default(Text("OK")))
+                }
+                .alert(viewModel.alertMessage, isPresented: $viewModel.showAlert) {
+                    Button("OK", role: .cancel) { }
                 }
 
                 HStack {
@@ -109,20 +114,27 @@ struct RegisterView: View {
                 }
                 .padding(.bottom, 20)
             }
-            
-            // NavigationLink to navigate to UserDetailView when navigateToUserDetail is true
+
             NavigationLink(destination: UserDetailView(), isActive: $navigateToUserDetail) {
                 EmptyView()
             }
-            .hidden() // Hide the NavigationLink
+            .hidden()
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
+    }
+
+    private func registerUser() async {
+        await viewModel.createUser(email: email, password: password)
+        if viewModel.isLoggedIn {
+            navigateToUserDetail = true
+        }
     }
 }
 
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
         RegisterView()
+            .environmentObject(ViewModel(service: AppService()))
     }
 }
