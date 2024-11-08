@@ -1,8 +1,7 @@
-import SwiftUI
-import Appwrite
 
+import SwiftUI
 struct RegisterView: View {
-    @EnvironmentObject var viewModel: RegisterViewModel // Only use EnvironmentObject here
+    @EnvironmentObject var viewModel: RegisterViewModel
     @Environment(\.dismiss) var dismiss
     @State private var email: String = ""
     @State private var password: String = ""
@@ -12,116 +11,115 @@ struct RegisterView: View {
     @State private var showPasswordMismatchAlert: Bool = false
 
     var body: some View {
-        ZStack {
-            Theme.backgroundColor
-                .edgesIgnoringSafeArea(.all)
+        GeometryReader { geometry in
+            ZStack {
+                Theme.backgroundColor
+                    .edgesIgnoringSafeArea(.all)
 
-            VStack {
-                HStack {
-                    Text("Welcome")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(Theme.primaryColor)
-                        .padding(.leading, 30)
-                        .padding(.top, 20)
-                    Spacer()
-                }
+                VStack {
+                    HStack {
+                        Text("Welcome")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.primaryColor)
+                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.top, geometry.size.height * 0.02)
+                        Spacer()
+                    }
 
-                Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 150)
+                    Image("logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width * 0.6, height: geometry.size.height * 0.2)
+                        .padding(.bottom, geometry.size.height * 0.05)
+
+                    CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
+                        .padding(.bottom, 12)
+
+                    CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
+                        .padding(.bottom, 12)
+
+                    CustomTextField(placeholder: "Confirm Password", isSecure: true, text: $confirmPassword, icon: "lock")
+                        .padding(.bottom, 20)
+
+                    CustomButton(
+                        title: "SIGN UP",
+                        backgroundColor: Theme.primaryColor,
+                        action: {
+                            Task {
+                                if password == confirmPassword {
+                                    await registerUser()
+                                } else {
+                                    showPasswordMismatchAlert = true
+                                }
+                            }
+                        },
+                        width: geometry.size.width * 0.8,
+                        height: 50,
+                        cornerRadius: 6
+                    )
+                    .padding(.top, 16)
                     .padding(.bottom, 30)
+                    
+                    
 
-                CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
-                    .padding(.bottom, 12)
+                    HStack {
+                                       Divider()
+                                           .frame(width: 110, height: 1)
+                                           .background(Color.gray)
+                                           .padding(.leading, 30)
 
-                CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
-                    .padding(.bottom, 12)
+                                       Text("OR")
+                                           .foregroundColor(Color.gray)
 
-                CustomTextField(placeholder: "Confirm Password", isSecure: true, text: $confirmPassword, icon: "lock")
+                                       Divider()
+                                           .frame(width: 110, height: 1)
+                                           .background(Color.gray)
+                                           .padding(.trailing, 30)
+                                   }
+                                   .padding(.vertical, 20)
+                                   .padding(.top, 10)
+
+                    HStack(spacing: geometry.size.width * 0.1) {
+                        Button(action: {
+                            // Google login action
+                        }) {
+                            Image("google-logo")
+                                .resizable()
+                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                        }
+                        Button(action: {
+                            // Apple login action
+                        }) {
+                            Image("apple-logo")
+                                .resizable()
+                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                        }
+                    }
                     .padding(.bottom, 20)
 
-                CustomButton(
-                    title: "SIGN UP",
-                    backgroundColor: Theme.primaryColor,
-                    action: {
-                        Task {
-                            if password == confirmPassword {
-                                await registerUser()
-                            } else {
-                                showPasswordMismatchAlert = true
-                            }
+                    Spacer()
+
+                    HStack {
+                        Text("Already a member?")
+                            .foregroundColor(Color.gray)
+
+                        NavigationLink(destination: LoginSimpleView()) {
+                            Text("Login")
+                                .foregroundColor(Theme.primaryColor)
                         }
-                    },
-                    width: 340,
-                    height: 50,
-                    cornerRadius: 6
-                )
-                .padding(.top, 20)
-                .alert(isPresented: $showPasswordMismatchAlert) {
-                    Alert(title: Text("Error"), message: Text("Passwords do not match"), dismissButton: .default(Text("OK")))
-                }
-                .alert(viewModel.alertMessage, isPresented: $viewModel.showAlert) {
-                    Button("OK", role: .cancel) { }
-                }
-
-                HStack {
-                    Divider()
-                        .frame(width: 110, height: 1)
-                        .background(Color.gray)
-                        .padding(.leading, 30)
-
-                    Text("OR")
-                        .foregroundColor(Color.gray)
-
-                    Divider()
-                        .frame(width: 110, height: 1)
-                        .background(Color.gray)
-                        .padding(.trailing, 30)
-                }
-                .padding(.vertical, 20)
-
-                HStack(spacing: 30) {
-                    Button(action: {
-                        // Google login action
-                    }) {
-                        Image("google-logo")
-                            .resizable()
-                            .frame(width: 81, height: 75)
                     }
-
-                    Button(action: {
-                        // Apple login action
-                    }) {
-                        Image("apple-logo")
-                            .resizable()
-                            .frame(width: 81, height: 75)
-                    }
+                    .padding(.bottom, 20)
                 }
-                .padding(.bottom, 20)
 
-                Spacer()
-
-                HStack {
-                    Text("Already a member?")
-                        .foregroundColor(Color.gray)
-
-                    NavigationLink(destination: LoginSimpleView()) {
-                        Text("Login")
-                            .foregroundColor(Theme.primaryColor)
-                    }
+                NavigationLink(destination: UserDetailView(), isActive: $navigateToUserDetail) {
+                    EmptyView()
                 }
-                .padding(.bottom, 20)
+                .hidden()
             }
-
-            NavigationLink(destination: UserDetailView(), isActive: $navigateToUserDetail) {
-                EmptyView()
-            }
-            .hidden()
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
         }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
     }
 
     private func registerUser() async {
@@ -129,12 +127,5 @@ struct RegisterView: View {
         if viewModel.isLoggedIn {
             navigateToUserDetail = true
         }
-    }
-}
-
-struct RegisterView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegisterView()
-            .environmentObject(RegisterViewModel(service: AppService()))
     }
 }

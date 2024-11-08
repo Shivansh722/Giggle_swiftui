@@ -1,138 +1,128 @@
 import SwiftUI
 
 struct LoginSimpleView: View {
-    @EnvironmentObject var viewModel: RegisterViewModel // Uses the shared RegisterViewModel instance
+    @EnvironmentObject var viewModel: RegisterViewModel
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isValidEmail = true
     @State private var isValidPassword = true
+    @State private var navigateToNextScreen = false // Navigation trigger
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.backgroundColor
-                    .edgesIgnoringSafeArea(.all)
+        GeometryReader { geometry in
+            NavigationView {
+                ZStack {
+                    Theme.backgroundColor
+                        .edgesIgnoringSafeArea(.all)
 
-                VStack() {
-                    // Welcome Back Text
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading, spacing: 5) {
-                            HStack {
-                                Text("Welcome")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Theme.primaryColor)
+                    VStack {
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack {
+                                    Text("Welcome")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Theme.primaryColor)
 
-                                Text("Back!")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Theme.onPrimaryColor)
+                                    Text("Back!")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Theme.onPrimaryColor)
+                                }
+                                .padding(.leading, geometry.size.width * -0.08)
+
+                                Image("plane")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geometry.size.width * 1, height: geometry.size.height * 0.6)
+                                    .padding(.top, -geometry.size.height * 0.28)
+                                Image("logo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2)
+                                    .padding(.top, -geometry.size.height * 0.15)
+                                    .padding(.leading, geometry.size.width * 0.3)
                             }
-                            // Plane Image below Welcome Back
-                            Image("plane")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 400, height: 450)
-                                .padding(.top, -140)
-                            Image("logo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 160, height: 140)
-                                .padding(.top, -150)
-                                .padding(.leading, 110)
+                            .padding(.leading, geometry.size.width * 0.08)
+                            Spacer()
                         }
-                        .padding(.leading, 30)
+                        .padding(.top, geometry.size.height * 0.02)
+
+                        CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
+                            .padding(.bottom, 12)
+
+                        CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
+                            .padding(.bottom, 20)
+
+                        CustomButton(
+                            title: "SIGN IN",
+                            backgroundColor: Theme.primaryColor,
+                            action: {
+                                Task {
+                                    guard !viewModel.isLoading else { return } // Prevent duplicate tasks
+                                    do {
+                                        try await viewModel.login(email: email, password: password)
+                                        if viewModel.isLoggedIn {
+                                            navigateToNextScreen = true
+                                        }
+                                    } catch {
+                                        viewModel.alertMessage = "Login failed. Please try again."
+                                        viewModel.showAlert = true
+                                    }
+                                }
+                            },
+                            width: geometry.size.width * 0.8,
+                            height: 50,
+                            cornerRadius: 6
+                        )
+                        .disabled(viewModel.isLoading) // Disable button when loading
+                        .padding(.top, 20)
+                        
+                        Divider().padding(.horizontal, geometry.size.width * 0.1)
+
+                        HStack(spacing: geometry.size.width * 0.1) {
+                            Image("google-logo")
+                                .resizable()
+                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                            Image("apple-logo")
+                                .resizable()
+                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                        }
+                        .padding(.top, 20)
 
                         Spacer()
-                    }
-                    .padding(.top, 20)
 
-                    // Email and Password Fields
-                    CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
-                        .padding(.bottom, 12)
+                        HStack {
+                            Text("Not a member?")
+                                .foregroundColor(Theme.onPrimaryColor)
 
-                    CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
-                        .padding(.bottom, 20)
-
-                    // Sign In Button
-                    CustomButton(
-                        title: "SIGN IN",
-                        backgroundColor: Theme.primaryColor,
-                        action: {
-                            Task {
-                                do {
-                                    try await viewModel.login(email: email, password: password)
-                                } catch {
-                                    viewModel.alertMessage = "Login failed. Please try again."
-                                    viewModel.showAlert = true
-                                }
+                            NavigationLink(destination: RegisterView()) {
+                                Text("Register Now")
+                                    .foregroundColor(Theme.primaryColor)
+                                    .fontWeight(.bold)
                             }
-                        },
-                        width: 340,
-                        height: 50,
-                        cornerRadius: 6
-                    )
-                    .padding(.top, 20)
-
-                    // Divider with OR text
-                    HStack {
-                        Divider()
-                            .frame(width: 110, height: 1)
-                            .background(Color.gray)
-
-                        Text("OR")
-                            .foregroundColor(Color.gray)
-
-                        Divider()
-                            .frame(width: 110, height: 1)
-                            .background(Color.gray)
-                    }
-                    .padding(.vertical, 20)
-
-                    // Social Login Icons
-                    HStack(spacing: 40) {
-                        Image("google-logo")
-                            .resizable()
-                            .frame(width: 81, height: 75)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-
-                        Image("apple-logo")
-                            .resizable()
-                            .frame(width: 81, height: 75)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
-                    .padding(.top, 20)
-
-                    Spacer()
-
-                    // Bottom registration link
-                    HStack {
-                        Text("Not a member?")
-                            .foregroundColor(Theme.onPrimaryColor)
-
-                        NavigationLink(destination: RegisterView()) {
-                            Text("Register Now")
-                                .foregroundColor(Theme.primaryColor)
-                                .fontWeight(.bold)
                         }
+                        .padding(.bottom, 30)
                     }
-                    .padding(.bottom, 30)
-                }
-                .padding(.horizontal, 20)
-            }
-            .alert(isPresented: $viewModel.showAlert) {
-                Alert(
-                    title: Text("Error"),
-                    message: Text(viewModel.alertMessage),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-        }
-        .navigationBarHidden(true)
-    }
-}
+                    .padding(.horizontal, 20)
 
-#Preview {
-    LoginSimpleView()
-        .environmentObject(RegisterViewModel(service: AppService())) // Provide the view model here
+                    NavigationLink(
+                        destination: HomeView(), // Replace with the actual next screen view
+                        isActive: $navigateToNextScreen
+                    ) {
+                        EmptyView()
+                    }
+                    .hidden() // Keep the link hidden, but active when triggered
+                }
+                .alert(isPresented: $viewModel.showAlert) {
+                    Alert(
+                        title: Text("Error"),
+                        message: Text(viewModel.alertMessage),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+            }
+            .navigationBarHidden(true)
+        }
+    }
 }
