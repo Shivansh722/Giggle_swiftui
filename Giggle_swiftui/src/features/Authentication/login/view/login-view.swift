@@ -23,36 +23,38 @@ struct LoginSimpleView: View {
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .foregroundColor(Theme.primaryColor)
-
                                     Text("Back!")
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .foregroundColor(Theme.onPrimaryColor)
                                 }
-                                .padding(.leading, geometry.size.width * -0.08)
-
-                                Image("plane")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 1, height: geometry.size.height * 0.6)
-                                    .padding(.top, -geometry.size.height * 0.28)
-                                Image("logo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2)
-                                    .padding(.top, -geometry.size.height * 0.15)
-                                    .padding(.leading, geometry.size.width * 0.3)
+                                .padding(.leading, geometry.size.width * 0.08)
                             }
-                            .padding(.leading, geometry.size.width * 0.08)
                             Spacer()
                         }
                         .padding(.top, geometry.size.height * 0.02)
 
+                        Image("plane")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.6)
+                            .padding(.top, geometry.size.height * -0.2)
+
+                        Image("logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2)
+                            .padding(.top, -geometry.size.height * 0.3)
+                            
+                        Spacer()
+
                         CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
                             .padding(.bottom, 12)
+                            
 
                         CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
                             .padding(.bottom, 20)
+                           
 
                         CustomButton(
                             title: "SIGN IN",
