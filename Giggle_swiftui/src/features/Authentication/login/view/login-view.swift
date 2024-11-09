@@ -16,6 +16,7 @@ struct LoginSimpleView: View {
                         .edgesIgnoringSafeArea(.all)
 
                     VStack {
+                        // Welcome back text
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 5) {
                                 HStack {
@@ -34,28 +35,30 @@ struct LoginSimpleView: View {
                         }
                         .padding(.top, geometry.size.height * 0.02)
 
+                        // Plane image
                         Image("plane")
                             .resizable()
                             .scaledToFit()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.6)
                             .padding(.top, geometry.size.height * -0.2)
 
+                        // Logo image
                         Image("logo")
                             .resizable()
                             .scaledToFit()
                             .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2)
-                            .padding(.top, -geometry.size.height * 0.3)
-                            
+                            .padding(.top, -geometry.size.height * 0.20) // Reduced padding to move fields up
+
                         Spacer()
 
+                        // Email and password text fields
                         CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
                             .padding(.bottom, 12)
-                            
 
                         CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
                             .padding(.bottom, 20)
-                           
 
+                        // Sign-in button
                         CustomButton(
                             title: "SIGN IN",
                             backgroundColor: Theme.primaryColor,
@@ -73,15 +76,32 @@ struct LoginSimpleView: View {
                                     }
                                 }
                             },
-                            width: geometry.size.width * 0.8,
+                            width: geometry.size.width * 0.6,
                             height: 50,
                             cornerRadius: 6
                         )
                         .disabled(viewModel.isLoading) // Disable button when loading
-                        .padding(.top, 20)
-                        
-                        Divider().padding(.horizontal, geometry.size.width * 0.1)
+                        .padding(.top, -10) // Reduced padding to move button up
 
+                        // Divider
+                        HStack {
+                                           Divider()
+                                               .frame(width: 110, height: 1)
+                                               .background(Color.gray)
+                                               .padding(.leading, 30)
+
+                                           Text("OR")
+                                               .foregroundColor(Color.gray)
+
+                                           Divider()
+                                               .frame(width: 110, height: 1)
+                                               .background(Color.gray)
+                                               .padding(.trailing, 30)
+                                       }
+                                       .padding(.vertical, 20)
+                                       .padding(.top, 25)
+
+                        // Google and Apple login options
                         HStack(spacing: geometry.size.width * 0.1) {
                             Image("google-logo")
                                 .resizable()
@@ -90,10 +110,12 @@ struct LoginSimpleView: View {
                                 .resizable()
                                 .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
                         }
-                        .padding(.top, 20)
+                        .padding(.top, 10)
+                        .padding(.bottom, 10)
 
                         Spacer()
 
+                        // Register text and link
                         HStack {
                             Text("Not a member?")
                                 .foregroundColor(Theme.onPrimaryColor)
@@ -127,4 +149,8 @@ struct LoginSimpleView: View {
             .navigationBarHidden(true)
         }
     }
+}
+
+#Preview {
+    LoginSimpleView()
 }
