@@ -1,11 +1,15 @@
 import SwiftUI
+import PhotosUI
 
 struct UserInfoView: View {
     @State private var name: String = ""
     @State private var dateOfBirth: Date = Date()
     @State private var selectedGender: String = "Male"
     @State private var phoneNumber: String = ""
-    @State private var selectedCountryCode: String = "+91" // Set default country code
+    @State private var selectedCountryCode: String? = "+91" // Set default country code
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
+    @State private var photosPickerItem: PhotosPickerItem?
 
     let genders = ["Male", "Female", "Other"]
     
@@ -16,7 +20,7 @@ struct UserInfoView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                   
+                    
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 5) {
                             HStack {
@@ -40,17 +44,22 @@ struct UserInfoView: View {
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, 20)
                     
+                    PhotosPicker(selection: $photosPickerItem ){
                     Circle()
                         .fill(Color.gray)
                         .frame(width: 100, height: 100)
                         .overlay(
-                            Image(systemName: "person.fill.badge.plus")
+                            Image(systemName: "person")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 60, height: 60)
                                 .foregroundColor(.white)
                         )
                         .padding(.bottom, 20)
+                }
+                       
+                    
+                  
                     
                     VStack(alignment: .leading, spacing: 20) {
                         
@@ -80,13 +89,7 @@ struct UserInfoView: View {
                         Text("Phone Number")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
-                        CustomTextField(
-                            placeholder: "Phone Number",
-                            isSecure: false,
-                            text: $phoneNumber,
-                            icon: "phone"
-                            
-                        )
+                        
                         .padding(.bottom, 12)
                         .padding(.horizontal, -20)
 

@@ -65,6 +65,7 @@ class RegisterViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isLoggedIn = false
     
+    
     // Keeps track of any ongoing login task
     private var loginTask: Task<Void, Never>?
     

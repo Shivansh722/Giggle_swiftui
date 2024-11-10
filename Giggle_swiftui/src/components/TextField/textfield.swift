@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct CustomTextField: View {
@@ -6,8 +5,9 @@ struct CustomTextField: View {
     var isSecure: Bool
     @Binding var text: String
     var icon: String
-    @State private var selectedCountryCode: String = "+91" // Default country code
+    @State private var selectedCountryCode: String? = "+91" // Default country code
     @State private var isTextHidden: Bool = true
+    var isCountryCodeRequired: Bool // Flag to control if the country code is required
 
     // List of country codes
     let countryCodes = ["+91", "+1", "+44", "+81", "+61"] // Add more codes as needed
@@ -23,15 +23,17 @@ struct CustomTextField: View {
                     .foregroundColor(.gray)
                     .padding(.leading, 15)
                 
-                // Country Code Picker
-                Picker("Country Code", selection: $selectedCountryCode) {
-                    ForEach(countryCodes, id: \.self) { code in
-                        Text(code).tag(code)
+                // Country Code Picker (Visible only if required)
+                if isCountryCodeRequired {
+                    Picker("Country Code", selection: $selectedCountryCode) {
+                        ForEach(countryCodes, id: \.self) { code in
+                            Text(code).tag(code)
+                        }
                     }
+                    .frame(width: 70) // Adjust width as needed
+                    .clipped()
+                    .pickerStyle(MenuPickerStyle())
                 }
-                .frame(width: 70) // Adjust width as needed
-                .clipped()
-                .pickerStyle(MenuPickerStyle())
                 
                 if isSecure {
                     Group {
