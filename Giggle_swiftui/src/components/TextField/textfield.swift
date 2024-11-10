@@ -51,8 +51,11 @@ struct CustomTextField: View {
     var isSecure: Bool
     @Binding var text: String
     var icon: String
-
+    @State private var selectedCountryCode: String = "+91" // Default country code
     @State private var isTextHidden: Bool = true
+
+    // List of country codes
+    let countryCodes = ["+91", "+1", "+44", "+81", "+61"] // Add more codes as needed
 
     var body: some View {
         ZStack {
@@ -65,26 +68,50 @@ struct CustomTextField: View {
                     .foregroundColor(.gray)
                     .padding(.leading, 15)
                 
+                // Country Code Picker
+                Picker("Country Code", selection: $selectedCountryCode) {
+                    ForEach(countryCodes, id: \.self) { code in
+                        Text(code).tag(code)
+                    }
+                }
+                .frame(width: 70) // Adjust width as needed
+                .clipped()
+                .pickerStyle(MenuPickerStyle())
+                
                 if isSecure {
                     Group {
                         if isTextHidden {
-                            SecureField(placeholder, text: $text)
-                                .autocapitalization(.none)       // Disable autocapitalization for secure fields
-                                .disableAutocorrection(true)      // Disable autocorrection
-                        } else {
-                            TextField(placeholder, text: $text)
+                            SecureField(placeholder, text: Binding(
+                                get: { self.text },
+                                set: { newValue in
+                                    self.text = filterPhoneInput(newValue)
+                                }
+                            ))
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
-                                .textContentType(isSecure ? .password : .none) // For better form autofill experience
+                        } else {
+                            TextField(placeholder, text: Binding(
+                                get: { self.text },
+                                set: { newValue in
+                                    self.text = filterPhoneInput(newValue)
+                                }
+                            ))
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .textContentType(isSecure ? .password : .none)
                         }
                     }
                     .padding(.horizontal, 10)
                 } else {
-                    TextField(placeholder, text: $text)
+                    TextField(placeholder, text: Binding(
+                        get: { self.text },
+                        set: { newValue in
+                            self.text = filterPhoneInput(newValue)
+                        }
+                    ))
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
-                        .keyboardType(placeholder.lowercased() == "email" ? .emailAddress : .default) // Set keyboard type for email
-                        .textContentType(placeholder.lowercased() == "email" ? .emailAddress : .none)
+                        .keyboardType(.numberPad)
                         .padding(.horizontal, 10)
                 }
 
@@ -99,12 +126,19 @@ struct CustomTextField: View {
                 }
             }
             .frame(height: 50)
-            .font(.system(size: 16)) // Adjust font size
+            .font(.system(size: 16))
         }
         .padding(.horizontal, 20)
         .frame(height: 50)
     }
+    
+    // Function to filter phone number input to 10 digits
+    private func filterPhoneInput(_ input: String) -> String {
+        let filtered = input.filter { "0123456789".contains($0) } // Only allow digits
+        return String(filtered.prefix(10)) // Limit to 10 digits
+    }
 }
+
 
 ///*
 // GeometryReader: This is used in each component to access the parent view’s dimensions.

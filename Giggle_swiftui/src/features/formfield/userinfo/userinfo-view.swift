@@ -5,7 +5,8 @@ struct UserInfoView: View {
     @State private var dateOfBirth: Date = Date()
     @State private var selectedGender: String = "Male"
     @State private var phoneNumber: String = ""
-    
+    @State private var selectedCountryCode: String = "+91" // Set default country code
+
     let genders = ["Male", "Female", "Other"]
     
     var body: some View {
@@ -34,12 +35,10 @@ struct UserInfoView: View {
                     }
                     .padding(.top, geometry.size.height * 0.02)
                     
-                    
                     ProgressView(value: 20, total: 100)
                         .accentColor(Theme.primaryColor)
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, 20)
-                    
                     
                     Circle()
                         .fill(Color.gray)
@@ -53,7 +52,6 @@ struct UserInfoView: View {
                         )
                         .padding(.bottom, 20)
                     
-                    
                     VStack(alignment: .leading, spacing: 20) {
                         
                         Text("Name")
@@ -64,9 +62,8 @@ struct UserInfoView: View {
                             .padding(.horizontal, -20)
                         
                         DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white,textColor: Theme.onPrimaryColor, padding:10)
-                            .padding(.bottom,   12)
+                            .padding(.bottom, 12)
                         
-                       
                         Text("Gender")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
@@ -80,13 +77,19 @@ struct UserInfoView: View {
                         .padding(.horizontal,-8)
                         .padding(.top, -8)
                         
-                        // Phone Number TextField
                         Text("Phone Number")
-                            .font(.caption)
-                            .foregroundColor(Theme.secondaryColor)
-                        TextField("+91", text: $phoneNumber)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(Theme.onPrimaryColor)
+                        CustomTextField(
+                            placeholder: "Phone Number",
+                            isSecure: false,
+                            text: $phoneNumber,
+                            icon: "phone"
+                            
+                        )
+                        .padding(.bottom, 12)
+                        .padding(.horizontal, -20)
+
                     }
                     .padding(.horizontal, geometry.size.width * 0.08)
                     
