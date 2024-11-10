@@ -89,7 +89,7 @@ struct UserInfoView: View {
                         Text("Phone Number")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
-                        
+                            PhoneNumberInputView()
                         .padding(.bottom, 12)
                         .padding(.horizontal, -20)
 
