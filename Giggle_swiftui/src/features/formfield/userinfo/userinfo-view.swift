@@ -64,18 +64,21 @@ struct UserInfoView: View {
                             .padding(.horizontal, -20)
                         
                         DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white,textColor: Theme.onPrimaryColor, padding:10)
+                            .padding(.bottom,   12)
                         
-                        // Gender Picker
+                       
                         Text("Gender")
-                            .font(.caption)
-                            .foregroundColor(Theme.secondaryColor)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(Theme.onPrimaryColor)
                         Picker("Gender", selection: $selectedGender) {
                             ForEach(genders, id: \.self) { gender in
                                 Text(gender)
+                                   
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal)
+                        .padding(.horizontal,-8)
+                        .padding(.top, -8)
                         
                         // Phone Number TextField
                         Text("Phone Number")
