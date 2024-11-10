@@ -63,7 +63,7 @@ struct UserInfoView: View {
                             .padding(.bottom, 12)
                             .padding(.horizontal, -20)
                         
-                        c
+                        DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white,textColor: Theme.onPrimaryColor, padding:10)
                         
                         // Gender Picker
                         Text("Gender")
