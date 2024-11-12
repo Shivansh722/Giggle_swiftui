@@ -6,8 +6,11 @@ struct CustomTextField: View {
     @Binding var text: String
     var icon: String
     
-    @State private var isTextHidden: Bool = true
- 
+    @State private var isTextHidden: Bool = true// State variable that toggles visibility of the text (for secure fields)
+
+    
+    //binding to create a two-way connection between a property that stores data, and a view that displays and changes the data.
+ // reflects the text input here between the TextField and the parent view
 
     var body: some View {
         ZStack {
@@ -20,9 +23,24 @@ struct CustomTextField: View {
                     .foregroundColor(.gray)
                     .padding(.leading, 15)
                 
+                //making conditional textfield or secured Text field as required
            
                 
                 if isSecure {
+                    
+                    //Group is a container view that allows you to group multiple views together without altering the layout.
+                    //It’s often used for conditional views like here, where we need different TextField
+                    
+                   /* The Binding initializer takes two closures:
+
+                    get: This closure retrieves the current value of text (like reading the current value).
+                    set: This closure is called whenever the value changes, allowing custom logic to filter the input before it’s saved to text.
+                    swift
+                    Copy code
+                    */
+
+                    
+                    
                     Group {
                         if isTextHidden {
                             SecureField(placeholder, text: Binding(

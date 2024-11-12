@@ -8,6 +8,9 @@ struct LocationView: View {
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
+    
+    @State private var isLocationPicked = false // Track if location is picked
+    @State private var showLocationEditIcon = false // Track if edit icon should be shown
 
     var body: some View {
         GeometryReader { geometry in
@@ -61,11 +64,30 @@ struct LocationView: View {
 
                         // Map Preview: Show the map with the user's current location if available
                         if let location = locationManager.currentLocation {
-                            Map(coordinateRegion: $region, showsUserLocation: true)
-                                .frame(height: 200)
-                                .cornerRadius(10)
-                                .padding(.horizontal, geometry.size.width * 0.08)
-                                .padding(.top, 20)
+                            ZStack(alignment: .topTrailing) {
+                                Map(coordinateRegion: $region, showsUserLocation: true)
+                                    .frame(height: 200)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, geometry.size.width * 0.08)
+                                    .padding(.top, 20)
+
+                                // Edit Icon
+                                if isLocationPicked {
+                                    Button(action: {
+                                        // Reset location and region
+                                        isLocationPicked = false
+                                        region.center = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194) // Reset to default
+                                        locationManager.startUpdatingLocation() // Allow user to pick location again
+                                    }) {
+                                        Image(systemName: "pencil.circle.fill")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.red)
+                                            .padding()
+                                    }
+                                }
+                            }
 
                             Text("Current Location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
                                 .font(.subheadline)
@@ -73,9 +95,14 @@ struct LocationView: View {
                                 .padding(.top, 20)
                         }
 
-                        CustomButton(title: "PICK YOUR CURRENT LOCATION", backgroundColor: Theme.primaryColor, action: {
-                            locationManager.requestLocationPermission() // Call method to request permission
-                            locationManager.startUpdatingLocation()  // Start location updates after button press
+                        CustomButton(title: isLocationPicked ? "NEXT" : "PICK YOUR CURRENT LOCATION", backgroundColor: Theme.primaryColor, action: {
+                            if !isLocationPicked {
+                                locationManager.requestLocationPermission() // Request permission if not granted
+                                locationManager.startUpdatingLocation()  // Start location updates after button press
+                            } else {
+                                // Proceed to the next step
+                                print("Proceed to the next screen or step")
+                            }
                         }, width: 320, height: 50, cornerRadius: 6)
                         .padding(.top, 280)
                     }
@@ -87,6 +114,9 @@ struct LocationView: View {
             if let newLocation = newLocation {
                 // Update the map region to center on the new location
                 region.center = newLocation.coordinate
+                // Mark that the location has been picked
+                isLocationPicked = true
+                showLocationEditIcon = true
             }
         }
     }

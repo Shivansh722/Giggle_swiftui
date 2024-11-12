@@ -9,6 +9,10 @@ struct RegisterView: View {
     @State private var isPasswordVisible: Bool = false
     @State private var navigateToUserDetail: Bool = false
     @State private var showPasswordMismatchAlert: Bool = false
+    
+    /*@EnvironmentObject var viewModel: RegisterViewModel allows this view to access shared data and state from the RegisterViewModel.
+    @Environment(\.dismiss) var dismiss provides a way to close the current view programmatically.
+     */
 
     var body: some View {
         GeometryReader { geometry in

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoginSimpleView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
+   
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isValidEmail = true
@@ -82,6 +83,7 @@ struct LoginSimpleView: View {
                         )
                         .disabled(viewModel.isLoading) // Disable button when loading
                         .padding(.top, -10) // Reduced padding to move button up
+                        .padding(.horizontal, 50)
 
                         // Divider
                         HStack {
@@ -151,6 +153,3 @@ struct LoginSimpleView: View {
     }
 }
 
-#Preview {
-    LoginSimpleView()
-}

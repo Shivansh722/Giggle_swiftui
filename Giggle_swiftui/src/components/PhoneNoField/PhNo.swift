@@ -11,6 +11,8 @@ struct PhoneNumberInputView: View {
     @State private var selectedCountryCode = "+1"
     @State private var phoneNumber = ""
     
+    //@State: When the value changes, SwiftUI updates the parts of the view hierarchy that depend on the value.
+    
     let countryCodes = ["+1", "+91", "+44", "+61", "+33"]
 
     var body: some View {
