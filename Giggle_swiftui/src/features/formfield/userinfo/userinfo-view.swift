@@ -56,6 +56,8 @@ struct UserInfoView: View {
                                 .foregroundColor(.white)
                         )
                         .padding(.bottom, 20)
+                        
+                        
                 }
                        
                     

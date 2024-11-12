@@ -42,6 +42,31 @@ struct locationView: View {
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, 20)
                     
+                    Image("local")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.horizontal, geometry.size.width * 0.4)
+                        .padding(.top, geometry.size.height * 0.09)
+                       
+                    Text("Discover the best Gigs for you with Giggle!")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(Theme.onPrimaryColor)
+                        .padding(.top, 12)
+                       
+                    Text("With Giggle, you can fund your own dates—no need to call your dad!")
+                        .font(.subheadline)
+                        .fontWeight(.light)
+                        .foregroundColor(Theme.onPrimaryColor)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 35)
+                        .padding(.top, 12)
+                    
+                    CustomButton(title: "NEXT", backgroundColor: Theme.primaryColor, action: {
+                        //daba ke next page
+                    }, width:320, height: 50, cornerRadius: 6)
+                       
+                        
                     
                 }
                 
