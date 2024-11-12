@@ -6,7 +6,7 @@ struct Giggle_swiftuiApp: App {
 
     var body: some Scene {
         WindowGroup {
-            UserDetailView()
+            LocationView()
                 .environmentObject(viewModel) // Inject ViewModel as an environment object
         }
     }
