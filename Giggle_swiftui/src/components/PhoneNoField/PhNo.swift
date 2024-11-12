@@ -8,41 +8,41 @@
 import SwiftUI
 
 struct PhoneNumberInputView: View {
-    @State private var selectedCountryCode = "+1" // Default to US country code
+    @State private var selectedCountryCode = "+1"
     @State private var phoneNumber = ""
     
-    let countryCodes = ["+1", "+91", "+44", "+61", "+33"] // Add more country codes here
+    let countryCodes = ["+1", "+91", "+44", "+61", "+33"]
 
     var body: some View {
         VStack {
             ZStack {
-                // Background box with custom styles
+                
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Theme.onPrimaryColor) // Background color with opacity for light gray
-                    .frame(height: 60) // Height of the entire box
+                    .fill(Theme.onPrimaryColor)
+                    .frame(height: 60)
                     .overlay(
                         HStack {
-                            // Country code picker
+                            
                             Picker("Country Code", selection: $selectedCountryCode) {
                                 ForEach(countryCodes, id: \.self) { code in
                                     Text(code)
                                 }
                             }
-                            .pickerStyle(MenuPickerStyle()) // Dropdown style for country code selection
-                            .frame(width: 80) // Set fixed width for the picker
+                            .pickerStyle(MenuPickerStyle())
+                            .frame(width: 80)
                             .padding(.leading, 10)
                             
-                            // Phone number input
+                            
                             TextField("Enter phone number", text: $phoneNumber)
-                                .keyboardType(.phonePad) // Phone number keyboard
+                                .keyboardType(.phonePad)
                                 .padding(10)
-                                .textFieldStyle(PlainTextFieldStyle()) // TextField style without border
+                                .textFieldStyle(PlainTextFieldStyle())
                                 .frame(height: 40)
                         }
                         .padding(.horizontal, 5)
                     )
             }
-            .padding(.horizontal) // Padding around the box
+            .padding(.horizontal)
         }
     }
 }
