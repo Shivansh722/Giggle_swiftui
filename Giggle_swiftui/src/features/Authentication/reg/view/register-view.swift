@@ -2,13 +2,18 @@ import SwiftUI
 
 struct RegisterView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss//to dismiss a view as it changes
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
     @State private var isPasswordVisible: Bool = false
     @State private var navigateToUserDetail: Bool = false
     @State private var showPasswordMismatchAlert: Bool = false
+    
+    //`@EnvironmentObject` in SwiftUI is used to inject an observable object into the view hierarchy, allowing child views to access and update shared data. It simplifies state management by avoiding the need to pass data manually through each view.
+    //This is a property wrapper that SwiftUI uses to create and manage a mutable state in a view. Whenever the state changes, the view is re-rendered.
+
+    
 
     var body: some View {
         GeometryReader { geometry in

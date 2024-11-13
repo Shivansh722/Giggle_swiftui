@@ -9,6 +9,9 @@ struct LoginSimpleView: View {
     @State private var isValidPassword = true
     @State private var navigateToNextScreen = false // Navigation trigger
 
+    // State variable that toggles visibility as the view changes ( also within the view )
+    
+    
     var body: some View {
         GeometryReader { geometry in
             NavigationView {

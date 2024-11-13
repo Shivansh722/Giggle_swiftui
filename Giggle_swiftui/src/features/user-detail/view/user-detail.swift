@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct UserDetailView: View {
+    @State private var navigateToUserInfo = false // State variable for navigation
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -47,9 +49,17 @@ struct UserDetailView: View {
                                     .padding(.leading, 10)
                             }
                             
-                            NavigationLink(destination: UserInfoView()) { // Navigate to UserInfoView
-                                CustomButton(title: "FILL MANUALLY", backgroundColor: Theme.primaryColor, action: {}, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
+                            // NavigationLink controlled by `navigateToUserInfo`
+                            NavigationLink(
+                                destination: UserInfoView(),
+                                isActive: $navigateToUserInfo // Binding to navigate
+                            ) {
+                                EmptyView()
                             }
+                            
+                            CustomButton(title: "FILL MANUALLY", backgroundColor: Theme.primaryColor, action: {
+                                navigateToUserInfo = true // Set to true to trigger navigation
+                            }, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
                             .padding(.horizontal, 45)
                             .padding(.top, 20)
                             
@@ -92,7 +102,6 @@ struct UserDetailView: View {
                             }, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
                             .padding(.horizontal, 45)
                             .padding(.top, 20)
-                            
                         }
                         
                         Spacer()
@@ -100,9 +109,10 @@ struct UserDetailView: View {
                     .padding(.top, 20)
                 }
             }
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
+           
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: EmptyView())
     }
 }
 

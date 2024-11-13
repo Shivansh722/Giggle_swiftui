@@ -44,24 +44,19 @@ struct UserInfoView: View {
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, 20)
                     
-                    PhotosPicker(selection: $photosPickerItem ){
-                    Circle()
-                        .fill(Color.gray)
-                        .frame(width: 100, height: 100)
-                        .overlay(
-                            Image(systemName: "person")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.white)
-                        )
-                        .padding(.bottom, 20)
-                        
-                        
-                }
-                       
-                    
-                  
+                    PhotosPicker(selection: $photosPickerItem) {
+                        Circle()
+                            .fill(Color.gray)
+                            .frame(width: 100, height: 100)
+                            .overlay(
+                                Image(systemName: "person")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                                    .foregroundColor(.white)
+                            )
+                            .padding(.bottom, 20)
+                    }
                     
                     VStack(alignment: .leading, spacing: 20) {
                         
@@ -72,7 +67,7 @@ struct UserInfoView: View {
                             .padding(.bottom, 12)
                             .padding(.horizontal, -20)
                         
-                        DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white,textColor: Theme.onPrimaryColor, padding:10)
+                        DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: 10)
                             .padding(.bottom, 12)
                         
                         Text("Gender")
@@ -81,19 +76,18 @@ struct UserInfoView: View {
                         Picker("Gender", selection: $selectedGender) {
                             ForEach(genders, id: \.self) { gender in
                                 Text(gender)
-                                   
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal,-8)
+                        .padding(.horizontal, -8)
                         .padding(.top, -8)
                         
                         Text("Phone Number")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
                         PhoneNumberInputView()
-                        .padding(.bottom, 12)
-                        .padding(.horizontal, -20)
+                            .padding(.bottom, 12)
+                            .padding(.horizontal, -20)
 
                     }
                     .padding(.horizontal, geometry.size.width * 0.08)
@@ -116,6 +110,7 @@ struct UserInfoView: View {
                     .padding(.bottom, 20)
                 }
             }
+            .navigationBarBackButtonHidden(true) // Hide the default back button
         }
     }
 }
