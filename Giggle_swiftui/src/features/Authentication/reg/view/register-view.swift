@@ -1,5 +1,5 @@
-
 import SwiftUI
+
 struct RegisterView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
     @Environment(\.dismiss) var dismiss
@@ -9,10 +9,6 @@ struct RegisterView: View {
     @State private var isPasswordVisible: Bool = false
     @State private var navigateToUserDetail: Bool = false
     @State private var showPasswordMismatchAlert: Bool = false
-    
-    /*@EnvironmentObject var viewModel: RegisterViewModel allows this view to access shared data and state from the RegisterViewModel.
-    @Environment(\.dismiss) var dismiss provides a way to close the current view programmatically.
-     */
 
     var body: some View {
         GeometryReader { geometry in
@@ -64,25 +60,23 @@ struct RegisterView: View {
                     )
                     .padding(.top, 16)
                     .padding(.bottom, 30)
-                    
-                    
 
                     HStack {
-                                       Divider()
-                                           .frame(width: 110, height: 1)
-                                           .background(Color.gray)
-                                           .padding(.leading, 30)
+                        Divider()
+                            .frame(width: 110, height: 1)
+                            .background(Color.gray)
+                            .padding(.leading, 30)
 
-                                       Text("OR")
-                                           .foregroundColor(Color.gray)
+                        Text("OR")
+                            .foregroundColor(Color.gray)
 
-                                       Divider()
-                                           .frame(width: 110, height: 1)
-                                           .background(Color.gray)
-                                           .padding(.trailing, 30)
-                                   }
-                                   .padding(.vertical, 20)
-                                   .padding(.top, 10)
+                        Divider()
+                            .frame(width: 110, height: 1)
+                            .background(Color.gray)
+                            .padding(.trailing, 30)
+                    }
+                    .padding(.vertical, 20)
+                    .padding(.top, 10)
 
                     HStack(spacing: geometry.size.width * 0.1) {
                         Button(action: {
@@ -123,6 +117,9 @@ struct RegisterView: View {
             }
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
+            .alert(isPresented: $showPasswordMismatchAlert) {
+                Alert(title: Text("Password Mismatch"), message: Text("Passwords do not match. Please try again."), dismissButton: .default(Text("OK")))
+            }
         }
     }
 
