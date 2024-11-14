@@ -156,3 +156,6 @@ struct LoginSimpleView: View {
     }
 }
 
+#Preview {
+    LoginSimpleView()
+}

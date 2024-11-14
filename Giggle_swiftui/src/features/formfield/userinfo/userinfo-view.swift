@@ -6,11 +6,13 @@ struct UserInfoView: View {
     @State private var dateOfBirth: Date = Date()
     @State private var selectedGender: String = "Male"
     @State private var phoneNumber: String = ""
-    @State private var selectedCountryCode: String? = "+91" // Set default country code
+    @State private var selectedCountryCode: String = "+91"
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
     @State private var photosPickerItem: PhotosPickerItem?
-
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     let genders = ["Male", "Female", "Other"]
     
     var body: some View {
@@ -67,7 +69,7 @@ struct UserInfoView: View {
                             .padding(.bottom, 12)
                             .padding(.horizontal, -20)
                         
-                        DateViewPicker(selectedDate: .constant(Date()), title: "Date", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: 10)
+                        DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: 10)
                             .padding(.bottom, 12)
                         
                         Text("Gender")
@@ -85,10 +87,9 @@ struct UserInfoView: View {
                         Text("Phone Number")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
-                        PhoneNumberInputView()
+                        PhoneNumberInputView(selectedCountryCode: $selectedCountryCode, phoneNumber: $phoneNumber, showAlert: $showAlert, alertMessage: $alertMessage)
                             .padding(.bottom, 12)
                             .padding(.horizontal, -20)
-
                     }
                     .padding(.horizontal, geometry.size.width * 0.08)
                     
@@ -110,7 +111,7 @@ struct UserInfoView: View {
                     .padding(.bottom, 20)
                 }
             }
-            .navigationBarBackButtonHidden(true) // Hide the default back button
+            .navigationBarBackButtonHidden(true)
         }
     }
 }

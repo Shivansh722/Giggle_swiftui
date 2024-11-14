@@ -11,9 +11,21 @@ struct eduView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Text("edu Info View")
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .background(Color.white)
+                Theme.backgroundColor
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            Text("Education")
+                                .font(.title)
+                                .foregroundColor(.white)
+                            
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(.horizontal, geometry.size.width * 0.08)
+                    
+                }
             }
         }
     }
