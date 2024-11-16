@@ -16,18 +16,53 @@ struct eduView: View {
                 VStack {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            Text("Education")
-                                .font(.title)
-                                .foregroundColor(.white)
-                            
+                            HStack{
+                                Text("Education")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.primaryColor)
+                                Text("Details")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                            }
+                            .padding(.leading, geometry.size.width * 0.08)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
                     }
-                    .padding(.horizontal, geometry.size.width * 0.08)
+                    .padding(.top, geometry.size.height * 0.02)
+                    Spacer()
                     
                 }
+                ProgressView(value: 40, total: 100)
+                    .accentColor(Theme.primaryColor)
+                    .padding(.horizontal, geometry.size.width * 0.08)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 12)
+            
+                Text("A")
+                    .font(.system(size:56 , weight: .bold))
+                    
+                    .foregroundColor(Theme.primaryColor)
+                + Text("re you pursuing your education")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(Theme.primaryColor)
+                + Text("?")
+                    .font(.system(size:56 , weight: .bold))
+                    .foregroundColor(Theme.onPrimaryColor)
+                
+                
+                
+                
+                
+                
+                
             }
+            
+            Spacer()
         }
+       
+
     }
 }
 

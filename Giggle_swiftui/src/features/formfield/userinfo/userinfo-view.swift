@@ -24,13 +24,13 @@ struct UserInfoView: View {
                 VStack {
                     
                     HStack(alignment: .top) {
-                        VStack(alignment: .leading, spacing: 5) {
+                        VStack(alignment: .leading, spacing: geometry.size.height * 0.005) {
                             HStack {
-                                Text("User")
+                                Text("Get")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.primaryColor)
-                                Text("Details")
+                                Text("Started!")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.onPrimaryColor)
@@ -44,52 +44,53 @@ struct UserInfoView: View {
                     ProgressView(value: 20, total: 100)
                         .accentColor(Theme.primaryColor)
                         .padding(.horizontal, geometry.size.width * 0.08)
-                        .padding(.bottom, 20)
+                        .padding(.bottom, geometry.size.height * 0.02)
                     
                     PhotosPicker(selection: $photosPickerItem) {
                         Circle()
                             .fill(Color.gray)
-                            .frame(width: 100, height: 100)
+                            .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
                             .overlay(
                                 Image(systemName: "person")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 60, height: 60)
+                                    .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
                                     .foregroundColor(.white)
                             )
-                            .padding(.bottom, 20)
+                            .padding(.bottom, geometry.size.height * 0.02)
                     }
                     
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
                         
                         Text("Name")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
                         CustomTextField(placeholder: "Name", isSecure: false, text: $name, icon: "person")
-                            .padding(.bottom, 12)
-                            .padding(.horizontal, -20)
+                            .padding(.bottom, geometry.size.height * 0.015)
+                            .padding(.horizontal, -geometry.size.width * 0.05)
                         
-                        DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: 10)
-                            .padding(.bottom, 12)
+                        DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: geometry.size.width * 0.03)
+                            .padding(.bottom, geometry.size.height * 0.015)
                         
                         Text("Gender")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
+                       
                         Picker("Gender", selection: $selectedGender) {
                             ForEach(genders, id: \.self) { gender in
                                 Text(gender)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal, -8)
-                        .padding(.top, -8)
+                        .padding(.horizontal, -geometry.size.width * 0.02)
+                        .padding(.top, -geometry.size.height * 0.01)
                         
                         Text("Phone Number")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
                         PhoneNumberInputView(selectedCountryCode: $selectedCountryCode, phoneNumber: $phoneNumber, showAlert: $showAlert, alertMessage: $alertMessage)
-                            .padding(.bottom, 12)
-                            .padding(.horizontal, -20)
+                            .padding(.bottom, geometry.size.height * 0.015)
+                            .padding(.horizontal, -geometry.size.width * 0.05)
                     }
                     .padding(.horizontal, geometry.size.width * 0.08)
                     
@@ -105,10 +106,10 @@ struct UserInfoView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Theme.primaryColor)
-                            .cornerRadius(8)
+                            .cornerRadius(geometry.size.width * 0.02)
                     }
                     .padding(.horizontal, geometry.size.width * 0.08)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, geometry.size.height * 0.02)
                 }
             }
             .navigationBarBackButtonHidden(true)
@@ -116,6 +117,5 @@ struct UserInfoView: View {
     }
 }
 
-#Preview {
-    UserInfoView()
-}
+
+
