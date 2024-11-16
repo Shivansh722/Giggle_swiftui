@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct eduView: View {
+    
+    @State private var selectedOption = "Yes"
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -52,8 +55,15 @@ struct eduView: View {
                     .foregroundColor(Theme.onPrimaryColor)
                 
                 
-                
-                
+                Picker("Are you pursuing your education?", selection: $selectedOption) {
+                                       Text("Yes").tag("Yes")
+                        .foregroundColor(selectedOption == "Yes" ? .black : .white)
+                                       Text("No").tag("No")
+                        .foregroundColor(selectedOption == "No" ? .black : .white)
+                                   }
+                                   .pickerStyle(SegmentedPickerStyle())
+                                   .padding(.horizontal, geometry.size.width * 0.08)
+                                   .padding(.top, geometry.size.height * 0.4)
                 
                 
                 
