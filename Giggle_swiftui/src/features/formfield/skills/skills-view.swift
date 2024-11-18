@@ -2,46 +2,76 @@ import SwiftUI
 
 struct skillView: View {
     @StateObject private var viewModel = PreferenceViewModel() // Initialize ViewModel
+    @State private var skillName = ""
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Theme.backgroundColor
-                    .edgesIgnoringSafeArea(.all) // Ensure full screen white background
+                    .edgesIgnoringSafeArea(.all) // Ensure full-screen white background
+
                 VStack {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            HStack{
-                                Text("Education")
+                            HStack {
+                                Text("Your")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.primaryColor)
-                                Text("Details")
+                                Text("Skills")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.onPrimaryColor)
                             }
-                            
+                            .padding(.leading, geometry.size.width * 0.08)
                         }
                         Spacer()
                     }
-                    .padding(.top, geometry.size.height * 0.06)
+                    .padding(.top, geometry.size.height * 0.02)
+
                     Spacer()
-                    
+
                     VStack {
+                        // Replace with a placeholder for debugging if needed
+                        
+                        Text("What skills do you have?")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.onPrimaryColor)
+                            
+                        Text("Get noticed for right jobs by adding your skills.")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Theme.onPrimaryColor)
+                        
+                        
                         ChipContainerView(viewModel: viewModel)
                             .padding()
+                        
+                        Text("Add skills ?")
+                            .font(.callout)
+                            .fontWeight(.medium)
+                            .foregroundColor(Theme.onPrimaryColor)
+                            .padding(.top, geometry.size.height * -0.6)
+                        
+                        
                     }
-                    padding(.top, geometry.size.height * 0.02)
-                    
+                    .padding(.top, geometry.size.height * 0.08) // Added leading dot
                 }
+                    
+                CustomTextField(
+                    placeholder: "Your Skill",
+                    isSecure: false,
+                    text: $skillName,
+                    icon: "star.fill"
+                )
+                
+                
+
                 ProgressView(value: 40, total: 100)
                     .accentColor(Theme.primaryColor)
                     .padding(.horizontal, geometry.size.width * 0.08)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 12)
-            
-                
-              
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 12) // Adjust position
             }
         }
     }
@@ -50,3 +80,5 @@ struct skillView: View {
 #Preview {
     skillView()
 }
+
+// Ensure Theme and ChipContainerView are defined properly.
