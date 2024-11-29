@@ -138,4 +138,5 @@ struct RegisterView: View {
         }
     }
 }
+//register view - exchange new laptop
 
