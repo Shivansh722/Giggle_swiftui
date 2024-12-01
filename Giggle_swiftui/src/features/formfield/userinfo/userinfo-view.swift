@@ -113,9 +113,39 @@ struct UserInfoView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
+            .onAppear {
+                loadUserDataFromUserDefaults()
+                }
+        }
+    }
+    private func saveUserDataToUserDefaults() {
+        UserDefaults.standard.set(name, forKey: "userName")
+        UserDefaults.standard.set(phoneNumber, forKey: "userPhone")
+        print("User data saved: Name = \(name), Phone = \(phoneNumber)")
+    }
+
+    private func loadUserDataFromUserDefaults() {
+        if let resumeData = UserDefaults.standard.data(forKey: "resumeData") {
+            do {
+                if let resume = try JSONSerialization.jsonObject(with: resumeData, options: []) as? [String: Any] {
+                    if let storedName = resume["Name"] as? String {
+                        name = storedName
+                        print("User data loaded: Name = \(name)")
+                    } else {
+                        print("Name key not found in the resume data")
+                    }
+                    if let storedPhone = resume["Contact"] as? String {
+                        phoneNumber = storedPhone
+                        print("User data loaded: Phone = \(phoneNumber)")
+                    } else {
+                        print("Phone key not found in the resume data")
+                    }
+                }
+            } catch {
+                print("Error decoding resume data: \(error.localizedDescription)")
+            }
+        } else {
+            print("No resume data found in UserDefaults")
         }
     }
 }
-
-
-

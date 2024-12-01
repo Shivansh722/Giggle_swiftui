@@ -2,6 +2,7 @@ import SwiftUI
 
 struct UserDetailView: View {
     @State private var navigateToUserInfo = false // State variable for navigation
+    @State private var navigateToUserDetailAuto = false
     
     var body: some View {
         NavigationView {
@@ -97,8 +98,14 @@ struct UserDetailView: View {
                                     .padding(.leading, 10)
                             }
                             
+                            NavigationLink(
+                                destination: user_detail_auto(),
+                                isActive: $navigateToUserDetailAuto // Binding to navigate
+                            ) {
+                                EmptyView()
+                            }
                             CustomButton(title: "FILL AUTOMATICALLY", backgroundColor: Theme.primaryColor, action: {
-                                // Action for Fill Automatically button
+                                navigateToUserDetailAuto = true
                             }, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
                             .padding(.horizontal, 45)
                             .padding(.top, 20)
