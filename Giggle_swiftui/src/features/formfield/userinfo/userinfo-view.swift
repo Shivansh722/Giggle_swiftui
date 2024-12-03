@@ -12,6 +12,7 @@ struct UserInfoView: View {
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var navigateToLocation:Bool = false
     
     let genders = ["Male", "Female", "Other"]
     
@@ -95,10 +96,15 @@ struct UserInfoView: View {
                     .padding(.horizontal, geometry.size.width * 0.08)
                     
                     Spacer()
-                    
+                    NavigationLink(
+                        destination:LocationView(),
+                        isActive: $navigateToLocation
+                    ){
+                        EmptyView()
+                    }
                     // Next Button
                     Button(action: {
-                        // Handle the "Next" button action here
+                        navigateToLocation = true
                     }) {
                         Text("NEXT")
                             .font(.headline)

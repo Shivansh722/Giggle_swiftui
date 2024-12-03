@@ -5,7 +5,7 @@ struct user_detail_auto: View {
     @State private var showPreview = false
     @State private var navigateToUserInfo = false
     let userDetailAutoView = UserDetailAutoView()
-    let image = UIImage(named: "resume")
+    let image = UIImage(named: "FullResume")
 
     var body: some View {
         NavigationView {

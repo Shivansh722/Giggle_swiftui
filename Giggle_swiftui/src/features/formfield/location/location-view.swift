@@ -11,6 +11,7 @@ struct LocationView: View {
     
     @State private var isLocationPicked = false // Track if location is picked
     @State private var showLocationEditIcon = false // Track if edit icon should be shown
+    @State private var navigateToEduView1 = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -94,6 +95,12 @@ struct LocationView: View {
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .padding(.top, 20)
                         }
+                            NavigationLink(
+                                destination: eduView(),
+                                isActive:$navigateToEduView1
+                            ){
+                                EmptyView()
+                            }
 
                         CustomButton(title: isLocationPicked ? "NEXT" : "PICK YOUR CURRENT LOCATION", backgroundColor: Theme.primaryColor, action: {
                             if !isLocationPicked {
@@ -102,6 +109,7 @@ struct LocationView: View {
                             } else {
                                 // Proceed to the next step
                                 print("Proceed to the next screen or step")
+                                navigateToEduView1 = true
                             }
                         }, width: 320, height: 50, cornerRadius: 6)
                         .padding(.top, 280)
