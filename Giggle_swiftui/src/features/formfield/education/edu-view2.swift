@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct eduView2: View {
-    @State private var selectedPursuing = "Under Graduate" // Default dropdown value
+    @State private var selectedPursuing = "12th pass" // Default dropdown value
     @State private var degreeName = ""
     @State private var specialization = ""
     @State private var completionYear = Date()
@@ -154,6 +154,41 @@ struct eduView2: View {
                     .padding(.top, geometry.size.height * 0.02)
                 }
             }
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear{
+            loadUserDataFromUserDefaults()
+        }
+    }
+    
+    private func saveUserDataToUserDefaults() {
+        
+    }
+    
+    private func loadUserDataFromUserDefaults() {
+        if let resumeData = UserDefaults.standard.data(forKey: "resumeData") {
+            do {
+                if let resume = try JSONSerialization.jsonObject(with: resumeData, options: []) as? [String: Any] {
+                    let educationArray = resume["Education"] as? [[String: Any]]
+                    if let firstEducation = educationArray?.first,
+                       let degree = firstEducation["Degree"] as? String, let instution = firstEducation["Institution"] as? String{
+                        if (degree == "B.Tech"){
+                            self.selectedPursuing = "Under Graduate"
+                        } else {
+                            self.selectedPursuing = degree
+                        }
+                        self.degreeName = degree
+                        self.universityName = instution
+                        
+                    } else {
+                        print("Degree not found in Education")
+                    }
+                }
+            } catch {
+                print("Error decoding resume data: \(error.localizedDescription)")
+            }
+        } else {
+            print("No resume data found in UserDefaults")
         }
     }
 }
