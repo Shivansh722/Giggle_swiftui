@@ -56,6 +56,7 @@ enum RequestStatus {
 class AppService {
     let client: Client
     let account: Account
+    var userId:String?
     
     init() {
         self.client = Client()
@@ -68,7 +69,8 @@ class AppService {
     
     func createUser(email: String, password: String) async -> RequestStatus {
         do {
-            _ = try await account.create(userId: ID.unique(), email: email, password: password)
+            let user = try await account.create(userId: ID.unique(), email: email, password: password)
+            self.userId = user.id
             return .success
         } catch {
             return .error(error.localizedDescription)
