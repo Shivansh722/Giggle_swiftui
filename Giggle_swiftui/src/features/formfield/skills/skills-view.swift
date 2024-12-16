@@ -3,6 +3,7 @@ import SwiftUI
 struct skillView: View {
     @StateObject private var viewModel = PreferenceViewModel() // Initialize ViewModel
     @State private var skillName = ""
+    @State private var navigateToHome = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -66,6 +67,25 @@ struct skillView: View {
                     icon: "star.fill"
                 )
                 
+                NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
+                    EmptyView()
+                }
+                
+                CustomButton(
+                    title: "NEXT",
+                    backgroundColor: Theme.primaryColor,
+                    action: {
+                        navigateToHome = true
+                        
+                    },
+                    width: geometry.size.width * 0.8,
+                    height: 50
+                )
+                .padding(.top, 700)
+                .padding(.leading, geometry.size.width * -0.06)
+                .padding(.horizontal, geometry.size.width * 0.08)
+                
+               
                 
 
                 ProgressView(value: 40, total: 100)
