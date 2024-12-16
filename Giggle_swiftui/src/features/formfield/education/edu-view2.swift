@@ -13,6 +13,7 @@ struct eduView2: View {
     @State private var specialization = ""
     @State private var completionYear = Date()
     @State private var universityName = ""
+    @State private var navigateToskillView = false
     
     var pursuingOptions = ["12th pass", "Diploma", "ITI", "Under Graduate", "Post Graduate"]
     
@@ -131,13 +132,17 @@ struct eduView2: View {
                         
                         Spacer()
                         
+                        NavigationLink(destination: skillView(), isActive: $navigateToskillView) {
+                            EmptyView()
+                        }
+                        
                         // Next Button
                         CustomButton(
                             title: "NEXT",
                             backgroundColor: Theme.primaryColor,
                             action: {
-                                // Handle button action here
-                                print("Next button pressed")
+                                navigateToskillView = true
+                                
                             },
                             width: geometry.size.width * 0.8,
                             height: 50

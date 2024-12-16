@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
-		3F374CF32CFB61960016C6FD /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3F374CF22CFB61960016C6FD /* GoogleGenerativeAI */; };
+		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
-				3F374CF32CFB61960016C6FD /* GoogleGenerativeAI in Frameworks */,
+				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +73,7 @@
 			name = Giggle_swiftui;
 			packageProductDependencies = (
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
-				3F374CF22CFB61960016C6FD /* GoogleGenerativeAI */,
+				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -105,7 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
-				3F374CF12CFB61960016C6FD /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -351,9 +351,9 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		3F374CF12CFB61960016C6FD /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+		19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google-gemini/generative-ai-swift.git";
+			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.5.6;
@@ -367,9 +367,9 @@
 			package = 1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
 			productName = Appwrite;
 		};
-		3F374CF22CFB61960016C6FD /* GoogleGenerativeAI */ = {
+		19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3F374CF12CFB61960016C6FD /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			package = 19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
 			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
