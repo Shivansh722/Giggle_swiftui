@@ -99,6 +99,7 @@ struct HomeView: View {
                                  .padding(.horizontal, geometry.size.width * -0.45)
                             
                              JobCardView()
+                                .padding(.bottom, geometry.size.height * 0.02)
                             JobCardView()
                         }
                         .padding(.top, geometry.size.height * -0.6)
