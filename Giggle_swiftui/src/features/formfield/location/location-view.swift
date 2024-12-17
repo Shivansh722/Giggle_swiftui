@@ -118,6 +118,7 @@ struct LocationView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .onChange(of: locationManager.currentLocation) { newLocation in
             if let newLocation = newLocation {
                 // Update the map region to center on the new location
@@ -127,5 +128,7 @@ struct LocationView: View {
                 showLocationEditIcon = true
             }
         }
+        
+        .navigationBarBackButtonHidden(true)
     }
 }

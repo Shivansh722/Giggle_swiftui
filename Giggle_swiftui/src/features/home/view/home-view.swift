@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @ObservedObject var formManager = FormManager.shared
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -16,7 +17,7 @@ struct HomeView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.primaryColor)
                             
-                            Text("Orlando Diggs")
+                            Text(formManager.formData.name)
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.onPrimaryColor)
@@ -74,7 +75,7 @@ struct HomeView: View {
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
             }
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

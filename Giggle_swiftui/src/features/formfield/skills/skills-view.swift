@@ -4,13 +4,14 @@ struct skillView: View {
     @StateObject private var viewModel = PreferenceViewModel() // Initialize ViewModel
     @State private var skillName = ""
     @State private var navigateToHome = false
-
+    @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Theme.backgroundColor
                     .edgesIgnoringSafeArea(.all) // Ensure full-screen white background
-
+                
                 VStack {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
@@ -29,9 +30,9 @@ struct skillView: View {
                         Spacer()
                     }
                     .padding(.top, geometry.size.height * 0.02)
-
+                    
                     Spacer()
-
+                    
                     VStack {
                         // Replace with a placeholder for debugging if needed
                         
@@ -39,7 +40,7 @@ struct skillView: View {
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(Theme.onPrimaryColor)
-                            
+                        
                         Text("Get noticed for right jobs by adding your skills.")
                             .font(.subheadline)
                             .fontWeight(.medium)
@@ -59,7 +60,7 @@ struct skillView: View {
                     }
                     .padding(.top, geometry.size.height * 0.08) // Added leading dot
                 }
-                    
+                
                 CustomTextField(
                     placeholder: "Your Skill",
                     isSecure: false,
@@ -74,8 +75,15 @@ struct skillView: View {
                 CustomButton(
                     title: "NEXT",
                     backgroundColor: Theme.primaryColor,
-                    action: {
-                        navigateToHome = true
+                    action:{
+                        Task {
+                            let result = await saveUserInfo.saveInfo()
+                            if result {
+                                navigateToHome = true
+                            } else {
+                                print("Failed to save user info")
+                            }
+                        }
                         
                     },
                     width: geometry.size.width * 0.8,
@@ -85,9 +93,9 @@ struct skillView: View {
                 .padding(.leading, geometry.size.width * -0.06)
                 .padding(.horizontal, geometry.size.width * 0.08)
                 
-               
                 
-
+                
+                
                 ProgressView(value: 40, total: 100)
                     .accentColor(Theme.primaryColor)
                     .padding(.horizontal, geometry.size.width * 0.08)
@@ -95,6 +103,11 @@ struct skillView: View {
             }
         }
     }
+}
+
+private func dumpToDB(){
+    @ObservedObject var formManager = FormManager.shared
+    print(formManager.formData.degreeName)
 }
 
 #Preview {
