@@ -65,8 +65,20 @@ struct HomeView: View {
                             // Overlapping Custom Button
                             VStack {
                                 Spacer()
+                                Text("Take FLN")
+                                    .font(.headline)
+                                    .foregroundColor(Theme.secondaryColor)
+                                    .padding(.leading, geometry.size.width * 0.02)
+                                    .padding(.bottom, geometry.size.height * -0.08)
+                                Text("To start applying for gigs you need to take the FLN test first.")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Theme.tertiaryColor)
+                                    .padding(.top, geometry.size.height * 0.02)
+                                    .padding(.bottom, geometry.size.height * -0.06)
+                                    .multilineTextAlignment(.center)
+                                
                                 CustomButton(
-                                    title: "Take FLN",
+                                    title: "NEXT",
                                     backgroundColor: Theme.primaryColor,
                                     action: {
                                         // Add Button Action Here
