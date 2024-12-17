@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @ObservedObject var formManager = FormManager.shared
     init() {
         // Set the tab bar appearance globally when the view is initialized
         let appearance = UITabBarAppearance()
@@ -45,7 +46,11 @@ struct HomeView: View {
                             .padding()
                             
                             Spacer()
-                            
+               
+                            Text(formManager.formData.name)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
                             Image(systemName: "person.crop.circle")
                                 .resizable()
                                 .frame(width: 40, height: 40)
@@ -149,6 +154,7 @@ struct HomeView: View {
                 Image(systemName: "bell.fill")
                 Text("Notifications")
             }
+        }.navigationBarBackButtonHidden(true)
         }
         .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
     }

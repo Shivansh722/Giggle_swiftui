@@ -74,7 +74,9 @@ struct eduView: View {
                     }
                 }
             }
+            .navigationBarBackButtonHidden(true)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

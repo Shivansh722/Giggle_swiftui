@@ -47,21 +47,23 @@
 //}
 
 import Appwrite
+import Foundation
+import SwiftUICore
 
 enum RequestStatus {
     case success
     case error(_ message: String)
 }
 
-class AppService {
+class AppService:ObservableObject {
     let client: Client
     let account: Account
-    var userId:String?
+    @Published var userId:String?
     
     init() {
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1") // Ensure endpoint is correct
-            .setProject("6729f0c60023e865f840")
+            .setProject("657eaf76ae09f6666581")
             .setSelfSigned(true)
         
         self.account = Account(client)
@@ -70,7 +72,7 @@ class AppService {
     func createUser(email: String, password: String) async -> RequestStatus {
         do {
             let user = try await account.create(userId: ID.unique(), email: email, password: password)
-            self.userId = user.id
+            FormManager.shared.formData.userId = user.id
             return .success
         } catch {
             return .error(error.localizedDescription)

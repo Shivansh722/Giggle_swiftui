@@ -2,6 +2,7 @@ import SwiftUI
 import PhotosUI
 
 struct UserInfoView: View {
+    @ObservedObject var formManager = FormManager.shared
     @State private var name: String = ""
     @State private var dateOfBirth: Date = Date()
     @State private var selectedGender: String = "Male"
@@ -104,6 +105,7 @@ struct UserInfoView: View {
                     }
                     // Next Button
                     Button(action: {
+                        setData()
                         navigateToLocation = true
                     }) {
                         Text("NEXT")
@@ -124,6 +126,12 @@ struct UserInfoView: View {
                 }
         }
     }
+    private func setData(){
+        formManager.formData.name = name
+        formManager.formData.phone = phoneNumber
+        formManager.formData.gender = selectedGender
+    }
+    
     private func saveUserDataToUserDefaults() {
         UserDefaults.standard.set(name, forKey: "userName")
         UserDefaults.standard.set(phoneNumber, forKey: "userPhone")

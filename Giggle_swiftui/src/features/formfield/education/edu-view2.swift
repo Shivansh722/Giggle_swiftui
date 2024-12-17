@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct eduView2: View {
+    @ObservedObject var formManager = FormManager.shared
     @State private var selectedPursuing = "12th pass" // Default dropdown value
     @State private var degreeName = ""
     @State private var specialization = ""
@@ -141,6 +142,7 @@ struct eduView2: View {
                             title: "NEXT",
                             backgroundColor: Theme.primaryColor,
                             action: {
+                                set_data()
                                 navigateToskillView = true
                                 
                             },
@@ -154,6 +156,7 @@ struct eduView2: View {
                     .padding(.top, geometry.size.height * 0.02)
                 }
             }
+            .navigationBarBackButtonHidden(true)
         }
         .navigationBarBackButtonHidden(true)
         .onAppear{
@@ -161,8 +164,12 @@ struct eduView2: View {
         }
     }
     
-    private func saveUserDataToUserDefaults() {
-        
+    private func set_data(){
+        formManager.formData.pursuing = selectedPursuing
+        formManager.formData.degreeName = degreeName
+        formManager.formData.completionYear = completionYear
+        formManager.formData.universityName = universityName
+        formManager.formData.specialization = specialization
     }
     
     private func loadUserDataFromUserDefaults() {
