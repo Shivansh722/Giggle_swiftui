@@ -20,7 +20,7 @@ struct HomeView: View {
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
-
+    
     var body: some View {
         TabView {
             // Home Tab
@@ -37,8 +37,7 @@ struct HomeView: View {
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.primaryColor)
-                                
-                                Text("Orlando Diggs")
+                                Text(formManager.formData.name)
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.onPrimaryColor)
@@ -46,11 +45,8 @@ struct HomeView: View {
                             .padding()
                             
                             Spacer()
-               
-                            Text(formManager.formData.name)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(Theme.onPrimaryColor)
+                            
+                            
                             Image(systemName: "person.crop.circle")
                                 .resizable()
                                 .frame(width: 40, height: 40)
@@ -98,12 +94,12 @@ struct HomeView: View {
                         
                         VStack {
                             Text("Recommendations")
-                                 .font(.system(size: 24))
-                                 .fontWeight(.bold)
-                                 .foregroundColor(Theme.onPrimaryColor)
-                                 .padding(.horizontal, geometry.size.width * -0.45)
+                                .font(.system(size: 24))
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
+                                .padding(.horizontal, geometry.size.width * -0.45)
                             
-                             JobCardView()
+                            JobCardView()
                                 .padding(.bottom, geometry.size.height * 0.02)
                             JobCardView()
                         }
@@ -155,8 +151,7 @@ struct HomeView: View {
                 Text("Notifications")
             }
         }.navigationBarBackButtonHidden(true)
-        }
-        .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
+            .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
     }
 }
 
