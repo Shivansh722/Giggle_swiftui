@@ -13,6 +13,7 @@ struct Theme {
     static let tertiaryColor = Color(hex: "FFFFFF")//WHITE
     static let onPrimaryColor = Color(hex: "F1FAEE")//offwhite
     static let onSecondaryColor = Color(hex: "9B9B9B")
+    static let primaryContrastColor = Color(hex: "000000")
     
     
 }
