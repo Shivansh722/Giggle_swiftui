@@ -6,7 +6,7 @@ struct Giggle_swiftuiApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SplashScreen()
+            FluencyView()
                 .environmentObject(viewModel) // Inject ViewModel as an environment object
         }
     }
