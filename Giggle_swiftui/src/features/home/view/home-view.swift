@@ -47,11 +47,13 @@ struct HomeView: View {
                             Spacer()
                             
                             
-                            Image(systemName: "person.crop.circle")
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                                .foregroundColor(Color.gray)
-                                .padding()
+                            NavigationLink(destination: ProfileScreen()) {
+                                Image(systemName: "person.crop.circle")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(Color.gray)
+                                    .padding()
+                            }
                         }
                         Spacer()
                         

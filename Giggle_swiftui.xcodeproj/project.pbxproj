@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
 		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
+		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				350EE9892D25629000F083D5 /* Popovers in Frameworks */,
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
 				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
 			);
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
 				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
+				350EE9882D25629000F083D5 /* Popovers */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -106,6 +109,7 @@
 			packageReferences = (
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -363,6 +367,14 @@
 				minimumVersion = 0.5.6;
 			};
 		};
+		350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aheze/Popovers";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -375,6 +387,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
 			productName = GoogleGenerativeAI;
+		};
+		350EE9882D25629000F083D5 /* Popovers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */;
+			productName = Popovers;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

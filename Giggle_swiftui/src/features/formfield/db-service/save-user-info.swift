@@ -20,8 +20,8 @@ class SaveUserInfo:ObservableObject {
         self.appService = appService
     }
     func saveInfo() async -> Bool {
-        let databaseId = "657eb094cd7622cdc23b"
-        let collectionId = "67609b2c0020a833ac33"
+        let databaseId = "67729cb100158022ba8e"
+        let collectionId = "67729cdc0016234d1704"
         
         @ObservedObject var formManager = FormManager.shared
         let user = formManager.formData.userId
