@@ -10,13 +10,14 @@ import SwiftUI
 struct FluencyView: View {
     @State var textValue: String = "Push To Talk"
     @State var speechRecognizer = SpeechRecognizer()
-    
+    @State var observer: ResultsObserver?
+
     @State private var timerText: String = "00:10"
     @State private var isRecording: Bool = false
     @State private var isButtonDisabled: Bool = false
     @State private var timer: Timer?
     @State private var remainingTime: Int = 10
-    
+
     var body: some View {
         ZStack {
             Theme.backgroundColor
@@ -30,46 +31,47 @@ struct FluencyView: View {
                     Spacer()
                 }
                 .padding(.leading, 20)
-                
+
                 Spacer()
-                
+
                 VStack {
                     Text("Hey Orlando!")
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(.gray)
-                    
+
                     Text(textValue)
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.gray)
                 }
-                
+
                 Button {
                     startRecording()
+
                 } label: {
                     Image(isRecording ? "FLN_MIC2" : "FLN_MIC")
                         .resizable()
                         .frame(width: 151, height: 151)
                 }
                 .disabled(isButtonDisabled)
-                
+
                 Text(timerText)
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.gray)
                     .padding(.top, 8)
-                
+
                 Spacer()
             }
         }
     }
-    
+
     private func startRecording() {
         isRecording = true
         isButtonDisabled = true
         speechRecognizer.record(to: $textValue)
-        
+
         remainingTime = 10
         timerText = "00:\(String(format: "%02d", remainingTime))"
-        
+
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if remainingTime > 0 {
                 remainingTime -= 1
@@ -79,7 +81,7 @@ struct FluencyView: View {
             }
         }
     }
-    
+
     private func stopRecording() {
         isRecording = false
         isButtonDisabled = false
@@ -87,6 +89,10 @@ struct FluencyView: View {
         timer?.invalidate()
         timer = nil
         timerText = "00:10"
+
+        DispatchQueue.main.async {
+            classifySound()
+        }
     }
 }
 

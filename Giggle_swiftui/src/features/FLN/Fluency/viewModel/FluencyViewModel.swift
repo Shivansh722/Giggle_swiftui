@@ -1,24 +1,25 @@
-//
-//  FluencyViewModel.swift
-//  Giggle_swiftui
-//
-//  Created by admin49 on 18/12/24.
-//
-
 import AVFoundation
+import CreateMLComponents
 import Foundation
+import SoundAnalysis
 import Speech
 import SwiftUI
-import SoundAnalysis
-import CreateMLComponents
 
-/// A helper for transcribing speech to text using AVAudioEngine.
+class SharedData {
+    static let shared = SharedData()
+    var sharedVariable: String?
+}
+
 struct SpeechRecognizer {
     private class SpeechAssist {
         var audioEngine: AVAudioEngine?
         var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
         var recognitionTask: SFSpeechRecognitionTask?
         let speechRecognizer = SFSpeechRecognizer()
+
+        // Audio recording properties
+        var audioFile: AVAudioFile?
+        var recordingURL: URL?
 
         deinit {
             reset()
@@ -30,20 +31,12 @@ struct SpeechRecognizer {
             audioEngine = nil
             recognitionRequest = nil
             recognitionTask = nil
+            audioFile = nil
         }
     }
 
     private let assistant = SpeechAssist()
 
-    /**
-        Begin transcribing audio.
-     
-        Creates a `SFSpeechRecognitionTask` that transcribes speech to text until you call `stopRecording()`.
-        The resulting transcription is continuously written to the provided text binding.
-     
-        -  Parameters:
-            - speech: A binding to a string where the transcription is written.
-     */
     func record(to speech: Binding<String>) {
         relay(speech, message: "Requesting access")
         canAccess { authorized in
@@ -58,7 +51,8 @@ struct SpeechRecognizer {
             guard let audioEngine = assistant.audioEngine else {
                 fatalError("Unable to create audio engine")
             }
-            assistant.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+            assistant.recognitionRequest =
+                SFSpeechAudioBufferRecognitionRequest()
             guard let recognitionRequest = assistant.recognitionRequest else {
                 fatalError("Unable to create request")
             }
@@ -68,49 +62,86 @@ struct SpeechRecognizer {
                 relay(speech, message: "Booting audio subsystem")
 
                 let audioSession = AVAudioSession.sharedInstance()
-                try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
-                try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+                try audioSession.setCategory(
+                    .record, mode: .measurement, options: .duckOthers)
+                try audioSession.setActive(
+                    true, options: .notifyOthersOnDeactivation)
                 let inputNode = audioEngine.inputNode
                 relay(speech, message: "Found input node")
 
+                // Set up audio recording
+                let documentsPath = FileManager.default.urls(
+                    for: .documentDirectory, in: .userDomainMask)[0]
+                let audioFilename =
+                    "recording-\(Date().timeIntervalSince1970).wav"
+                assistant.recordingURL = documentsPath.appendingPathComponent(
+                    audioFilename)
+
                 let recordingFormat = inputNode.outputFormat(forBus: 0)
-                inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+                guard let recordingURL = assistant.recordingURL else {
+                    fatalError("Unable to create recording URL")
+                }
+
+                assistant.audioFile = try AVAudioFile(
+                    forWriting: recordingURL,
+                    settings: recordingFormat.settings)
+
+                inputNode.installTap(
+                    onBus: 0, bufferSize: 1024, format: recordingFormat
+                ) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+                    // Write buffer to audio file
+                    try? assistant.audioFile?.write(from: buffer)
+
+                    // Send buffer for speech recognition
                     recognitionRequest.append(buffer)
                 }
-                // audio stream
-                
-                
-                
+
                 relay(speech, message: "Preparing audio engine")
                 audioEngine.prepare()
                 try audioEngine.start()
-                assistant.recognitionTask = assistant.speechRecognizer?.recognitionTask(with: recognitionRequest) { (result, error) in
-                    var isFinal = false
-                    if let result = result {
-                        print(result)
-                        print(speech)
-                        relay(speech, message: result.bestTranscription.formattedString)
-                        isFinal = result.isFinal
-                    }
+                assistant.recognitionTask = assistant.speechRecognizer?
+                    .recognitionTask(with: recognitionRequest) {
+                        (result, error) in
+                        var isFinal = false
+                        if let result = result {
+                            relay(
+                                speech,
+                                message: result.bestTranscription
+                                    .formattedString)
+                            isFinal = result.isFinal
+                        }
 
-                    if error != nil || isFinal {
-                        audioEngine.stop()
-                        inputNode.removeTap(onBus: 0)
-                        self.assistant.recognitionRequest = nil
+                        if error != nil || isFinal {
+                            audioEngine.stop()
+                            inputNode.removeTap(onBus: 0)
+                            self.assistant.recognitionRequest = nil
+                        }
                     }
-                }
             } catch {
                 print("Error transcribing audio: " + error.localizedDescription)
                 assistant.reset()
             }
         }
     }
-    
-    /// Stop transcribing audio.
-    func stopRecording() {
+
+    /// Stop transcribing audio and save recording
+    func stopRecording() -> URL? {
+        let recordingURL = assistant.recordingURL
+        if let url = recordingURL {
+            let fileName = url.lastPathComponent
+            let fileNameString = String(fileName)
+            print(fileNameString, " before")
+
+            SharedData.shared.sharedVariable = fileNameString
+            print(
+                SharedData.shared.sharedVariable ?? "default value",
+                " shared variable")
+            print("Recording saved to: \(url.path)")
+        }
         assistant.reset()
+        return recordingURL
     }
-    
+
     private func canAccess(withHandler handler: @escaping (Bool) -> Void) {
         SFSpeechRecognizer.requestAuthorization { status in
             if status == .authorized {
@@ -122,10 +153,8 @@ struct SpeechRecognizer {
             }
         }
     }
-    
+
     private func relay(_ binding: Binding<String>, message: String) {
-            binding.wrappedValue = message
-        
+        binding.wrappedValue = message
     }
 }
-

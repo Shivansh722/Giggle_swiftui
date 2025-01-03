@@ -63,7 +63,7 @@ class AppService:ObservableObject {
     init() {
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1") // Ensure endpoint is correct
-            .setProject("657eaf76ae09f6666581")
+            .setProject("677299c0003044510787")
             .setSelfSigned(true)
         
         self.account = Account(client)
