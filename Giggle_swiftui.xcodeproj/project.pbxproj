@@ -272,6 +272,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Giggle-swiftui-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We use your location to show gigs near you.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need your local";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
@@ -305,6 +306,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Giggle-swiftui-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We use your location to show gigs near you.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need your local";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
