@@ -8,16 +8,16 @@
 //class AppService {
 //    let client: Client
 //    let account: Account
-//    
+//
 //    init() {
 //        self.client = Client()
 //            .setEndpoint("https://cloud.appwrite.io/v1") // Ensure endpoint is correct
 //            .setProject("6729f0c60023e865f840")
 //            .setSelfSigned(true)
-//        
+//
 //        self.account = Account(client)
 //    }
-//    
+//
 //    func createUser(email: String, password: String) async -> RequestStatus {
 //        do {
 //            _ = try await account.create(userId: ID.unique(), email: email, password: password)
@@ -26,7 +26,7 @@
 //            return .error(error.localizedDescription)
 //        }
 //    }
-//    
+//
 //    func login(email: String, password: String) async -> RequestStatus {
 //        do {
 //            _ = try await account.createEmailPasswordSession(email: email, password: password)
@@ -35,7 +35,7 @@
 //            return .error(error.localizedDescription)
 //        }
 //    }
-//    
+//
 //    func logout() async -> RequestStatus {
 //        do {
 //            _ = try await account.deleteSession(sessionId: "current")
@@ -55,46 +55,68 @@ enum RequestStatus {
     case error(_ message: String)
 }
 
-class AppService:ObservableObject {
+class AppService: ObservableObject {
     let client: Client
     let account: Account
-    @Published var userId:String?
-    
+    @Published var userId: String?
+
     init() {
         self.client = Client()
-            .setEndpoint("https://cloud.appwrite.io/v1") // Ensure endpoint is correct
+            .setEndpoint("https://cloud.appwrite.io/v1")  // Ensure endpoint is correct
             .setProject("677299c0003044510787")
             .setSelfSigned(true)
-        
+
         self.account = Account(client)
     }
-    
+
     func createUser(email: String, password: String) async -> RequestStatus {
         do {
-            let user = try await account.create(userId: ID.unique(), email: email, password: password)
+            let user = try await account.create(
+                userId: ID.unique(), email: email, password: password)
             FormManager.shared.formData.userId = user.id
+            FormManager.shared.formData.email = user.email
             return .success
         } catch {
             return .error(error.localizedDescription)
         }
     }
-    
+
     func login(email: String, password: String) async -> RequestStatus {
         // First, ensure any existing session is cleared
-        let logoutStatus = await logout() // Attempt to log out any active session
+        let logoutStatus = await logout()  // Attempt to log out any active session
         if case .error(let message) = logoutStatus {
-            print("Logout failed: \(message)") // Optional: handle failed logout case
+            print("Logout failed: \(message)")  // Optional: handle failed logout case
         }
-        
-        // Now, try to create a new session
+
         do {
             _ = try await account.createEmailPasswordSession(email: email, password: password)
+            if let user = try? await account.get() {
+                let userId = user.id
+                let userDefaults = UserDefaults.standard
+                let storedUserId = userDefaults.string(forKey: "userID")  // Fetch existing userId from UserDefaults
+                
+                DispatchQueue.main.async {
+                    if storedUserId != userId {
+                        // Update userId in FormManager and UserDefaults if it's different
+                        FormManager.shared.formData.userId = userId
+                        userDefaults.set(userId, forKey: "userID")
+                        print("UserId updated to: \(userId)")
+                    } else {
+                        FormManager.shared.formData.userId = userId
+                        print("UserId remains the same: \(userId)")
+                    }
+                }
+            } else {
+                print("Failed to fetch user details after login.")
+            }
+
             return .success
         } catch {
             return .error(error.localizedDescription)
         }
     }
-    
+
+
     func logout() async -> RequestStatus {
         do {
             _ = try await account.deleteSession(sessionId: "current")

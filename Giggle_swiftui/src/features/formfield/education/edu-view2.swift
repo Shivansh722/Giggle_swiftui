@@ -173,29 +173,31 @@ struct eduView2: View {
     }
     
     private func loadUserDataFromUserDefaults() {
-        if let resumeData = UserDefaults.standard.data(forKey: "resumeData") {
-            do {
-                if let resume = try JSONSerialization.jsonObject(with: resumeData, options: []) as? [String: Any] {
-                    let educationArray = resume["Education"] as? [[String: Any]]
-                    if let firstEducation = educationArray?.first,
-                       let degree = firstEducation["Degree"] as? String, let instution = firstEducation["Institution"] as? String{
-                        if (degree == "B.Tech"){
-                            self.selectedPursuing = "Under Graduate"
+        if UserPreference.shared.shouldLoadUserDetailsAutomatically{
+            if let resumeData = UserDefaults.standard.data(forKey: "resumeData") {
+                do {
+                    if let resume = try JSONSerialization.jsonObject(with: resumeData, options: []) as? [String: Any] {
+                        let educationArray = resume["Education"] as? [[String: Any]]
+                        if let firstEducation = educationArray?.first,
+                           let degree = firstEducation["Degree"] as? String, let instution = firstEducation["Institution"] as? String{
+                            if (degree == "B.Tech"){
+                                self.selectedPursuing = "Under Graduate"
+                            } else {
+                                self.selectedPursuing = degree
+                            }
+                            self.degreeName = degree
+                            self.universityName = instution
+                            
                         } else {
-                            self.selectedPursuing = degree
+                            print("Degree not found in Education")
                         }
-                        self.degreeName = degree
-                        self.universityName = instution
-                        
-                    } else {
-                        print("Degree not found in Education")
                     }
+                } catch {
+                    print("Error decoding resume data: \(error.localizedDescription)")
                 }
-            } catch {
-                print("Error decoding resume data: \(error.localizedDescription)")
+            } else {
+                print("No resume data found in UserDefaults")
             }
-        } else {
-            print("No resume data found in UserDefaults")
         }
     }
 }

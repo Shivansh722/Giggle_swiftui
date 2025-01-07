@@ -59,6 +59,7 @@ struct user_detail_auto: View {
                                     
                                     // Store the generated text directly in UserDefaults
                                     userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)
+//                                    userDetailAutoView.deleteAllUserDefaults()
                                     
                                     // Navigate to the next screen
                                     navigateToUserInfo = true
