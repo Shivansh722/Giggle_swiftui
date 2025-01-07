@@ -2,6 +2,8 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
+    @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
+    
     init() {
         // Set the tab bar appearance globally when the view is initialized
         let appearance = UITabBarAppearance()
@@ -45,7 +47,6 @@ struct HomeView: View {
                             .padding()
                             
                             Spacer()
-                            
                             
                             NavigationLink(destination: ProfileScreen()) {
                                 Image(systemName: "person.crop.circle")
@@ -114,6 +115,11 @@ struct HomeView: View {
                 Image(systemName: "house.fill")
                 Text("Home")
             }
+            .onAppear {
+                Task {
+                    await fetchUser()
+                }
+            }
             
             // Search Tab
             GeometryReader { geometry in
@@ -152,8 +158,13 @@ struct HomeView: View {
                 Image(systemName: "bell.fill")
                 Text("Notifications")
             }
-        }.navigationBarBackButtonHidden(true)
-            .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
+        }
+        .navigationBarBackButtonHidden(true)
+        .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
+    }
+    
+    func fetchUser() async {
+        await saveUserInfo.fetchUser(userId: formManager.formData.userId)
     }
 }
 

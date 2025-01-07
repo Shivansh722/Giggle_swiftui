@@ -13,6 +13,8 @@ class SaveUserInfo:ObservableObject {
     let client: Client
     let database: Databases
     let appService: AppService
+    let databaseID:String = "67729cb100158022ba8e"
+    let collectionID:String = "67729cdc0016234d1704"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -20,8 +22,8 @@ class SaveUserInfo:ObservableObject {
         self.appService = appService
     }
     func saveInfo() async -> Bool {
-        let databaseId = "67729cb100158022ba8e"
-        let collectionId = "67729cdc0016234d1704"
+        let databaseId = databaseID
+        let collectionId = collectionID
         
         @ObservedObject var formManager = FormManager.shared
         let user = formManager.formData.userId
@@ -30,7 +32,7 @@ class SaveUserInfo:ObservableObject {
         
         // Prepare the data to be stored
         let data: [String: Any] = [
-            "userId": user,
+//            "userId": user,
             "degreeName":degreeName,
             "name":formManager.formData.name,
             "email":formManager.formData.email,
@@ -44,7 +46,7 @@ class SaveUserInfo:ObservableObject {
             let result = try await database.createDocument(
                 databaseId: databaseId,
                 collectionId: collectionId,
-                documentId: UUID().uuidString,  
+                documentId: String(user),
                 data: data
             )
             print("Data saved successfully. \(result)")
@@ -72,4 +74,22 @@ class SaveUserInfo:ObservableObject {
         return formManager.formData.degreeName
     }
     
+    func fetchUser(userId: String) async {
+        let databaseId = databaseID
+        let collectionId = collectionID
+
+        do {
+            // Fetch the document using the userId as the document ID
+            let document = try await database.getDocument(
+                databaseId: databaseId,
+                collectionId: collectionId,
+                documentId: userId
+            )
+            print(document.data)
+            FormManager.shared.formData.name = (document.data["name"]?.value as? String) ?? ""
+        } catch {
+            
+        }
+    }
+
 }
