@@ -11,6 +11,7 @@ struct FluencyView: View {
     @State var textValue: String = "Push To Talk"
     @State var speechRecognizer = SpeechRecognizer()
     @State var observer: ResultsObserver?
+    @State var classificationScore: Double?
 
     @State private var timerText: String = "00:10"
     @State private var isRecording: Bool = false
@@ -58,6 +59,17 @@ struct FluencyView: View {
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.gray)
                     .padding(.top, 8)
+                
+                Spacer()
+
+                if let score = classificationScore {
+                    Text(
+                        "Classification Score: \(String(format: "%.2f", score))%"
+                    )
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(Theme.tertiaryColor)
+                    .padding(.top, 8)
+                }
 
                 Spacer()
             }
@@ -91,7 +103,10 @@ struct FluencyView: View {
         timerText = "00:10"
 
         DispatchQueue.main.async {
-            classifySound()
+            classifySound { finalResult in
+                classificationScore = finalResult
+                print("The final classification result is: \(finalResult)%")
+            }
         }
     }
 }
