@@ -1,40 +1,39 @@
-//
-//  numeracy_view.swift
-//  Giggle_swiftui
-//
-//  Created by user@91 on 09/01/25.
-//
-
-
-
 import SwiftUI
 
 struct NumeracyView: View {
+    @State private var currentQuestionIndex: Int = 0
     @State private var selectedOption: Int? = nil
-    @State private var timeLeft: CGFloat = 1.0 // 1.0 means 100% progress
+    @State private var timeLeft: CGFloat = 300.0 // 5 minutes in seconds
     @State private var timer: Timer? = nil
     
-    let totalTime: CGFloat = 5.0 // 5 seconds
-    let options = ["Verb", "Object", "Predicate", "Clause"]
+    let totalTime: CGFloat = 300.0 // 5 minutes
+    let questions = [
+        ("What is 5 + 3?", ["6", "7", "8", "9"]),
+        ("Which number is a prime number?", ["12", "15", "17", "20"]),
+        ("What is the square of 4?", ["12", "14", "16", "18"]),
+        ("Which of these is an even number?", ["13", "17", "19", "22"]),
+        ("What is 10 divided by 2?", ["3", "4", "5", "6"])
+    ]
+    let optionButtonSize: CGSize = CGSize(width: 360, height: 80) // Changeable button size
     
     var body: some View {
         GeometryReader { geometry in
             VStack {
                 // Title and Progress
                 HStack {
-                    Text("Literacy")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                    Text("Numeracy")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.tertiaryColor)
                     
                     Spacer()
                     
-                    Text("05/08")
+                    Text("\(currentQuestionIndex + 1)/\(questions.count)")
                         .foregroundColor(.gray)
                     
                     Spacer()
                     
-                    Text(String(format: "%.2f", timeLeft * totalTime))
+                    Text(String(format: "%.2f", timeLeft))
                         .foregroundColor(.gray)
                     
                     Image(systemName: "clock")
@@ -43,20 +42,20 @@ struct NumeracyView: View {
                 .padding()
                 
                 // Progress Bar
-                ProgressView(value: timeLeft)
-                    .progressViewStyle(LinearProgressViewStyle(tint: .gray))
+                ProgressView(value: timeLeft / totalTime)
+                    .progressViewStyle(LinearProgressViewStyle(tint: Theme.primaryColor))
                     .padding(.horizontal)
                 
                 // Question
-                Text("Which part of a sentence provides more information about the subject?")
+                Text(questions[currentQuestionIndex].0)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .padding()
                 
                 // Options
-                VStack(spacing: 16) {
-                    ForEach(options.indices, id: \.self) { index in
+                VStack {
+                    ForEach(questions[currentQuestionIndex].1.indices, id: \.self) { index in
                         Button(action: {
                             withAnimation {
                                 selectedOption = index
@@ -64,19 +63,20 @@ struct NumeracyView: View {
                         }) {
                             HStack {
                                 Circle()
-                                    .strokeBorder(selectedOption == index ? Color.blue : Color.gray, lineWidth: 2)
-                                    .background(Circle().foregroundColor(selectedOption == index ? Color.blue.opacity(0.2) : Color.clear))
+                                    .strokeBorder(selectedOption == index ? Color.red : Color.gray, lineWidth: 2)
+                                    .background(Circle().foregroundColor(selectedOption == index ? Color.red.opacity(0.2) : Color.clear))
                                     .frame(width: 24, height: 24)
                                 
-                                Text(options[index])
+                                Text(questions[currentQuestionIndex].1[index])
                                     .foregroundColor(.white)
                                     .fontWeight(.semibold)
                                 
                                 Spacer()
                             }
                             .padding()
+                            .frame(width: optionButtonSize.width, height: optionButtonSize.height)
                             .background(Color(UIColor.darkGray))
-                            .cornerRadius(8)
+                            .cornerRadius(20)
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
@@ -87,19 +87,24 @@ struct NumeracyView: View {
                 
                 // Next Button
                 Button(action: {
-                    // Action for Next Button
+                    if currentQuestionIndex < questions.count - 1 {
+                        currentQuestionIndex += 1
+                        selectedOption = nil
+                    } else {
+                        timer?.invalidate()
+                        // Handle quiz completion here
+                    }
                 }) {
-                    Text("NEXT")
-                        .fontWeight(.bold)
+                    Text(currentQuestionIndex < questions.count - 1 ? "NEXT" : "FINISH")
+                        .frame(width: geometry.size.width * 0.8, height: 50)
+                        .background(Theme.primaryColor)
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(8)
+                        .cornerRadius(6)
+                        .font(.headline)
                 }
                 .padding(.horizontal)
             }
-            .background(Color.black)
+            .background(Theme.backgroundColor)
             .onAppear {
                 startTimer()
             }
@@ -110,11 +115,12 @@ struct NumeracyView: View {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             withAnimation {
-                timeLeft -= 0.02 / totalTime
+                timeLeft -= 1.0
                 if timeLeft <= 0 {
                     timer?.invalidate()
+                    // Handle time over logic here
                 }
             }
         }
