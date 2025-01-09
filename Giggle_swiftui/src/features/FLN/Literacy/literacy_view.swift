@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct QuizView: View {
+struct LiteracyView: View {
     @State private var selectedOption: Int? = nil
     @State private var timeLeft: CGFloat = 1.0 // 1.0 means 100% progress
     @State private var timer: Timer? = nil
@@ -21,9 +21,9 @@ struct QuizView: View {
                 // Title and Progress
                 HStack {
                     Text("Literacy")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.tertiaryColor)
                     
                     Spacer()
                     
@@ -42,7 +42,7 @@ struct QuizView: View {
                 
                 // Progress Bar
                 ProgressView(value: timeLeft)
-                    .progressViewStyle(LinearProgressViewStyle(tint: .gray))
+                    .progressViewStyle(LinearProgressViewStyle(tint: Theme.primaryColor))
                     .padding(.horizontal)
                 
                 // Question
@@ -53,7 +53,7 @@ struct QuizView: View {
                     .padding()
                 
                 // Options
-                VStack(spacing: 16) {
+                VStack() {
                     ForEach(options.indices, id: \.self) { index in
                         Button(action: {
                             withAnimation {
@@ -62,8 +62,8 @@ struct QuizView: View {
                         }) {
                             HStack {
                                 Circle()
-                                    .strokeBorder(selectedOption == index ? Color.blue : Color.gray, lineWidth: 2)
-                                    .background(Circle().foregroundColor(selectedOption == index ? Color.blue.opacity(0.2) : Color.clear))
+                                    .strokeBorder(selectedOption == index ? Color.red : Color.gray, lineWidth: 2)
+                                    .background(Circle().foregroundColor(selectedOption == index ? Color.red.opacity(0.2) : Color.clear))
                                     .frame(width: 24, height: 24)
                                 
                                 Text(options[index])
@@ -76,6 +76,7 @@ struct QuizView: View {
                             .background(Color(UIColor.darkGray))
                             .cornerRadius(8)
                         }
+                        
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
@@ -87,17 +88,23 @@ struct QuizView: View {
                 Button(action: {
                     // Action for Next Button
                 }) {
-                    Text("NEXT")
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(8)
+                    CustomButton(
+                        title: "NEXT",
+                        backgroundColor: Theme.primaryColor,
+                        action:{
+                            
+                        },
+                            
+                        
+                        width: geometry.size.width * 0.8,
+                        height: 50
+                    )
+                    .padding(.top, geometry.size.height * 0.32)
+                    .padding(.horizontal, geometry.size.width * -0.04)
                 }
                 .padding(.horizontal)
             }
-            .background(Color.black)
+            .background(Theme.backgroundColor)
             .onAppear {
                 startTimer()
             }
@@ -119,8 +126,8 @@ struct QuizView: View {
     }
 }
 
-struct QuizView_Previews: PreviewProvider {
+struct LiteracyView_Previews: PreviewProvider {
     static var previews: some View {
-        QuizView()
+        LiteracyView()
     }
 }
