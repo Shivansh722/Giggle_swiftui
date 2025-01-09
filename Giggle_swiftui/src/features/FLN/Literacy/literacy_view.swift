@@ -11,10 +11,11 @@ struct LiteracyView: View {
     @State private var selectedOption: Int? = nil
     @State private var timeLeft: CGFloat = 1.0 // 1.0 means 100% progress
     @State private var timer: Timer? = nil
-    
+
     let totalTime: CGFloat = 5.0 // 5 seconds
     let options = ["Verb", "Object", "Predicate", "Clause"]
-    
+    let optionButtonSize: CGSize = CGSize(width: 360, height: 80) // Changeable button size
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -54,7 +55,7 @@ struct LiteracyView: View {
                 
                 // Options
                 VStack() {
-                    ForEach(options.indices, id: \.self) { index in
+                    ForEach(options.indices, id: \ .self) { index in
                         Button(action: {
                             withAnimation {
                                 selectedOption = index
@@ -73,10 +74,10 @@ struct LiteracyView: View {
                                 Spacer()
                             }
                             .padding()
+                            .frame(width: optionButtonSize.width, height: optionButtonSize.height)
                             .background(Color(UIColor.darkGray))
-                            .cornerRadius(8)
+                            .cornerRadius(20)
                         }
-                        
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
@@ -97,9 +98,10 @@ struct LiteracyView: View {
                             
                         
                         width: geometry.size.width * 0.8,
-                        height: 50
+                        height: 50,
+                        cornerRadius: 6
                     )
-                    .padding(.top, geometry.size.height * 0.32)
+                    .padding(.top, geometry.size.height * 0.20)
                     .padding(.horizontal, geometry.size.width * -0.04)
                 }
                 .padding(.horizontal)
