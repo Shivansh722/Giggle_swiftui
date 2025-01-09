@@ -42,7 +42,10 @@ struct CustomButton: View {
     var width: CGFloat? // Use nil for flexible width
     var height: CGFloat? // Use nil for flexible height
     var cornerRadius: CGFloat = 12
-    
+    var hasStroke: Bool = false // New property to control stroke visibility
+    var strokeColor: Color = .white // Default stroke color
+    var lineWidth: CGFloat = 2 // Default stroke width
+
     var body: some View {
         GeometryReader { geometry in
             Button(action: action) {
@@ -52,10 +55,43 @@ struct CustomButton: View {
                     .padding()
                     .frame(width: width ?? geometry.size.width * 0.9, // 90% of available width if nil
                            height: height ?? geometry.size.height * 0.1) // 10% of available height if nil
-                    .background(backgroundColor)
+                    .background(
+                        ZStack {
+                            backgroundColor
+                            if hasStroke {
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .stroke(strokeColor, lineWidth: lineWidth)
+                            }
+                        }
+                    )
                     .cornerRadius(cornerRadius)
             }
             .padding(.horizontal, geometry.size.width * 0.1) // 10% horizontal padding
         }
+    }
+}
+
+#Preview {
+    VStack(spacing: 20) {
+        CustomButton(
+            title: "With Stroke",
+            backgroundColor: Theme.backgroundColor,
+            action: {},
+            width: 200,
+            height: 50,
+            cornerRadius: 6,
+            hasStroke: true,
+            strokeColor: .blue,
+            lineWidth: 3
+        )
+
+        CustomButton(
+            title: "No Stroke",
+            backgroundColor: Theme.backgroundColor,
+            action: {},
+            width: 200,
+            height: 50,
+            cornerRadius: 6
+        )
     }
 }
