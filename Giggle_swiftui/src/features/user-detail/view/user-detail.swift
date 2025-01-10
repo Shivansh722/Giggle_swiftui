@@ -60,6 +60,7 @@ struct UserDetailView: View {
                             
                             CustomButton(title: "FILL MANUALLY", backgroundColor: Theme.primaryColor, action: {
                                 navigateToUserInfo = true // Set to true to trigger navigation
+                                UserPreference.shared.shouldLoadUserDetailsAutomatically = false
                             }, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
                             .padding(.horizontal, 45)
                             .padding(.top, 20)
@@ -106,6 +107,7 @@ struct UserDetailView: View {
                             }
                             CustomButton(title: "FILL AUTOMATICALLY", backgroundColor: Theme.primaryColor, action: {
                                 navigateToUserDetailAuto = true
+                                UserPreference.shared.shouldLoadUserDetailsAutomatically = true
                             }, width: geometry.size.width * 0.6, height: 50, cornerRadius: 6)
                             .padding(.horizontal, 45)
                             .padding(.top, 20)

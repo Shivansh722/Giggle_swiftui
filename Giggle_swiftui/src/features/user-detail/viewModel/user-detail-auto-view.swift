@@ -123,6 +123,16 @@ class UserDetailAutoView {
             print("Failed to convert JSON string to Data")
         }
     }
+    
+    func deleteAllUserDefaults() {
+        if let appDomain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+            UserDefaults.standard.synchronize()
+            print("All UserDefaults data has been deleted")
+        } else {
+            print("Failed to get the app domain")
+        }
+    }
 }
 
 class ResumeViewModel: ObservableObject {
@@ -131,4 +141,9 @@ class ResumeViewModel: ObservableObject {
     init(resume: String) {
         self.resume = resume
     }
+}
+
+class UserPreference {
+    static let shared = UserPreference()
+    var shouldLoadUserDetailsAutomatically: Bool = false
 }

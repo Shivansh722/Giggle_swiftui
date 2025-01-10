@@ -4,6 +4,7 @@ struct skillView: View {
     @StateObject private var viewModel = PreferenceViewModel() // Initialize ViewModel
     @State private var skillName = ""
     @State private var navigateToHome = false
+    let userDetailAutoView = UserDetailAutoView()
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     
     var body: some View {
@@ -80,6 +81,9 @@ struct skillView: View {
                             let result = await saveUserInfo.saveInfo()
                             if result {
                                 navigateToHome = true
+                                userDetailAutoView.deleteAllUserDefaults()
+                                let userDefault = UserDefaults.standard
+                                userDefault.set(FormManager.shared.formData.userId, forKey: "userID")
                             } else {
                                 print("Failed to save user info")
                             }
