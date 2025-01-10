@@ -1,0 +1,141 @@
+//
+//  FLNScoreView.swift
+//  Giggle_swiftui
+//
+//  Created by admin49 on 09/01/25.
+//
+
+import SwiftUI
+
+struct FLNScoreView: View {
+    var body: some View {
+        ZStack {
+            Theme.backgroundColor
+                .edgesIgnoringSafeArea(.all)
+
+            VStack {
+                HStack {
+                    Text("Overall")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.primaryColor)
+
+                        + Text(" Score")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.tertiaryColor)
+                    Spacer()
+                }
+                .padding(.leading, 20)
+
+                Spacer()
+
+                HStack {
+                    VStack(spacing: 20) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("Fluency")
+                                    .font(.title)
+                                    .bold()
+                                    .foregroundColor(.white)
+                                Text("Average User Score: 65%")
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                            }
+                            Spacer()
+                            Text("69%")
+                                .font(.system(size: 50, weight: .bold))
+                                .foregroundColor(Theme.secondaryColor)
+                        }
+                        .padding([.trailing, .leading], 20)
+
+                        HStack {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("Literacy & Numeracy")
+                                    .font(.title)
+                                    .bold()
+                                    .foregroundColor(Theme.tertiaryColor)
+                                Text("Average User Score: 65%")
+                                    .foregroundColor(Theme.tertiaryColor)
+                                    .font(.subheadline)
+                            }
+                            Spacer()
+                            Text("69%")
+                                .font(.system(size: 50, weight: .bold))
+                                .foregroundColor(Theme.secondaryColor)
+                        }
+                        .padding([.trailing, .leading], 20)
+                    }
+                }
+
+                Spacer()
+
+                Text("Giggle Grading")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(Theme.tertiaryColor)
+
+                ZStack {
+
+                    Text("G+")
+                        .font(.system(size: 72))
+                        .fontWeight(.semibold)
+                        .foregroundColor(Theme.secondaryColor)
+                }
+                .frame(width: 172, height: 108)
+                .background(
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(
+                                color: .white.opacity(0.2), location: 0.00),
+                            Gradient.Stop(
+                                color: Color(red: 0.6, green: 0.6, blue: 0.6)
+                                    .opacity(0.05), location: 1.00),
+                        ],
+                        startPoint: UnitPoint(x: 1.23, y: 0),
+                        endPoint: UnitPoint(x: -0.2, y: 1.17)
+                    )
+                )
+                .cornerRadius(22)
+
+                Image("A true Giggler!!")
+                    .resizable()
+                    .frame(width: 127, height: 25)
+
+                Spacer()
+
+                VStack(spacing: 20) {
+
+                    Button(action: {
+
+                    }) {
+                        Text("RETEST")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, maxHeight: 50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Theme.primaryColor, lineWidth: 2)
+                            )
+                    }
+
+                    Button(action: {
+
+                    }) {
+                        Text("APPLY WITH GIGGLE")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, maxHeight: 50)
+                            .background(Theme.primaryColor)
+                            .cornerRadius(6)
+                    }
+                }
+                .padding([.horizontal, .bottom], 20)
+            }
+        }
+    }
+}
+
+#Preview {
+    FLNScoreView()
+}
