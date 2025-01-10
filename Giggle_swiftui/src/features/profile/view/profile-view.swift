@@ -19,15 +19,6 @@ struct ProfileScreen: View {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack(spacing: 16) {
                         HStack{
-                            NavigationLink(destination: HomeView()) {
-                                Button(action: {}) {
-                                    Image(systemName: "arrow.backward")
-                                        .resizable()
-                                        .foregroundStyle(Theme.onPrimaryColor)
-                                        .scaledToFit()
-                                        .frame(width: 27, height: 19)
-                                }
-                            }
                             Spacer()
                             VStack {
                                 Button(action: {
