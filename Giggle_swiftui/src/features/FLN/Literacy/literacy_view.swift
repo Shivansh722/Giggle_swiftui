@@ -17,99 +17,116 @@ struct LiteracyView: View {
     let optionButtonSize: CGSize = CGSize(width: 360, height: 80) // Changeable button size
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                // Title and Progress
-                HStack {
-                    Text("Literacy")
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(Theme.tertiaryColor)
-                    
-                    Spacer()
-                    
-                    Text("\(currentQuestionIndex + 1)/\(questions.count)")
-                        .foregroundColor(.gray)
-                    
-                    Spacer()
-                    
-                    Text(String(format: "%.2f", timeLeft))
-                        .foregroundColor(.gray)
-                    
-                    Image(systemName: "clock")
-                        .foregroundColor(.gray)
-                }
-                .padding()
-                
-                // Progress Bar
-                ProgressView(value: timeLeft / totalTime)
-                    .progressViewStyle(LinearProgressViewStyle(tint: Theme.primaryColor))
-                    .padding(.horizontal)
-                
-                // Question
-                Text(questions[currentQuestionIndex].0)
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding()
-                
-                // Options
+        NavigationStack{
+            GeometryReader { geometry in
                 VStack {
-                    ForEach(questions[currentQuestionIndex].1.indices, id: \.self) { index in
-                        Button(action: {
-                            withAnimation {
-                                selectedOption = index
-                            }
-                        }) {
-                            HStack {
-                                Circle()
-                                    .strokeBorder(selectedOption == index ? Color.red : Color.gray, lineWidth: 2)
-                                    .background(Circle().foregroundColor(selectedOption == index ? Color.red.opacity(0.2) : Color.clear))
-                                    .frame(width: 24, height: 24)
-                                
-                                Text(questions[currentQuestionIndex].1[index])
-                                    .foregroundColor(.white)
-                                    .fontWeight(.semibold)
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            .frame(width: optionButtonSize.width, height: optionButtonSize.height)
-                            .background(Color(UIColor.darkGray))
-                            .cornerRadius(20)
-                        }
-                        .buttonStyle(PlainButtonStyle())
+                    // Title and Progress
+                    HStack {
+                        Text("Literacy")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(Theme.tertiaryColor)
+                        
+                        Spacer()
+                        
+                        Text("\(currentQuestionIndex + 1)/\(questions.count)")
+                            .foregroundColor(.gray)
+                        
+                        Spacer()
+                        
+                        Text(String(format: "%.2f", timeLeft))
+                            .foregroundColor(.gray)
+                        
+                        Image(systemName: "clock")
+                            .foregroundColor(.gray)
                     }
-                }
-                .padding()
-                
-                Spacer()
-                
-                // Next Button
-                Button(action: {
-                    if currentQuestionIndex < questions.count - 1 {
-                        currentQuestionIndex += 1
-                        selectedOption = nil
-                    } else {
-                        timer?.invalidate()
-                        // Handle quiz completion here
-                    }
-                }) {
-                    Text(currentQuestionIndex < questions.count - 1 ? "NEXT" : "FINISH")
-                        .frame(width: geometry.size.width * 0.8, height: 50)
-                        .background(Theme.primaryColor)
+                    .padding()
+                    
+                    // Progress Bar
+                    ProgressView(value: timeLeft / totalTime)
+                        .progressViewStyle(LinearProgressViewStyle(tint: Theme.primaryColor))
+                        .padding(.horizontal)
+                    
+                    // Question
+                    Text(questions[currentQuestionIndex].0)
+                        .font(.title3)
+                        .fontWeight(.semibold)
                         .foregroundColor(.white)
-                        .cornerRadius(6)
-                        .font(.headline)
+                        .padding()
+                    
+                    // Options
+                    VStack {
+                        ForEach(questions[currentQuestionIndex].1.indices, id: \.self) { index in
+                            Button(action: {
+                                withAnimation {
+                                    selectedOption = index
+                                }
+                            }) {
+                                HStack {
+                                    Circle()
+                                        .strokeBorder(selectedOption == index ? Color.red : Color.gray, lineWidth: 2)
+                                        .background(Circle().foregroundColor(selectedOption == index ? Color.red.opacity(0.2) : Color.clear))
+                                        .frame(width: 24, height: 24)
+                                    
+                                    Text(questions[currentQuestionIndex].1[index])
+                                        .foregroundColor(.white)
+                                        .fontWeight(.semibold)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
+                                .frame(width: optionButtonSize.width, height: optionButtonSize.height)
+                                .background(Color(UIColor.darkGray))
+                                .cornerRadius(20)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                    .padding()
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        if currentQuestionIndex < questions.count - 1 {
+                            currentQuestionIndex += 1
+                            selectedOption = nil
+                        } else {
+                            timer?.invalidate()
+                            // Handle quiz completion here
+                        }
+                    }) {
+                        if currentQuestionIndex < questions.count - 1 {
+                            Text("NEXT")
+                                .frame(width: geometry.size.width * 0.8, height: 50)
+                                .background(Theme.primaryColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(6)
+                                .font(.headline)
+                                .onTapGesture {
+                                    currentQuestionIndex += 1
+                                }
+                        } else {
+                            NavigationLink {
+                                NumeracyView()
+                            } label: {
+                                Text("FINISH")
+                                    .frame(width: geometry.size.width * 0.8, height: 50)
+                                    .background(Theme.primaryColor)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(6)
+                                    .font(.headline)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            .background(Theme.backgroundColor)
-            .onAppear {
-                startTimer()
-            }
-            .onDisappear {
-                timer?.invalidate()
+                .background(Theme.backgroundColor)
+                .onAppear {
+                    startTimer()
+                }
+                .onDisappear {
+                    timer?.invalidate()
+                }
             }
         }
     }
