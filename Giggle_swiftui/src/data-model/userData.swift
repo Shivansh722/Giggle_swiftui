@@ -16,16 +16,19 @@ struct FormData {
     var DOB: String
     var gender: String
     var pursuing: String
-    var degreeName:String
-    var universityName:String
-    var specialization:String
-    var completionYear:Date
+    var degreeName: String
+    var universityName: String
+    var specialization: String
+    var completionYear: Date
+    var resumeIds: [String] = []
 }
 
-class FormManager:ObservableObject {
+class FormManager: ObservableObject {
     static let shared = FormManager()
     private init() {}
-    
-    @Published var formData = FormData(userId: "", name: "", email: "", address: "", phone: "",DOB: "",gender: "",pursuing: "",degreeName: "",universityName: "",specialization: "",completionYear: Date())
-}
 
+    @Published var formData = FormData(
+        userId: "", name: "", email: "", address: "", phone: "", DOB: "",
+        gender: "", pursuing: "", degreeName: "", universityName: "",
+        specialization: "", completionYear: Date(), resumeIds: [])
+}

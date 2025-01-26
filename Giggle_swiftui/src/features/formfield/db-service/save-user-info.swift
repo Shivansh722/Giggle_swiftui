@@ -39,6 +39,7 @@ class SaveUserInfo:ObservableObject {
             "phone":formManager.formData.phone,
             "gender":formManager.formData.gender,
             "universityName":formManager.formData.universityName,
+            "resumeIds":formManager.formData.resumeIds
         ]
         
         do {
@@ -88,7 +89,7 @@ class SaveUserInfo:ObservableObject {
             print(document.data)
             FormManager.shared.formData.name = (document.data["name"]?.value as? String) ?? ""
         } catch {
-            
+            print("error fetching user: \(error)")
         }
     }
 

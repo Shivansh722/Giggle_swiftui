@@ -9,7 +9,7 @@ struct Giggle_swiftuiApp: App {
 
            
 
-            LiteracyView()
+            SplashScreen()
 
                 .environmentObject(viewModel) // Inject ViewModel as an environment object
         }

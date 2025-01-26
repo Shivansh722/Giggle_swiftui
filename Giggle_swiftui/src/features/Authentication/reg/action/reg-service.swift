@@ -93,8 +93,7 @@ class AppService: ObservableObject {
             if let user = try? await account.get() {
                 let userId = user.id
                 let userDefaults = UserDefaults.standard
-                let storedUserId = userDefaults.string(forKey: "userID")  // Fetch existing userId from UserDefaults
-                
+                let storedUserId = userDefaults.string(forKey: "userID")
                 DispatchQueue.main.async {
                     if storedUserId != userId {
                         // Update userId in FormManager and UserDefaults if it's different
