@@ -116,6 +116,8 @@ class UserDetailAutoView {
     }
     
     func storeResumeToUserDefaults(jsonString: String) {
+        UserDefaults.standard.removeObject(forKey: "resumeData")
+        print("Previous resume data removed from UserDefaults")
         if let jsonData = jsonString.data(using: .utf8) {
             UserDefaults.standard.set(jsonData, forKey: "resumeData")
             print("Resume stored in UserDefaults")

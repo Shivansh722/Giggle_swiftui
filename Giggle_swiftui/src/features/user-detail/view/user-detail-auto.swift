@@ -54,12 +54,12 @@ struct user_detail_auto: View {
                                     }
 
                                     // Generate text using the extracted text
-                                    let generatedText = await userDetailAutoView.generateTextForPrompt(promptText: extractedText)
-                                    print("Generated Text from Gemini: \(generatedText)")
+//                                    let generatedText = await userDetailAutoView.generateTextForPrompt(promptText: extractedText)
+//                                    print("Generated Text from Gemini: \(generatedText)")
                                     
                                     // Store the generated text directly in UserDefaults
-                                    userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)
-//                                    userDetailAutoView.deleteAllUserDefaults()
+//                                    userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)
+                                    userDetailAutoView.deleteAllUserDefaults()
                                     
                                     // Navigate to the next screen
                                     navigateToUserInfo = true

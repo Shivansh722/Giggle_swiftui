@@ -100,7 +100,7 @@ struct UserDetailView: View {
                             }
                             
                             NavigationLink(
-                                destination: user_detail_auto(),
+                                destination: ResumeUpload(),
                                 isActive: $navigateToUserDetailAuto // Binding to navigate
                             ) {
                                 EmptyView()
