@@ -8,7 +8,6 @@ struct user_detail_auto: View {
     let image = UIImage(named: "FullResume")
 
     var body: some View {
-        NavigationView {
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor
@@ -97,7 +96,6 @@ struct user_detail_auto: View {
                     }
                 }
             }
-        }
     }
 }
 

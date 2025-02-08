@@ -14,7 +14,6 @@ struct ResumeUpload: View {
     @State private var isProcessingComplete = false
 
     var body: some View {
-        NavigationView {
             ZStack {
                 Theme.backgroundColor
                     .edgesIgnoringSafeArea(.all)
@@ -132,7 +131,6 @@ struct ResumeUpload: View {
                                     }
                                 )
             }
-        }
     }
 }
 
