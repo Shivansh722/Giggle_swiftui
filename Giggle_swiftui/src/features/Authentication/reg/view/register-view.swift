@@ -115,7 +115,7 @@ struct RegisterView: View {
                     .padding(.bottom, 20)
                 }
 
-                NavigationLink(destination: UserDetailView(), isActive: $navigateToUserDetail) {
+                NavigationLink(destination: ChooseView(), isActive: $navigateToUserDetail) {
                     EmptyView()
                 }
                 .hidden()
