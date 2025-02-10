@@ -75,7 +75,7 @@ class SaveUserInfo:ObservableObject {
         return formManager.formData.degreeName
     }
     
-    func fetchUser(userId: String) async {
+    func fetchUser(userId: String) async{
         let databaseId = databaseID
         let collectionId = collectionID
 

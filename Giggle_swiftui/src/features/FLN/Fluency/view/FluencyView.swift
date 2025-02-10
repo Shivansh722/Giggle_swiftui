@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct FluencyView: View {
     @State var textValue: String = "Push To Talk"
@@ -18,6 +19,10 @@ struct FluencyView: View {
     @State private var isButtonDisabled: Bool = false
     @State private var timer: Timer?
     @State private var remainingTime: Int = 10
+    @State private var navigateToHome: Bool = false
+    @State private var isScore: Bool = false
+    
+    @StateObject var SaveFLNdetails = FLNInfo(appService: AppService())
 
     var body: some View {
         ZStack {
@@ -59,7 +64,7 @@ struct FluencyView: View {
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.gray)
                     .padding(.top, 8)
-                
+
                 Spacer()
 
                 if let score = classificationScore {
@@ -72,7 +77,35 @@ struct FluencyView: View {
                 }
 
                 Spacer()
+
+                Button(action: {
+                    if let score = classificationScore {
+                        FlnDataManager.shared.flnData.fluencyScore = String(
+                            format: "%.2f", score)
+                        DispatchQueue.main.async{
+                            Task{
+                                await SaveFLNdetails.saveFlnInfo()
+                                navigateToHome = true
+                            }
+                        }
+                        
+                    }
+                }) {
+                    Text("CONTINUE")
+                        .background(Theme.primaryColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
+                        .font(.headline)
+                }
+
+                NavigationLink(
+                    destination: HomeView(), isActive: $navigateToHome
+                ) {
+                    EmptyView()
+                }
             }
+            .navigationBarHidden(true)  // Hide the navigation bar
+            .navigationBarBackButtonHidden(true)
         }
     }
 

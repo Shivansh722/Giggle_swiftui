@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
+    @State private var navigateToLiteracy:Bool = false
     
     init() {
         // Set the tab bar appearance globally when the view is initialized
@@ -85,13 +86,17 @@ struct HomeView: View {
                                     title: "NEXT",
                                     backgroundColor: Theme.primaryColor,
                                     action: {
-                                        // Add Button Action Here
+                                        navigateToLiteracy = true
                                     },
                                     width: geometry.size.width * 0.5,
                                     height: 50
                                 )
                                 .padding(.top, geometry.size.height * 0.08)
                                 .padding(.horizontal, geometry.size.width * 0.18)
+                                
+                                NavigationLink(destination: LiteracyView(),isActive: $navigateToLiteracy){
+                                    EmptyView()
+                                }
                             }
                         }
                         
