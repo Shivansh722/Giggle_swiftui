@@ -48,19 +48,40 @@ struct UserInfoView: View {
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, geometry.size.height * 0.02)
                     
-                    PhotosPicker(selection: $photosPickerItem) {
-                        Circle()
-                            .fill(Color.gray)
-                            .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
-                            .overlay(
-                                Image(systemName: "person")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
-                                    .foregroundColor(.white)
-                            )
-                            .padding(.bottom, geometry.size.height * 0.02)
+                    PhotosPicker(selection: $photosPickerItem, matching: .images) {
+                        if let selectedImage = selectedImage {
+                            Image(uiImage: selectedImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                .padding(.bottom, geometry.size.height * 0.02)
+                        } else {
+                            Circle()
+                                .fill(Color.gray)
+                                .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
+                                .overlay(
+                                    Image(systemName: "person")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
+                                        .foregroundColor(.white)
+                                )
+                                .padding(.bottom, geometry.size.height * 0.02)
+                        }
                     }
+                    .onChange(of: photosPickerItem) { newItem in
+                        if let newItem = newItem {
+                            Task {
+                                if let data = try? await newItem.loadTransferable(type: Data.self),
+                                   let uiImage = UIImage(data: data) {
+                                    selectedImage = uiImage
+                                }
+                            }
+                        }
+                    }
+
                     
                     VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
                         
@@ -166,3 +187,6 @@ struct UserInfoView: View {
     }
 }
 
+#Preview() {
+    UserInfoView()
+}
