@@ -25,6 +25,33 @@ class FLNInfo: ObservableObject {
         self.appService = appService
     }
     
+    func getFlnInfo() async -> String? {
+        let defaults = UserDefaults.standard
+        guard let userId = defaults.value(forKey: "userID") as? String else {
+            print("Error: userID not found")
+            return nil
+        }
+        
+        do {
+            let document = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: UserCollectionID,
+                documentId: userId
+            )
+            
+            if let fln_id = document.data["fln_id"] {
+                return String(describing: fln_id)
+            } else {
+                print("FLN ID not found")
+                return nil
+            }
+        } catch {
+            print("Error fetching document: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    
     func saveFlnInfo() async {
         let defaults = UserDefaults.standard
         guard let userId = defaults.value(forKey: "userID") as? String else {

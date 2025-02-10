@@ -6,6 +6,8 @@ struct LiteracyView: View {
     @State private var score: Int = 0
     @State private var timeLeft: CGFloat = 300.0 // 5 minutes in seconds
     @State private var timer: Timer? = nil
+    @State private var navigate: Bool = false
+//    @EnvironmentObject var flnDataManager: FlnDataManager // ✅ Use EnvironmentObject
     
     let totalTime: CGFloat = 300.0 // 5 minutes
     let questions = [
@@ -20,6 +22,7 @@ struct LiteracyView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
+                // Header Section
                 HStack {
                     Text("Literacy")
                         .font(.title)
@@ -36,18 +39,21 @@ struct LiteracyView: View {
                 }
                 .padding()
                 
+                // Progress Bar
                 ProgressView(value: timeLeft / totalTime)
                     .progressViewStyle(LinearProgressViewStyle(tint: Theme.primaryColor))
                     .padding(.horizontal)
                 
+                // Question
                 Text(questions[currentQuestionIndex].0)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .padding()
                 
+                // Options List
                 VStack {
-                    ForEach(questions[currentQuestionIndex].1.indices, id: \ .self) { index in
+                    ForEach(questions[currentQuestionIndex].1.indices, id: \.self) { index in
                         Button(action: {
                             withAnimation {
                                 selectedOption = index
@@ -80,35 +86,43 @@ struct LiteracyView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    if currentQuestionIndex < questions.count - 1 {
-                        currentQuestionIndex += 1
+                // Next / Finish Button
+                if currentQuestionIndex < questions.count - 1 {
+                    Button(action: {
                         selectedOption = nil
-                    } else {
-                        timer?.invalidate()
-                        print("Final Score: \(score)")
-                        FlnDataManager.shared.flnData.literacyScore = String(score)
-                    }
-                }) {
-                    if currentQuestionIndex < questions.count - 1 {
+                        currentQuestionIndex += 1
+                    }) {
                         Text("NEXT")
                             .frame(width: geometry.size.width * 0.8, height: 50)
                             .background(Theme.primaryColor)
                             .foregroundColor(.white)
                             .cornerRadius(6)
                             .font(.headline)
-                    } else {
-                        NavigationLink(destination: NumeracyView()) {
-                            Text("FINISH")
-                                .frame(width: geometry.size.width * 0.8, height: 50)
-                                .background(Theme.primaryColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(6)
-                                .font(.headline)
-                        }
                     }
+                } else {
+                    Button(action: {
+                        timer?.invalidate()
+                        timer = nil
+                        
+                        print("Final Score before update: \(score)")
+                        
+                        DispatchQueue.main.async{
+                            FlnDataManager.shared.flnData.literacyScore = score
+                        }
+                        navigate = true
+                    }) {
+                        Text("FINISH")
+                            .frame(width: geometry.size.width * 0.8, height: 50)
+                            .background(Theme.primaryColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(6)
+                            .font(.headline)
+                    }
+                    .background(
+                        NavigationLink("", destination: NumeracyView(), isActive: $navigate)
+                            .hidden()
+                    )
                 }
-                .padding(.horizontal)
             }
             .background(Theme.backgroundColor)
             .onAppear {
@@ -116,6 +130,7 @@ struct LiteracyView: View {
             }
             .onDisappear {
                 timer?.invalidate()
+                timer = nil
             }
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
@@ -125,9 +140,11 @@ struct LiteracyView: View {
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             withAnimation {
-                timeLeft -= 1.0
-                if timeLeft <= 0 {
+                if timeLeft > 0 {
+                    timeLeft -= 1.0
+                } else {
                     timer?.invalidate()
+                    timer = nil
                 }
             }
         }
@@ -135,5 +152,5 @@ struct LiteracyView: View {
 }
 
 #Preview {
-    LiteracyView()
+   
 }

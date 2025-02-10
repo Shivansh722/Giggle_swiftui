@@ -3,37 +3,36 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
-    @State private var navigateToLiteracy:Bool = false
-    
+    @StateObject var flnInfo = FLNInfo(appService: AppService())
+
+    @State private var flnID: String? = nil
+    @State private var isLoading = true
+    @State private var navigateToLiteracy = false
+
     init() {
-        // Set the tab bar appearance globally when the view is initialized
         let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()  // Use default background style
-        appearance.backgroundColor = UIColor(Theme.primaryContrastColor) // Set background color of the tab bar
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundColor = UIColor(Theme.primaryContrastColor)
         
-        // Normal state appearance
-        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Theme.onPrimaryColor) // Icon color for normal (unselected) state
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor(Theme.onPrimaryColor)] // Text color for normal state
+        // Normal state
+        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Theme.onPrimaryColor)
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor(Theme.onPrimaryColor)]
         
-        // Selected state appearance
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Theme.primaryColor) // Icon color for selected state
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor(Theme.primaryColor)] // Text color for selected state
+        // Selected state
+        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Theme.primaryColor)
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor(Theme.primaryColor)]
         
-        // Apply this appearance globally
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
     
     var body: some View {
         TabView {
-            // Home Tab
             GeometryReader { geometry in
                 ZStack {
-                    Theme.backgroundColor
-                        .edgesIgnoringSafeArea(.all)
-                    
+                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack {
-                        // Top section with Greeting and Profile icon
+                        // Header with Greeting & Profile
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Hi")
@@ -46,9 +45,7 @@ struct HomeView: View {
                                     .foregroundColor(Theme.onPrimaryColor)
                             }
                             .padding()
-                            
                             Spacer()
-                            
                             NavigationLink(destination: ProfileScreen()) {
                                 Image(systemName: "person.crop.circle")
                                     .resizable()
@@ -58,48 +55,74 @@ struct HomeView: View {
                             }
                         }
                         Spacer()
-                        
+
                         ZStack {
-                            // Image
                             Image("desk")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: geometry.size.width * 1.0, height: geometry.size.height / 2)
+                                .frame(width: geometry.size.width, height: geometry.size.height / 2)
                                 .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
                             
-                            // Overlapping Custom Button
                             VStack {
-                                Spacer()
-                                Text("Take FLN")
-                                    .font(.headline)
-                                    .foregroundColor(Theme.secondaryColor)
-                                    .padding(.leading, geometry.size.width * 0.02)
-                                    .padding(.bottom, geometry.size.height * -0.08)
-                                Text("To start applying for gigs you need to take the FLN test first.")
-                                    .font(.system(size: 16))
-                                    .foregroundColor(Theme.tertiaryColor)
-                                    .padding(.top, geometry.size.height * 0.02)
-                                    .padding(.bottom, geometry.size.height * -0.06)
-                                    .multilineTextAlignment(.center)
-                                
-                                CustomButton(
-                                    title: "NEXT",
-                                    backgroundColor: Theme.primaryColor,
-                                    action: {
-                                        navigateToLiteracy = true
-                                    },
-                                    width: geometry.size.width * 0.5,
-                                    height: 50
-                                )
-                                .padding(.top, geometry.size.height * 0.08)
-                                .padding(.horizontal, geometry.size.width * 0.18)
-                                
-                                NavigationLink(destination: LiteracyView(),isActive: $navigateToLiteracy){
-                                    EmptyView()
+                                if isLoading {
+                                    ProgressView()
+                                        .onAppear {
+                                            Task {
+                                                await fetchFlnID()
+                                            }
+                                        }
+                                } else if flnID == nil {
+                                    VStack(spacing: 16) {
+                                        Text("Take FLN")
+                                            .font(.headline)
+                                            .foregroundColor(Theme.secondaryColor)
+                                        
+                                        Text("To start applying for gigs you need to take the FLN test first.")
+                                            .font(.system(size: 16))
+                                            .foregroundColor(Theme.tertiaryColor)
+                                            .multilineTextAlignment(.center)
+                                            .padding(.horizontal, 24)
+                                        
+                                        CustomButton(
+                                            title: "NEXT",
+                                            backgroundColor: Theme.primaryColor,
+                                            action: { navigateToLiteracy = true },
+                                            width: geometry.size.width * 0.5,
+                                            height: 50
+                                        )
+                                        .padding(.leading, 65)
+                                        
+                                        NavigationLink(destination: LiteracyView(), isActive: $navigateToLiteracy) {
+                                            EmptyView()
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 40)
+                                } else {
+                                    ZStack {
+                                        Text("G+")
+                                            .font(.system(size: 72))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Theme.secondaryColor)
+                                    }
+                                    .frame(width: 172, height: 108)
+                                    .background(
+                                        LinearGradient(
+                                            stops: [
+                                                Gradient.Stop(color: .white.opacity(0.2), location: 0.00),
+                                                Gradient.Stop(color: Color.gray.opacity(0.05), location: 1.00)
+                                            ],
+                                            startPoint: UnitPoint(x: 1.23, y: 0),
+                                            endPoint: UnitPoint(x: -0.2, y: 1.17)
+                                        )
+                                    )
+                                    .cornerRadius(22)
+                                    .padding(.bottom,250)
                                 }
                             }
                         }
-                        
+                        Spacer()
+
                         VStack {
                             Text("Recommendations")
                                 .font(.system(size: 24))
@@ -111,7 +134,7 @@ struct HomeView: View {
                                 .padding(.bottom, geometry.size.height * 0.02)
                             JobCardView()
                         }
-                        .padding(.top, geometry.size.height * -0.6)
+                        .padding(.top, geometry.size.height * -0.3)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
@@ -126,16 +149,13 @@ struct HomeView: View {
                 }
             }
             
-            // Search Tab
             GeometryReader { geometry in
                 ZStack {
-                    Theme.backgroundColor
-                        .edgesIgnoringSafeArea(.all)
-                    
+                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack {
                         Text("Search View")
                             .font(.largeTitle)
-                            .foregroundColor(Theme.onPrimaryColor) // Text color for Search tab
+                            .foregroundColor(Theme.onPrimaryColor)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
@@ -145,16 +165,13 @@ struct HomeView: View {
                 Text("Search")
             }
             
-            // Notifications Tab
             GeometryReader { geometry in
                 ZStack {
-                    Theme.backgroundColor
-                        .edgesIgnoringSafeArea(.all)
-                    
+                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack {
                         Text("Notifications View")
                             .font(.largeTitle)
-                            .foregroundColor(Theme.onPrimaryColor) // Text color for Notifications tab
+                            .foregroundColor(Theme.onPrimaryColor)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
@@ -165,11 +182,16 @@ struct HomeView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .accentColor(Theme.primaryColor) // Custom accent color for selected tab items
+        .accentColor(Theme.primaryColor)
     }
-    
+
     func fetchUser() async {
         await saveUserInfo.fetchUser(userId: formManager.formData.userId)
+    }
+
+    func fetchFlnID() async {
+        flnID = await flnInfo.getFlnInfo()
+        isLoading = false
     }
 }
 
