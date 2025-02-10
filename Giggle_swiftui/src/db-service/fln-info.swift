@@ -39,10 +39,10 @@ class FLNInfo: ObservableObject {
                 documentId: userId
             )
             
-            if let fln_id = document.data["fln_id"] {
-                return String(describing: fln_id)
+            if let fln_id = document.data["fln_id"]?.value as? String {
+                return fln_id
             } else {
-                print("FLN ID not found")
+                print("FLN ID not found or is null")
                 return nil
             }
         } catch {
@@ -50,6 +50,7 @@ class FLNInfo: ObservableObject {
             return nil
         }
     }
+
 
     
     func saveFlnInfo() async {
