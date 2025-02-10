@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct FLNScoreView: View {
+    @State private var navigatetoHome:Bool = false
+    @State private var flnID: String? = nil
+    @State private var naviagtetoLiteracy:Bool = false
     var body: some View {
         ZStack {
             Theme.backgroundColor
@@ -38,12 +41,12 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(.white)
-                                Text("Average User Score: 65%")
+                                Text("Average User Score: \(FlnDataManager.shared.flnData.fluencyScore)%")
                                     .foregroundColor(.white)
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("69%")
+                            Text("\(String(format: "%.0f", FlnDataManager.shared.flnData.fluencyScore))%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -55,12 +58,16 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(Theme.tertiaryColor)
-                                Text("Average User Score: 65%")
+                                
+                                let numeracyScores = FlnDataManager.shared.flnData.numeracyScore
+                                let literacyScores = FlnDataManager.shared.flnData.literacyScore
+                                let averageScore = (numeracyScores + literacyScores) / 2
+                                Text("Average User Score: \(averageScore)%")
                                     .foregroundColor(Theme.tertiaryColor)
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("69%")
+                            Text("67%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -107,7 +114,7 @@ struct FLNScoreView: View {
                 VStack(spacing: 20) {
 
                     Button(action: {
-
+                        naviagtetoLiteracy = true
                     }) {
                         Text("RETEST")
                             .font(.headline)
@@ -118,9 +125,13 @@ struct FLNScoreView: View {
                                     .stroke(Theme.primaryColor, lineWidth: 2)
                             )
                     }
+                    
+                    NavigationLink(destination:LiteracyView(),isActive: $naviagtetoLiteracy){
+                        EmptyView()
+                    }
 
                     Button(action: {
-
+                        navigatetoHome = true
                     }) {
                         Text("APPLY WITH GIGGLE")
                             .font(.headline)
@@ -129,6 +140,10 @@ struct FLNScoreView: View {
                             .background(Theme.primaryColor)
                             .cornerRadius(6)
                     }
+                    NavigationLink(destination:HomeView(),isActive: $navigatetoHome){
+                        EmptyView()
+                    }
+                    
                 }
                 .padding([.horizontal, .bottom], 20)
             }
