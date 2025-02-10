@@ -5,7 +5,6 @@ struct UserDetailView: View {
     @State private var navigateToUserDetailAuto = false
     
     var body: some View {
-        NavigationView {
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor
@@ -117,11 +116,10 @@ struct UserDetailView: View {
                     }
                     .padding(.top, 20)
                 }
-            }
-           
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: EmptyView())
+                .navigationBarBackButtonHidden(true)
+            }   
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: EmptyView())
     }
 }
 

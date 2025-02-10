@@ -105,7 +105,7 @@ struct skillView: View {
                     .padding(.horizontal, geometry.size.width * 0.08)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 12) // Adjust position
             }
-        }
+        }.navigationBarHidden(true)
     }
 }
 
