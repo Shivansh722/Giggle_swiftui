@@ -19,6 +19,7 @@ struct LocationClientiew: View {
     @State private var isLocationPicked = false // Track if location is picked
     @State private var showLocationEditIcon = false // Track if edit icon should be shown
     @State private var navigateToEduView1 = false
+    @StateObject var saveClientInfo = ClientHandlerUserInfo(appService: AppService())
 
     var body: some View {
         GeometryReader { geometry in
@@ -123,7 +124,11 @@ struct LocationClientiew: View {
                                 } else {
                                     // Proceed to the next step
                                     print("Proceed to the next screen or step")
-                                    navigateToEduView1 = true
+//                                    navigateToEduView1 = true
+                                    
+                                        Task{
+                                            await saveClientInfo.saveClientInfo()
+                                        }
                                 }
                             },
                             width: 320,
@@ -147,6 +152,10 @@ struct LocationClientiew: View {
                 showLocationEditIcon = true
             }
         }
+    }
+    
+    private func setLocation(){
+        ClientFormManager.shared.clientData.location = "37.3347302 , -122.0089189"
     }
 }
 

@@ -61,7 +61,12 @@ struct ClientOnboardingView: View {
                     }
                 }
                 else{
-                    EmptyView()
+                    NavigationLink(
+                        destination: ClientInfoView(),
+                        isActive: $navigate
+                    ){
+                        EmptyView()
+                    }
                 }
                 
             }
