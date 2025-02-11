@@ -8,9 +8,14 @@ struct ClientInfoView: View {
     @State private var phoneNumber: String = ""
     @State private var companyName: String = ""
     @State private var selectedWorkTrait: String = "Technical"
+    @State private var selectedCountryCode: String = "+91"
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     @State private var selectedImage: UIImage?
     @State private var photosPickerItem: PhotosPickerItem?
+    
+    @State private var navigate:Bool = false
     
     let genders = ["Male", "Female", "Other"]
     let workTraits = ["Technical", "Management", "Creative", "Support", "Sales"]
@@ -18,8 +23,8 @@ struct ClientInfoView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-//                Theme.backgroundColor
-//                    .edgesIgnoringSafeArea(.all)
+                Theme.backgroundColor
+                    .edgesIgnoringSafeArea(.all)
                 
                 ScrollView {
                     VStack {
@@ -28,11 +33,11 @@ struct ClientInfoView: View {
                             Text("Get")
                                 .font(.title)
                                 .fontWeight(.bold)
-                                .foregroundColor(.blue)
+                                .foregroundColor(Theme.primaryColor)
                             Text("Started!")
                                 .font(.title)
                                 .fontWeight(.bold)
-                                .foregroundColor(.black)
+                                .foregroundColor(Theme.tertiaryColor)
                             Spacer()
                         }
                         .padding(.top, 20)
@@ -40,7 +45,7 @@ struct ClientInfoView: View {
                         
                         // Progress Bar
                         ProgressView(value: 0.2, total: 1.0)
-                            .tint(.blue)
+                            .tint(Theme.primaryColor)
                             .padding(.horizontal, 20)
                             .padding(.bottom, 20)
                         
@@ -80,24 +85,20 @@ struct ClientInfoView: View {
                         VStack(alignment: .leading, spacing: 20) {
                             // Name Field
                             Text("Name")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            TextField("Enter your name", text: $name)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .padding(.bottom, 10)
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            CustomTextField(placeholder: "Name", isSecure: false, text: $name, icon: "person")
+                                .padding(.bottom, geometry.size.height * 0.015)
+                                .padding(.horizontal, -geometry.size.width * 0.05)
                             
-                            // Date of Birth Field
-                            Text("Date of Birth")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            DatePicker("Select Date", selection: $dateOfBirth, displayedComponents: .date)
-                                .datePickerStyle(CompactDatePickerStyle())
-                                .padding(.bottom, 10)
+                            DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: geometry.size.width * 0.03)
+                                .padding(.bottom, geometry.size.height * 0.015)
                             
                             // Gender Field
                             Text("Gender")
-                                .font(.headline)
-                                .foregroundColor(.black)
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                           
                             Picker("Gender", selection: $selectedGender) {
                                 ForEach(genders, id: \.self) { gender in
                                     Text(gender)
@@ -108,25 +109,24 @@ struct ClientInfoView: View {
                             
                             // Phone Number Field
                             Text("Phone Number")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            TextField("Enter your phone number", text: $phoneNumber)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .keyboardType(.phonePad)
-                                .padding(.bottom, 10)
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            PhoneNumberInputView(selectedCountryCode: $selectedCountryCode, phoneNumber: $phoneNumber, showAlert: $showAlert, alertMessage: $alertMessage)
+                                .padding(.bottom, geometry.size.height * 0.015)
+                                .padding(.horizontal, -geometry.size.width * 0.05)
                             
                             // Company Name Field
                             Text("Company Name")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            TextField("Enter your company name", text: $companyName)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .padding(.bottom, 10)
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            CustomTextField(placeholder: "Enter your Company Name", isSecure: false, text: $companyName, icon: "")
+                                .padding(.bottom, geometry.size.height * 0.015)
+                                .padding(.horizontal, -geometry.size.width * 0.05)
                             
                             // Work Trait Field
                             Text("Work Trait")
-                                .font(.headline)
-                                .foregroundColor(.black)
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
                             Picker("Work Trait", selection: $selectedWorkTrait) {
                                 ForEach(workTraits, id: \.self) { trait in
                                     Text(trait)
@@ -141,13 +141,8 @@ struct ClientInfoView: View {
                         
                         // Next Button
                         Button(action: {
-                            print("Next button tapped")
-                            print("Name: \(name)")
-                            print("Date of Birth: \(dateOfBirth)")
-                            print("Gender: \(selectedGender)")
-                            print("Phone Number: \(phoneNumber)")
-                            print("Company Name: \(companyName)")
-                            print("Work Trait: \(selectedWorkTrait)")
+                            setData()
+                            navigate = true
                         }) {
                             Text("NEXT")
                                 .font(.headline)
@@ -159,10 +154,23 @@ struct ClientInfoView: View {
                         }
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
+                        
+                        NavigationLink(destination:WorkPitcher(), isActive: $navigate){
+                            EmptyView()
+                        }
                     }
                 }
             }
         }
+    }
+    
+    private func setData(){
+        ClientFormManager.shared.clientData.name = name
+        ClientFormManager.shared.clientData.DOB = dateOfBirth
+        ClientFormManager.shared.clientData.gender = selectedGender
+        ClientFormManager.shared.clientData.phone = phoneNumber
+        ClientFormManager.shared.clientData.storeName = companyName
+        ClientFormManager.shared.clientData.workTrait = selectedWorkTrait
     }
 }
 

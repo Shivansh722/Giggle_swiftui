@@ -14,7 +14,7 @@ class ClientHandlerUserInfo: ObservableObject {
     let database: Databases
     let appService: AppService
     let databaseID:String = "67729cb100158022ba8e"
-    let collectionID:String = "67729cdc0016234d1704"
+    let collectionID:String = "67a88597000fd8837adf"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -22,7 +22,30 @@ class ClientHandlerUserInfo: ObservableObject {
         self.appService = appService
     }
     
-    func saveClientInfo(){
+    func saveClientInfo() async {
+        let databaseId = databaseID
+        let collectionId = collectionID
+        
+        let data:[String:Any] = [
+            "name":ClientFormManager.shared.clientData.name,
+            "DOB":"nil",
+            "gender":ClientFormManager.shared.clientData.gender,
+            "phone":ClientFormManager.shared.clientData.phone,
+            "employerDetail":ClientFormManager.shared.clientData.employerDetail,
+            "storeName":ClientFormManager.shared.clientData.storeName,
+            "location":ClientFormManager.shared.clientData.location,
+            "work_trait":ClientFormManager.shared.clientData.workTrait,
+            "photos":ClientFormManager.shared.clientData.photos
+        ]
+        
+        do {
+            let result = try await database.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: String(FormManager.shared.formData.userId), data: data)
+            
+            print("Data saved Successfully. \(result.data)")
+        }
+        catch{
+            print(error)
+        }
         
     }
 }

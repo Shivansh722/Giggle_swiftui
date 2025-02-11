@@ -1,113 +1,139 @@
-//
-//  work-picture-upload-view.swift
-//  Giggle_swiftui
-//
-//  Created by rjk on 14/01/25.
-//
-
+import Appwrite
+import Foundation
 import SwiftUI
-import UIKit
+import UniformTypeIdentifiers
 
-struct WorkPictureUploadView: View {
-    @State private var showImagePicker = false
-    @State private var selectedImage: UIImage? = nil
-    @State private var workPictures: [UIImage] = []
+struct WorkPitcher: View {
+    @StateObject private var uploadManager = ResumeUploadManager(
+        apiEndpoint: "https://cloud.appwrite.io/v1",
+        projectIdentifier: "677299c0003044510787",
+        storageBucketId: "67863b500019e5de0dd8"
+    )
+
+    @State private var isFilePickerPresented = false
+    @State private var isProcessingComplete = false
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 20) {  // Reduced spacing
-                // Title
-                Text("Upload Work Pictures")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 20)
-                
-                // Work Picture Upload Section
-                VStack(spacing: 16) {
-                    Text("Upload images of your past work to showcase your skills.")
-                        .foregroundColor(Color(hex: "95969D"))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 30)
+            ZStack {
+                Theme.backgroundColor
+                    .edgesIgnoringSafeArea(.all)
 
-                    if workPictures.isEmpty {
-                        Text("Upload JPEG/PNG images")
-                            .foregroundColor(Color(hex: "424242"))
-                            .padding()
-                            .frame(maxWidth: geometry.size.width * 0.7, maxHeight: geometry.size.height * 0.1)
-                            .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.white))
-                            .padding(.top, 10)
-                    } else {
-                        ScrollView {
-                            VStack(spacing: 10) {
-                                ForEach(workPictures.indices, id: \.self) { index in
+                VStack {
+                    Text("Upload Resume")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 20)
+
+                    List {
+                        if !uploadManager.selectedResumes.isEmpty {
+                            Section(header: Text("Selected Resumes").foregroundColor(.white)) {
+                                ForEach(uploadManager.selectedResumes) { resume in
                                     HStack {
-                                        Image(uiImage: workPictures[index])
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 50, height: 50)
-                                            .cornerRadius(8)
-                                        
-                                        Text("Work Image \(index + 1)")
-                                            .font(.body)
-                                            .foregroundColor(.white)
-                                        
+                                        VStack(alignment: .leading) {
+                                            Text(resume.fileName)
+                                                .font(.headline)
+                                                .foregroundColor(.white)
+                                            Text("\(resume.fileSize / 1024) KB")
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        }
                                         Spacer()
-                                        
                                         Button(action: {
-                                            workPictures.remove(at: index)
+                                            uploadManager.removeSelectedResume(resume)
                                         }) {
-                                            Image(systemName: "xmark.circle.fill")
+                                            Image(systemName: "trash")
                                                 .foregroundColor(.red)
                                         }
                                     }
-                                    .padding()
-                                    .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.white))
-                                    .frame(maxWidth: geometry.size.width * 0.7)
                                 }
+                                .listRowBackground(Theme.backgroundColor)
                             }
                         }
-                        .frame(minHeight: 0, maxHeight: geometry.size.height * 0.5) // Prevents excessive white space
-                        .padding(.top, 10)
-                    }
-                    
-                    Button(action: {
-                        showImagePicker = true
-                    }) {
-                        Text(workPictures.isEmpty ? "Upload" : "Add More")
-                            .padding()
-                            .frame(maxWidth: geometry.size.width * 0.5)
-                            .background(Theme.primaryColor)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 24)
-                                .stroke(style: StrokeStyle(lineWidth: 1, dash: [12]))
-                                .foregroundColor(Theme.secondaryColor))
-                
-                Spacer()  // Pushes content up to avoid white space
 
-                Button(action: {
-                    print("Saved Work Pictures: \(workPictures.count)")
-                }) {
-                    Text("NEXT")
+                        if !uploadManager.uploadedResumes.isEmpty {
+                            Section(header: Text("Uploaded Resumes").foregroundColor(.white)) {
+                                ForEach(uploadManager.uploadedResumes) { resume in
+                                    VStack(alignment: .leading) {
+                                        Text(resume.fileName)
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                        Text("\(resume.fileSize / 1024) KB")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                .listRowBackground(Theme.backgroundColor)
+                            }
+                        }
+                    }
+                    .background(RoundedRectangle(cornerRadius: 24)
+                                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [12]))
+                                    .foregroundColor(Theme.secondaryColor))
+                    .scrollContentBackground(.hidden)
+                    .background(Theme.backgroundColor)
+                    .cornerRadius(12)
+                    .padding()
+
+                    if uploadManager.isProcessingUpload {
+                        ProgressView(
+                            "Uploading...",
+                            value: uploadManager.uploadProgressValue, total: 1.0
+                        )
                         .padding()
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(Theme.primaryColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    }
+
+                    VStack {
+                        Button(action: {
+                            isFilePickerPresented = true
+                        }) {
+                            Text("Add Resume")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+
+                        Button(action: {
+                            uploadManager.uploadallFiles()
+                        }) {
+                            Text("Upload All")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    uploadManager.isProcessingUpload
+                                        ? Color.gray : Color.green
+                                )
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .disabled(
+                            uploadManager.isProcessingUpload
+                                || uploadManager.selectedResumes.isEmpty)
+                    }
+                    .padding()
                 }
-                .padding(.bottom, 20) // Adds a slight bottom padding
+                .sheet(isPresented: $isFilePickerPresented) {
+                    DocumentPicker { url in
+                        if let url = url {
+                            uploadManager.addSelectedResume(fileURL: url)
+                        }
+                    }
+                }
+                .background(
+                                    NavigationLink(
+                                        destination: LocationClientiew(),
+                                        isActive: $uploadManager.navigationTrigger
+                                    ) {
+                                        EmptyView()
+                                    }
+                                )
             }
-            .frame(maxHeight: .infinity, alignment: .top) // Ensures everything stays at the top
-            .padding()
-            .background(Theme.backgroundColor.edgesIgnoringSafeArea(.all))
-        }
     }
 }
 
 #Preview {
-    WorkPictureUploadView()
+    ResumeUpload()
 }

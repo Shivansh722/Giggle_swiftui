@@ -82,6 +82,49 @@ class ResumeUploadManager: ObservableObject {
             }
         }
     }
+    
+    func uploadallFiles(){
+        guard !isProcessingUpload else { return }
+        isProcessingUpload = true
+        uploadProgressValue = 0.0
+        
+        Task{
+            for resume in selectedResumes {
+                ClientFormManager.shared.clientData.photos.append(resume.id.uuidString)
+                do {
+                    guard
+                        let inputResume = try? InputFile.fromPath(
+                            resume.localPath)
+                    else {
+                        print(
+                            "Failed to create InputFile for \(resume.fileName)")
+                        continue
+                    }
+
+                    let uploadedResume = try await appwriteStorage.createFile(
+                        bucketId: appwriteBucketId,
+                        fileId: resume.id.uuidString,
+                        file: inputResume,
+                        onProgress: { progress in
+                            DispatchQueue.main.async {
+                                self.uploadProgressValue = progress.progress
+                            }
+                        }
+                    )
+
+                    DispatchQueue.main.async {
+                        print("Uploaded: \(uploadedResume)")
+                        self.uploadedResumes.append(resume)
+                        self.extractTextFromPDF(resume: resume)
+                    }
+                } catch {
+                    print(
+                        "Failed to upload \(resume.fileName): \(error.localizedDescription)"
+                    )
+                }
+            }
+        }
+    }
 
     func removeSelectedResume(_ resume: ResumeFile) {
         selectedResumes.removeAll { $0.id == resume.id }
