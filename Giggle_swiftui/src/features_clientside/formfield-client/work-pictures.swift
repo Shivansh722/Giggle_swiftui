@@ -19,7 +19,7 @@ struct WorkPitcher: View {
                     .edgesIgnoringSafeArea(.all)
 
                 VStack {
-                    Text("Upload Resume")
+                    Text("Upload Work Images")
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)

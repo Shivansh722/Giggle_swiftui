@@ -46,7 +46,7 @@ struct FLNScoreView: View {
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("\(String(format: "%.0f", FlnDataManager.shared.flnData.fluencyScore))%")
+                            Text("\( FlnDataManager.shared.flnData.fluencyScore)%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }

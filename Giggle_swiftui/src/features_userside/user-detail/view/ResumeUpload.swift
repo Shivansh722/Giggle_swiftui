@@ -76,14 +76,6 @@ struct ResumeUpload: View {
                     .cornerRadius(12)
                     .padding()
 
-                    if uploadManager.isProcessingUpload {
-                        ProgressView(
-                            "Uploading...",
-                            value: uploadManager.uploadProgressValue, total: 1.0
-                        )
-                        .padding()
-                    }
-
                     VStack {
                         Button(action: {
                             isFilePickerPresented = true
@@ -99,19 +91,20 @@ struct ResumeUpload: View {
                         Button(action: {
                             uploadManager.uploadAllSelectedResumes()
                         }) {
-                            Text("Upload All")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    uploadManager.isProcessingUpload
-                                        ? Color.gray : Color.green
-                                )
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                            if uploadManager.isProcessingUpload {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            } else {
+                                Text("Upload All")
+                                    .frame(maxWidth: .infinity)
+                            }
                         }
-                        .disabled(
-                            uploadManager.isProcessingUpload
-                                || uploadManager.selectedResumes.isEmpty)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(uploadManager.isProcessingUpload ? Color.gray : Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .disabled(uploadManager.isProcessingUpload || uploadManager.selectedResumes.isEmpty)         
                     }
                     .padding()
                 }

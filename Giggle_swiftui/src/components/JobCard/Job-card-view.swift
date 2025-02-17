@@ -24,16 +24,16 @@ struct JobCardView: View {
                                     .fill(Color.purple.opacity(0.2))
                                     .frame(width: 48, height: 48)
                                 
-                                Image(systemName: "applelogo")
+                                Image("mcD")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.black)
                             }
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Product Designer")
+                                Text("Store Manager")
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundColor(.white)
-                                Text("Google inc • California, USA")
+                                Text("Mc Donalds • Mumbai, Maharashtra")
                                     .font(.system(size: 14))
                                     .foregroundColor(Color.gray)
                             }
@@ -65,7 +65,7 @@ struct JobCardView: View {
                     // Tags and Time
                     HStack {
                         HStack(spacing: 8) {
-                            Text("Senior designer")
+                            Text("Management")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white)
                                 .padding(.vertical, 6)

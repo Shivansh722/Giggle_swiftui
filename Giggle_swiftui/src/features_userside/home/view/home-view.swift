@@ -99,25 +99,9 @@ struct HomeView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding(.top, 40)
                                 } else {
-                                    ZStack {
-                                        Text("G+")
-                                            .font(.system(size: 72))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(Theme.secondaryColor)
-                                    }
-                                    .frame(width: 172, height: 108)
-                                    .background(
-                                        LinearGradient(
-                                            stops: [
-                                                Gradient.Stop(color: .white.opacity(0.2), location: 0.00),
-                                                Gradient.Stop(color: Color.gray.opacity(0.05), location: 1.00)
-                                            ],
-                                            startPoint: UnitPoint(x: 1.23, y: 0),
-                                            endPoint: UnitPoint(x: -0.2, y: 1.17)
-                                        )
-                                    )
-                                    .cornerRadius(22)
-                                    .padding(.bottom,250)
+                                    FLNGradeCardView(grade: "G+", lastUpdate: "Saturday, 26 Oct")
+                                            .padding(.bottom, 250)
+
                                 }
                             }
                         }
@@ -192,6 +176,63 @@ struct HomeView: View {
     func fetchFlnID() async {
         flnID = await flnInfo.getFlnInfo()
         isLoading = false
+    }
+}
+
+struct FLNGradeCardView: View {
+    let grade: String
+    let lastUpdate: String
+    @State private var navigate:Bool = false
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(Color.white, lineWidth: 1)
+                .cornerRadius(20)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Your FLN Grade:")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                
+                Text(grade)
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(Color.yellow) // Adjust based on design
+                HStack(alignment: .center, spacing: 10) {
+                    Button(action: {
+                        navigate = true
+                    }) {
+                        Text("SCORE")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, maxHeight: 10)
+                            .padding()
+                            .background(Theme.primaryColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text("Last Update")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        
+                        Text(lastUpdate)
+                            .font(.caption)
+                            .foregroundColor(.white)
+                    }
+                    
+                    NavigationLink(destination: FLNScoreView(), isActive: $navigate){
+                        EmptyView()
+                        
+                    }
+                    
+                }
+            }
+            .padding()
+        }
+        .frame(width: .infinity, height: 150)
+        .padding(.horizontal)
     }
 }
 
