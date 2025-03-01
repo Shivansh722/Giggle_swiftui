@@ -15,6 +15,7 @@ class SaveUserInfo:ObservableObject {
     let appService: AppService
     let databaseID:String = "67729cb100158022ba8e"
     let collectionID:String = "67729cdc0016234d1704"
+    let storageBucketId:String = "67863b500019e5de0dd8"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -92,5 +93,54 @@ class SaveUserInfo:ObservableObject {
             print("error fetching user: \(error)")
         }
     }
+    
+    @MainActor
+    func fetchFiles(userId: String) async -> [[String]] {
+        print("fetchFiles() called for userId:", userId)
+        
+        let databaseId = databaseID
+        let collectionId = collectionID
+        var fileDetails: [[String]] = [] 
+
+        do {
+            let document = try await database.getDocument(
+                databaseId: databaseId,
+                collectionId: collectionId,
+                documentId: userId
+            )
+
+            if let fileArray = document.data["resumeIds"]?.value as? [String] {
+                print("Found resume IDs:", fileArray)
+                
+                let storage = Storage(client)
+
+                for fileId in fileArray {
+                    do {
+                        let byteBuffer = try await storage.getFile(
+                            bucketId: storageBucketId,
+                            fileId: fileId
+                        )
+                        
+                        let fileInfo = [byteBuffer.name, String(byteBuffer.sizeOriginal)]
+                        fileDetails.append(fileInfo)
+                        
+                        print("Fetched file:", fileInfo)
+                    } catch {
+                        print("Error fetching file \(fileId):", error)
+                    }
+                }
+            }
+        } catch {
+            print("Error fetching document:", error)
+            return [["error loading"]]
+        }
+
+        return fileDetails
+    }
+
+
+
+
+
 
 }
