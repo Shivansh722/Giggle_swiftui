@@ -1,6 +1,8 @@
 import SwiftUI
+
 struct JobCardView: View {
     let jobs: [String: Any]
+    let flnID: String?
     
     var body: some View {
         NavigationLink(destination: JobDetailView(jobId: "\(jobs["$id"]!)")) {
@@ -87,9 +89,20 @@ struct JobCardView: View {
                 )
                 .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
                 .padding(.horizontal, 16)
+                
+                if flnID == nil {
+                    Image(systemName: "lock.fill")
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.red)
+                        .padding(8)
+                        .background(Color.white.opacity(0.8))
+                        .clipShape(Circle())
+                        .offset(x: 0, y: -10)
+                }
             }
         }
-        .buttonStyle(PlainButtonStyle()) // This ensures the entire card is tappable
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

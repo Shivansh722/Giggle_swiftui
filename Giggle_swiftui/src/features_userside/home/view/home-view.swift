@@ -74,6 +74,9 @@ struct HomeView: View {
                                             }
                                         }
                                 } else if flnID == nil {
+                                    ZStack{
+                                        
+                                    }
                                     VStack(spacing: 16) {
                                         Text("Take FLN")
                                             .font(.headline)
@@ -97,9 +100,10 @@ struct HomeView: View {
                                         NavigationLink(destination: LiteracyView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }
+                                        Spacer()
                                     }
                                     .frame(maxWidth: .infinity)
-                                    .padding(.top, 40)
+                                    .padding(.top, 5)
                                 } else {
                                     FLNGradeCardView(grade: "G+", lastUpdate: "Saturday, 26 Oct")
                                             .padding(.bottom, 250)
@@ -115,16 +119,15 @@ struct HomeView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .padding(.horizontal, geometry.size.width * -0.45)
+                                .padding(.top, 40)
                             
-//                            JobCardView(jobs: job)
-//                                .padding(.bottom, geometry.size.height * 0.02)
-//                            JobCardView(jobs: job)
                             ScrollView{
                                 ForEach(jobresult.indices, id: \.self) { index in
-                                    JobCardView(jobs: jobresult[index])
+                                    JobCardView(jobs: jobresult[index],flnID: flnID)
                                 }
-                            }
+                            }.padding(.top, 20)
                         }
+                        .padding(.top, 20)
                         .padding(.top, geometry.size.height * -0.3)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -139,9 +142,6 @@ struct HomeView: View {
                     await fetchUser()
                     let result = try await jobs.get_job_post()
                     jobresult = result
-                    for job in jobresult{
-//                        JobCardView(jobs: job)
-                    }
                     
                 }
             }
