@@ -4,10 +4,12 @@ struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     @StateObject var flnInfo = FLNInfo(appService: AppService())
+    @StateObject var jobs = JobPost(appService:AppService())
 
     @State private var flnID: String? = nil
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
+    @State private var jobresult:[[String:Any]] = []
 
     init() {
         let appearance = UITabBarAppearance()
@@ -114,9 +116,14 @@ struct HomeView: View {
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .padding(.horizontal, geometry.size.width * -0.45)
                             
-                            JobCardView()
-                                .padding(.bottom, geometry.size.height * 0.02)
-                            JobCardView()
+//                            JobCardView(jobs: job)
+//                                .padding(.bottom, geometry.size.height * 0.02)
+//                            JobCardView(jobs: job)
+                            ScrollView{
+                                ForEach(jobresult.indices, id: \.self) { index in
+                                    JobCardView(jobs: jobresult[index])
+                                }
+                            }
                         }
                         .padding(.top, geometry.size.height * -0.3)
                     }
@@ -130,6 +137,12 @@ struct HomeView: View {
             .onAppear {
                 Task {
                     await fetchUser()
+                    let result = try await jobs.get_job_post()
+                    jobresult = result
+                    for job in jobresult{
+//                        JobCardView(jobs: job)
+                    }
+                    
                 }
             }
             

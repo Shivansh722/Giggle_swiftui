@@ -1,18 +1,9 @@
-//
-//  JobCardView.swift
-//  Giggle_swiftui
-//
-//  Created by user@91 on 16/12/24.
-//
-
 import SwiftUI
-
 struct JobCardView: View {
+    let jobs: [String: Any]
+    
     var body: some View {
-       
-            // Background Color
-           
-            
+        NavigationLink(destination: JobDetailView(jobId: "\(jobs["$id"]!)")) {
             VStack {
                 // Card View
                 VStack(spacing: 16) {
@@ -30,10 +21,12 @@ struct JobCardView: View {
                                     .foregroundColor(.black)
                             }
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Store Manager")
+                                let keysString = jobs["job_title"]!
+                                Text("Keys: \(keysString)")
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundColor(.white)
-                                Text("Mc Donalds • Mumbai, Maharashtra")
+                                let location = jobs["location"]!
+                                Text("\(jobs["location"]!)")
                                     .font(.system(size: 14))
                                     .foregroundColor(Color.gray)
                             }
@@ -51,9 +44,8 @@ struct JobCardView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                     
-                    // Salary Section
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text("₹90K")
+                        Text("\(jobs["salary"]!)")
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(.white)
                         Text("/Mo")
@@ -62,10 +54,9 @@ struct JobCardView: View {
                     }
                     .padding(.top, -8)
                     
-                    // Tags and Time
                     HStack {
                         HStack(spacing: 8) {
-                            Text("Management")
+                            Text("\(jobs["job_trait"]!)")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white)
                                 .padding(.vertical, 6)
@@ -73,7 +64,7 @@ struct JobCardView: View {
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(16)
                             
-                            Text("Part time")
+                            Text("\(jobs["job_type"]!)")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white)
                                 .padding(.vertical, 6)
@@ -98,9 +89,16 @@ struct JobCardView: View {
                 .padding(.horizontal, 16)
             }
         }
+        .buttonStyle(PlainButtonStyle()) // This ensures the entire card is tappable
     }
+}
 
-
-#Preview {
-    JobCardView()
+struct JobDetailView: View {
+    let jobId: String
+    
+    var body: some View {
+        Text("Job ID: \(jobId)")
+            .font(.largeTitle)
+            .padding()
+    }
 }

@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct Testing: View {
-    @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
+    @StateObject var saveUserInfo = JobPost(appService: AppService())
     var body: some View {
         Button(action:{
             Task{
-                await saveUserInfo.fetchFiles(userId:"67a9e3659de7bda07a47")
+                try await saveUserInfo.get_job_post()
             }
         }){
             Text("click")
