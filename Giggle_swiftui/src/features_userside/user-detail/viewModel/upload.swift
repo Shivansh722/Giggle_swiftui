@@ -115,7 +115,7 @@ class ResumeUploadManager: ObservableObject {
                     DispatchQueue.main.async {
                         print("Uploaded: \(uploadedResume)")
                         self.uploadedResumes.append(resume)
-                        self.extractTextFromPDF(resume: resume)
+                        self.navigationTrigger = true
                     }
                 } catch {
                     print(
