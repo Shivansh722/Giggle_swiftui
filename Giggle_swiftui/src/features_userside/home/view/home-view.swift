@@ -4,23 +4,24 @@ struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     @StateObject var flnInfo = FLNInfo(appService: AppService())
-    @StateObject var jobs = JobPost(appService:AppService())
+    @StateObject var jobs = JobPost(appService: AppService())
 
     @State private var flnID: String? = nil
+    @State private var updatedAt: String? = nil
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
-    @State private var jobresult:[[String:Any]] = []
+    @State private var jobresult: [[String: Any]] = []
+    @State private var searchText: String = "" // Added for search input
+    @State private var filteredJobs: [[String: Any]] = [] // Added for filtered results
 
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.backgroundColor = UIColor(Theme.primaryContrastColor)
         
-        // Normal state
         appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Theme.onPrimaryColor)
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor(Theme.onPrimaryColor)]
         
-        // Selected state
         appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Theme.primaryColor)
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor(Theme.primaryColor)]
         
@@ -30,11 +31,11 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
+            // Home Tab (unchanged)
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack {
-                        // Header with Greeting & Profile
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Hi")
@@ -74,9 +75,6 @@ struct HomeView: View {
                                             }
                                         }
                                 } else if flnID == nil {
-                                    ZStack{
-                                        
-                                    }
                                     VStack(spacing: 16) {
                                         Text("Take FLN")
                                             .font(.headline)
@@ -97,7 +95,7 @@ struct HomeView: View {
                                         )
                                         .padding(.leading, 65)
                                         
-                                        NavigationLink(destination: LiteracyView(), isActive: $navigateToLiteracy) {
+                                        NavigationLink(destination: FlnIntroView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }
                                         Spacer()
@@ -105,9 +103,8 @@ struct HomeView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding(.top, 5)
                                 } else {
-                                    FLNGradeCardView(grade: "G+", lastUpdate: "Saturday, 26 Oct")
-                                            .padding(.bottom, 250)
-
+                                    FLNGradeCardView(grade: "G+", lastUpdate: updatedAt!)
+                                        .padding(.bottom, 250)
                                 }
                             }
                         }
@@ -121,9 +118,9 @@ struct HomeView: View {
                                 .padding(.horizontal, geometry.size.width * -0.45)
                                 .padding(.top, 40)
                             
-                            ScrollView{
+                            ScrollView {
                                 ForEach(jobresult.indices, id: \.self) { index in
-                                    JobCardView(jobs: jobresult[index],flnID: flnID)
+                                    JobCardView(jobs: jobresult[index], flnID: flnID)
                                 }
                             }.padding(.top, 20)
                         }
@@ -142,17 +139,35 @@ struct HomeView: View {
                     await fetchUser()
                     let result = try await jobs.get_job_post()
                     jobresult = result
-                    
+                    filteredJobs = result // Initialize filteredJobs with all jobs
                 }
             }
             
+            // Modified Search Tab
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack {
-                        Text("Search View")
-                            .font(.largeTitle)
-                            .foregroundColor(Theme.onPrimaryColor)
+                    VStack(spacing: 20) {
+                        TextField("Search jobs...", text: $searchText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                            .onChange(of: searchText) { newValue in
+                                filterJobs(searchText: newValue)
+                            }
+                        
+                        ScrollView {
+                            if filteredJobs.isEmpty && !searchText.isEmpty {
+                                Text("No jobs found matching '\(searchText)'")
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .padding()
+                            } else {
+                                ForEach(filteredJobs.indices, id: \.self) { index in
+                                    JobCardView(jobs: filteredJobs[index], flnID: flnID)
+                                        .padding(.horizontal)
+                                        .padding(.bottom, 10)
+                                }
+                            }
+                        }
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
@@ -162,6 +177,7 @@ struct HomeView: View {
                 Text("Search")
             }
             
+            // Notifications Tab (unchanged)
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
@@ -188,14 +204,34 @@ struct HomeView: View {
 
     func fetchFlnID() async {
         flnID = await flnInfo.getFlnInfo()
+        updatedAt = await flnInfo.getUserFlnUpdatedAt()
         isLoading = false
+    }
+    
+    // New function to filter jobs based on search text
+    func filterJobs(searchText: String) {
+        if searchText.isEmpty {
+            filteredJobs = jobresult
+        } else {
+            filteredJobs = jobresult.filter { job in
+                // Adjust these keys based on your job dictionary structure
+                let title = job["title"] as? String ?? ""
+                let description = job["description"] as? String ?? ""
+                let company = job["company"] as? String ?? ""
+                
+                return title.lowercased().contains(searchText.lowercased()) ||
+                       description.lowercased().contains(searchText.lowercased()) ||
+                       company.lowercased().contains(searchText.lowercased())
+            }
+        }
     }
 }
 
+// Assuming these structs exist elsewhere in your code
 struct FLNGradeCardView: View {
     let grade: String
     let lastUpdate: String
-    @State private var navigate:Bool = false
+    @State private var navigate: Bool = false
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -211,7 +247,7 @@ struct FLNGradeCardView: View {
                 Text(grade)
                     .font(.title2)
                     .bold()
-                    .foregroundColor(Color.yellow) // Adjust based on design
+                    .foregroundColor(Color.yellow)
                 HStack(alignment: .center, spacing: 10) {
                     Button(action: {
                         navigate = true
@@ -235,11 +271,9 @@ struct FLNGradeCardView: View {
                             .foregroundColor(.white)
                     }
                     
-                    NavigationLink(destination: FLNScoreView(), isActive: $navigate){
+                    NavigationLink(destination: FLNScoreView(), isActive: $navigate) {
                         EmptyView()
-                        
                     }
-                    
                 }
             }
             .padding()

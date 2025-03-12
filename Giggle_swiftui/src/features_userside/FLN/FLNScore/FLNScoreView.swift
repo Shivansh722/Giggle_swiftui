@@ -41,12 +41,12 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(.white)
-                                Text("Average User Score: \(FlnDataManager.shared.flnData.fluencyScore)%")
+                                Text("Average User Score: 67%")
                                     .foregroundColor(.white)
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("\( FlnDataManager.shared.flnData.fluencyScore)%")
+                            Text("67%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -62,7 +62,7 @@ struct FLNScoreView: View {
                                 let numeracyScores = FlnDataManager.shared.flnData.numeracyScore
                                 let literacyScores = FlnDataManager.shared.flnData.literacyScore
                                 let averageScore = (numeracyScores + literacyScores) / 2
-                                Text("Average User Score: \(averageScore)%")
+                                Text("Average User Score: 67%")
                                     .foregroundColor(Theme.tertiaryColor)
                                     .font(.subheadline)
                             }

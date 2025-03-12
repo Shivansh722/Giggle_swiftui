@@ -14,6 +14,7 @@ struct ProfileScreen: View {
     @State private var resumeFiles: [[String]] = []
     @StateObject var logout = AppService()
     @State private var navigate: Bool = false
+    @State private var navigateToEdit = false
 
     let userId = "67a9e3659de7bda07a47"
 
@@ -37,7 +38,9 @@ struct ProfileScreen: View {
                                 }
                                 Templates.Menu(present: $isPopoverPresented) {
                                     Templates.MenuButton(title: "Edit Profile")
-                                    { print("Button 1 pressed") }
+                                    {
+                                        navigateToEdit = true
+                                    }
                                     Templates.MenuButton(title: "Saved Gigs") {
                                         print("Button 2 pressed")
                                     }
@@ -56,6 +59,13 @@ struct ProfileScreen: View {
                             }
                         }
                         .padding(.horizontal)
+                        
+                        NavigationLink(
+                            destination: edit_profile_view(),
+                            isActive: $navigateToEdit
+                        ) {
+                            EmptyView()
+                        }
                         // Profile Picture and Name
                         VStack(spacing: 8) {
                             Image("face-id")  // Replace with your profile image asset
@@ -229,7 +239,7 @@ struct ProfileScreen: View {
                     .padding()
                 }
                 
-                NavigationLink(destination: LoginView(), isActive: $navigate) {
+                NavigationLink(destination: LoginSimpleView(), isActive: $navigate) {
                                            EmptyView()
                                        }
             }

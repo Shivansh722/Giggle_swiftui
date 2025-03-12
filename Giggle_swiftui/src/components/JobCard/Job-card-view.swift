@@ -24,7 +24,7 @@ struct JobCardView: View {
                             }
                             VStack(alignment: .leading, spacing: 2) {
                                 let keysString = jobs["job_title"]!
-                                Text("Keys: \(keysString)")
+                                Text("\(keysString)")
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundColor(.white)
                                 let location = jobs["location"]!
