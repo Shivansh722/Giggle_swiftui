@@ -105,7 +105,7 @@ struct LocationClientiew: View {
                         }
 
                         NavigationLink(
-                            destination: eduView(),
+                            destination: HomeClientView(),
                             isActive: $navigateToEduView1
                         ) {
                             EmptyView()
@@ -128,6 +128,7 @@ struct LocationClientiew: View {
                                     
                                         Task{
                                             await saveClientInfo.saveClientInfo()
+                                            navigateToEduView1 = true
                                         }
                                 }
                             },
