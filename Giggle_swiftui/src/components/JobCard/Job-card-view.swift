@@ -5,7 +5,7 @@ struct JobCardView: View {
     let flnID: String?
     
     var body: some View {
-        NavigationLink(destination: JobDetailView(jobId: "\(jobs["$id"]!)")) {
+        NavigationLink(destination: GigInfoView(jobId: "\(jobs["$id"]!)", jobs: jobs)) {
             VStack {
                 // Card View
                 VStack(spacing: 16) {
@@ -108,6 +108,7 @@ struct JobCardView: View {
 
 struct JobDetailView: View {
     let jobId: String
+    let jobs:[String: Any]
     
     var body: some View {
         Text("Job ID: \(jobId)")

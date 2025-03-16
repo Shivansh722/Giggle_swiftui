@@ -32,6 +32,8 @@ struct MapView: UIViewRepresentable {
 struct GigInfoView: View {
     // State to control the alert
     @State private var showAppliedAlert = false
+    let jobId: String
+    let jobs:[String: Any]
     
     var body: some View {
         NavigationView { // Use NavigationView for older SwiftUI versions
@@ -43,7 +45,7 @@ struct GigInfoView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 84, height: 84)
-                        Text("UI/UX Designer")
+                        Text("\(jobs["job_title"]!)")
                             .font(.title2)
                             .foregroundColor(.white)
                         HStack {
@@ -101,7 +103,7 @@ struct GigInfoView: View {
                         Text("Location")
                             .font(.system(size: 20, weight: .bold, design: .default))
                             .foregroundColor(.white)
-                        Text("Overlook Avenue, Belleville, NJ, USA")
+                        Text("\(jobs["location"]!)")
                             .foregroundColor(.white)
                             .font(.system(size: 12, weight: .regular, design: .default))
                         MapView(location: "Overlook Avenue, Belleville, NJ, USA")
@@ -143,13 +145,6 @@ struct GigInfoView: View {
                             Text("Full-Time")
                                 .foregroundColor(.white)
                         }
-                        HStack {
-                            Text("Specialization")
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("Design")
-                                .foregroundColor(.white)
-                        }
                     }
                     .padding()
                     
@@ -184,6 +179,9 @@ struct GigInfoView: View {
                             backgroundColor: Theme.primaryColor,
                             action: {
                                 // Trigger the alert
+                                Task{
+                                    try await JobPost(appService: AppService()).applyJob(jobId)
+                                }
                                 showAppliedAlert = true
                                 // Later, you can add backend logic here, e.g.:
                                 // applyToGig(userId: "user123", gigId: "gig456")
@@ -239,9 +237,5 @@ extension View {
                 .ignoresSafeArea()
         )
     }
-}
-
-#Preview {
-    GigInfoView()
 }
 
