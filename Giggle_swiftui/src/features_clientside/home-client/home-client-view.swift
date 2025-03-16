@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 // Define a Job struct
 struct Job: Identifiable {
     let id: String
