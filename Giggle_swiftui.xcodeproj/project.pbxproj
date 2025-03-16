@@ -10,12 +10,10 @@
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
 		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
-		3F100CD92D8150C700489664 /* block.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3F100CD82D8150C700489664 /* block.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3F100CD82D8150C700489664 /* block.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = block.gif; path = ../../../Downloads/block.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -43,7 +41,6 @@
 		19E9A9882CD20FA5009F768B = {
 			isa = PBXGroup;
 			children = (
-				3F100CD82D8150C700489664 /* block.gif */,
 				19E9A9932CD20FA5009F768B /* Giggle_swiftui */,
 				19E9A9922CD20FA5009F768B /* Products */,
 			);
@@ -129,7 +126,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F100CD92D8150C700489664 /* block.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,7 +288,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "proto.Giggle-swiftui";
+				PRODUCT_BUNDLE_IDENTIFIER = com.srmist.giggle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -327,7 +323,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "proto.Giggle-swiftui";
+				PRODUCT_BUNDLE_IDENTIFIER = com.srmist.giggle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
