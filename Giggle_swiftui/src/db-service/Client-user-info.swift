@@ -40,6 +40,20 @@ class ClientHandlerUserInfo: ObservableObject {
         
         do {
             let result = try await database.createDocument(databaseId: databaseId, collectionId: collectionId, documentId: String(FormManager.shared.formData.userId), data: data)
+            let userId = FormManager.shared.formData.userId
+            let userDefaults = UserDefaults.standard
+            let storedUserId = userDefaults.string(forKey: "userID")
+            DispatchQueue.main.async {
+                if storedUserId != userId {
+                    // Update userId in FormManager and UserDefaults if it's different
+                    FormManager.shared.formData.userId = userId
+                    userDefaults.set(userId, forKey: "userID")
+                    print("UserId updated to: \(userId)")
+                } else {
+                    FormManager.shared.formData.userId = userId
+                    print("UserId remains the same: \(userId)")
+                }
+            }
             
             print("Data saved Successfully. \(result.data)")
         }

@@ -8,13 +8,18 @@
 import Foundation
 
 struct GetJobPost:Identifiable, Codable {
-    let id: String
-    let jobTitle: String
-    let jobTrait: String
-    let jobType: String
-    let location: String
-    let salary: String
-    let createdAt: String
-    let updatedAt: String
+    var id: UUID
+    var jobTitle: String
+    var jobTrait: String
+    var jobType: String
+    var location: String
+    var salary: String
+}
+
+class JobFormManager: ObservableObject {
+    static let shared = JobFormManager()
+    private init() {}
+    
+    @Published var formData = GetJobPost(id: UUID(), jobTitle: "", jobTrait: "", jobType: "", location: "", salary: "")
 }
 

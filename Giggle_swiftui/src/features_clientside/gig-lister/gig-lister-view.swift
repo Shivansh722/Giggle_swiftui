@@ -97,6 +97,17 @@ struct GigDetailsScreen: View {
                             )
                             gigManager.addGig(newGig)
                             dismiss() // Close the modal
+                            
+                            JobFormManager.shared.formData.id = UUID()
+                            JobFormManager.shared.formData.jobTitle = companyName
+                            JobFormManager.shared.formData.location = location
+                            JobFormManager.shared.formData.salary = hoursPerWeek
+                            JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
+                            JobFormManager.shared.formData.jobTitle = category
+                            
+                            Task{
+                                try await JobPost(appService: AppService()).postJob()
+                            }
                         },
                         width: nil,
                         height: 60,
