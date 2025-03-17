@@ -3,9 +3,15 @@ import SwiftUI
 struct JobCardView: View {
     let jobs: [String: Any]
     let flnID: String?
-    
+    @StateObject var fetchImage = JobPost(appService: AppService())
+    @State private var base64Image: String?
+    @State private var isLoadingImage = false
+    @State private var imageError: String?
+
     var body: some View {
-        NavigationLink(destination: GigInfoView(jobId: "\(jobs["$id"]!)", jobs: jobs)) {
+        NavigationLink(
+            destination: GigInfoView(jobId: "\(jobs["$id"]!)", jobs: jobs)
+        ) {
             VStack {
                 // Card View
                 VStack(spacing: 16) {
@@ -16,11 +22,24 @@ struct JobCardView: View {
                                 Circle()
                                     .fill(Color.purple.opacity(0.2))
                                     .frame(width: 48, height: 48)
-                                
-                                Image("mcD")
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.black)
+
+                                if isLoadingImage {
+                                    ProgressView()
+                                        .frame(width: 24, height: 24)
+                                } else if let base64 = base64Image,
+                                    let data = Data(base64Encoded: base64),
+                                    let uiImage = UIImage(data: data)
+                                {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundColor(.black)
+                                } else {
+                                    Image("mcD")  // Fallback image
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundColor(.black)
+                                }
                             }
                             VStack(alignment: .leading, spacing: 2) {
                                 let keysString = jobs["job_title"]!
@@ -33,9 +52,9 @@ struct JobCardView: View {
                                     .foregroundColor(Color.gray)
                             }
                         }
-                        
+
                         Spacer()
-                        
+
                         // Bookmark Icon
                         Button(action: {}) {
                             Image(systemName: "bookmark")
@@ -45,7 +64,7 @@ struct JobCardView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
-                    
+
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("\(jobs["salary"]!)")
                             .font(.system(size: 28, weight: .bold))
@@ -55,7 +74,7 @@ struct JobCardView: View {
                             .foregroundColor(Color.gray)
                     }
                     .padding(.top, -8)
-                    
+
                     HStack {
                         HStack(spacing: 8) {
                             Text("\(jobs["job_trait"]!)")
@@ -65,7 +84,7 @@ struct JobCardView: View {
                                 .padding(.horizontal, 12)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(16)
-                            
+
                             Text("\(jobs["job_type"]!)")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white)
@@ -89,7 +108,7 @@ struct JobCardView: View {
                 )
                 .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
                 .padding(.horizontal, 16)
-                
+
                 if flnID == nil {
                     Image(systemName: "lock.fill")
                         .resizable()
@@ -101,6 +120,18 @@ struct JobCardView: View {
                         .offset(x: 0, y: -10)
                 }
             }
+            .onAppear {
+                Task {
+                    do {
+                        let base64 = try await fetchImage.fetchImage("\(jobs["$id"]!)")
+                        self.base64Image = base64
+                        self.isLoadingImage = false
+                    } catch {
+                        self.imageError = error.localizedDescription
+                        self.isLoadingImage = false
+                    }
+                }
+            }
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -108,8 +139,8 @@ struct JobCardView: View {
 
 struct JobDetailView: View {
     let jobId: String
-    let jobs:[String: Any]
-    
+    let jobs: [String: Any]
+
     var body: some View {
         Text("Job ID: \(jobId)")
             .font(.largeTitle)

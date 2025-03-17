@@ -1,5 +1,6 @@
 import Foundation
 import Appwrite
+import UIKit
 
 class JobPost: ObservableObject {
     let client: Client
@@ -10,6 +11,7 @@ class JobPost: ObservableObject {
     let posted_job = "67c803360001275e630b"
     let ClientCollection = "67a88597000fd8837adf"
     let userCollection = "67729cdc0016234d1704"
+    let BucketId = "67863b500019e5de0dd8"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -113,5 +115,32 @@ class JobPost: ObservableObject {
         } catch {
             print(error)
         }
+    }
+    
+    func fetchImage(_ jobId: String) async throws -> String {
+        let result = try await database.getDocument(databaseId: databaseID, collectionId: posted_job, documentId: jobId)
+        
+        print(result.data["client_id"]?.value as? String ?? "undefines")
+        
+        let getClientImageId = try await database.getDocument(databaseId: databaseID, collectionId: ClientCollection, documentId: result.data["client_id"]?.value as? String ?? "undefines")
+        
+        print(getClientImageId.data["photos"])
+        
+        guard let photos = getClientImageId.data["photos"]?.value as? [String],
+                  let photoId = photos.first else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No photos found"])
+            }
+        print("Photo ID: \(photoId)")
+        let storage = Storage(client)
+        let imageData = try await storage.getFilePreview (
+                bucketId: BucketId,
+                fileId: photoId
+            )
+        
+        var byteBuffer = imageData
+        
+        let data = byteBuffer.readData(length: byteBuffer.readableBytes)
+        
+        return String((data?.base64EncodedString())!)
     }
 }
