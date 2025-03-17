@@ -71,16 +71,46 @@ class JobPost: ObservableObject {
         let userDefaults = UserDefaults.standard
         let storedUserId = userDefaults.string(forKey: "userID")
         
-        do{
-            let job:[String] = [jobId]
-            let second1:[String] = [storedUserId!]
-            let data:[String:Any] = ["applied_job_id": job]
-            let result = try await database.updateDocument(databaseId: databaseID, collectionId: userCollection, documentId: storedUserId!, data: data)
+        do {
+            let userDoc = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: userCollection,
+                documentId: storedUserId!
+            )
             
-            let dataSaveInPostJobPeopleApplied:[String:Any] = ["people_applied":second1]
+            let jobDoc = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: posted_job,
+                documentId: jobId
+            )
             
-            let _ = try await database.updateDocument(databaseId: databaseID, collectionId: posted_job, documentId: jobId, data: dataSaveInPostJobPeopleApplied)
-        }catch{
+            var currentAppliedJobs = userDoc.data["applied_job_id"]?.value as? [String] ?? []
+            var currentPeopleApplied = jobDoc.data["people_applied"]?.value as? [String] ?? []
+            
+            if !currentAppliedJobs.contains(jobId) {
+                currentAppliedJobs.append(jobId)
+            }
+            if !currentPeopleApplied.contains(storedUserId!) {
+                currentPeopleApplied.append(storedUserId!)
+            }
+            
+            let userData: [String: Any] = ["applied_job_id": currentAppliedJobs]
+            let _ = try await database.updateDocument(
+                databaseId: databaseID,
+                collectionId: userCollection,
+                documentId: storedUserId!,
+                data: userData
+            )
+            
+            let jobData: [String: Any] = ["people_applied": currentPeopleApplied]
+            let _ = try await database.updateDocument(
+                databaseId: databaseID,
+                collectionId: posted_job,
+                documentId: jobId,
+                data: jobData
+            )
+            
+        } catch {
             print(error)
         }
     }
