@@ -138,9 +138,22 @@ class SaveUserInfo:ObservableObject {
         return fileDetails
     }
 
-
-
-
-
-
+    func jobAppliedCheck(_ jobId:String) async throws -> Bool {
+        
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        
+        do{
+            let result = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!)
+            
+            if let appliedJobsArray = result.data["applied_job_id"]?.value as? [String] {
+                let hasApplied = appliedJobsArray.contains(jobId)
+                return hasApplied
+            }
+        }catch{
+            print(error)
+            return false
+        }
+        return false
+    }
 }

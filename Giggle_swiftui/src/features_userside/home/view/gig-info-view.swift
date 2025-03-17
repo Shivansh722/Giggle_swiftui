@@ -35,6 +35,8 @@ struct GigInfoView: View {
     let jobId: String
     let jobs:[String: Any]
     var base64Image: String?
+    @State var isApplied: Bool = false
+    @StateObject var checkApplied = SaveUserInfo(appService: AppService())
     
     var body: some View {
         NavigationView { // Use NavigationView for older SwiftUI versions
@@ -186,13 +188,14 @@ struct GigInfoView: View {
                     HStack(alignment: .center) {
                         Spacer()
                         CustomButton(
-                            title: "APPLY NOW",
-                            backgroundColor: Theme.primaryColor,
+                            title: isApplied ? "APPLIED" : "APPLY NOW",
+                            backgroundColor: isApplied ? Color.gray : Theme.primaryColor,
                             action: {
                                 // Trigger the alert
                                 Task{
                                     try await JobPost(appService: AppService()).applyJob(jobId)
                                 }
+                                isApplied = true
                                 showAppliedAlert = true
                                 // Later, you can add backend logic here, e.g.:
                                 // applyToGig(userId: "user123", gigId: "gig456")
@@ -200,6 +203,7 @@ struct GigInfoView: View {
                             width: 283,
                             height: 50
                         )
+                        .disabled(isApplied)
                         Spacer()
                     }
                     .padding()
@@ -234,6 +238,17 @@ struct GigInfoView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
+            .onAppear {
+                Task {
+                    do {
+                        let applied = try await checkApplied.jobAppliedCheck(jobId)
+                            isApplied = applied
+                        } catch {
+                            print("Error checking application status: \(error)")
+                            isApplied = false
+                        }
+                    }
+                }
         }
     }
 }

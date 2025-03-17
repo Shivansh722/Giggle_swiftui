@@ -35,7 +35,7 @@ struct FlnIntroView: View {
             
             VStack {
                 // Replace Image with WebView for GIF
-                WebView(url: Bundle.main.url(forResource: "block", withExtension: "gif")!)
+                WebView(url: Bundle.main.url(forResource: "block", withExtension: "gif") ?? URL.desktopDirectory)
                     .frame(width: 200, height: 200)
                     .padding(.top, 40)
                 
