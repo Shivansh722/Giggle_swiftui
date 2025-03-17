@@ -34,6 +34,7 @@ struct GigInfoView: View {
     @State private var showAppliedAlert = false
     let jobId: String
     let jobs:[String: Any]
+    var base64Image: String?
     
     var body: some View {
         NavigationView { // Use NavigationView for older SwiftUI versions
@@ -41,10 +42,20 @@ struct GigInfoView: View {
                 VStack(spacing: 0) {
                     // Header with Logo and Job Title
                     VStack {
-                        Image("mcD") // Replace with actual image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 84, height: 84)
+                        if let base64 = base64Image,
+                            let data = Data(base64Encoded: base64),
+                            let uiImage = UIImage(data: data)
+                        {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.black)
+                        } else {
+                            Image("mcD")  // Fallback image
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.black)
+                        }
                         Text("\(jobs["job_title"]!)")
                             .font(.title2)
                             .foregroundColor(.white)

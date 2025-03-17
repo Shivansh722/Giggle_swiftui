@@ -10,7 +10,7 @@ struct JobCardView: View {
 
     var body: some View {
         NavigationLink(
-            destination: GigInfoView(jobId: "\(jobs["$id"]!)", jobs: jobs)
+            destination: GigInfoView(jobId: "\(jobs["$id"]!)", jobs: jobs,base64Image:base64Image)
         ) {
             VStack {
                 // Card View
