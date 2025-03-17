@@ -145,37 +145,47 @@ struct HomeView: View {
             
             // Modified Search Tab
             GeometryReader { geometry in
-                ZStack {
-                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack(spacing: 20) {
-                        TextField("Search jobs...", text: $searchText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                            .onChange(of: searchText) { newValue in
-                                filterJobs(searchText: newValue)
-                            }
-                        
-                        ScrollView {
-                            if filteredJobs.isEmpty && !searchText.isEmpty {
-                                Text("No jobs found matching '\(searchText)'")
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding()
-                            } else {
-                                ForEach(filteredJobs.indices, id: \.self) { index in
-                                    JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                        .padding(.horizontal)
-                                        .padding(.bottom, 10)
+                            ZStack {
+                                Theme.backgroundColor.edgesIgnoringSafeArea(.all)
+                                VStack(spacing: 20) {
+                                    ZStack(alignment: .leading) {
+                                        Text("Search Gigs")
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Theme.onPrimaryColor)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .padding(.leading, 16)
+                                    
+                                    TextField("Search gigs...", text: $searchText)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .padding()
+                                        .frame(height: 65)
+                                        .onChange(of: searchText) { newValue in
+                                            filterJobs(searchText: newValue)
+                                        }
+                                    
+                                    ScrollView {
+                                        if filteredJobs.isEmpty && !searchText.isEmpty {
+                                            Text("No jobs found matching '\(searchText)'")
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .padding()
+                                        } else {
+                                            ForEach(filteredJobs.indices, id: \.self) { index in
+                                                JobCardView(jobs: filteredJobs[index], flnID: flnID)
+                                                    .padding(.horizontal)
+                                                    .padding(.bottom, 10)
+                                            }
+                                        }
+                                    }
                                 }
+                                .frame(width: geometry.size.width, height: geometry.size.height)
                             }
                         }
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                }
-            }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                Text("Search")
-            }
+                        .tabItem {
+                            Image(systemName: "magnifyingglass")
+                            Text("Search")
+                        }
             
             // Notifications Tab (unchanged)
             GeometryReader { geometry in
