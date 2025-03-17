@@ -13,9 +13,8 @@ struct WorkPitcher: View {
 
     @State private var isFilePickerPresented = false
     @State private var isPhotoPickerPresented = false
-    @State private var isProcessingComplete = false
     @State private var showPickerChoice = false
-    @State private var navigationTrue : Bool = false
+    @State private var navigationTrue: Bool = false
 
     var body: some View {
         ZStack {
@@ -66,8 +65,8 @@ struct WorkPitcher: View {
                                     Text("\(resume.fileSize / 1024) KB")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
-                                    }
                                 }
+                            }
                             .listRowBackground(Theme.backgroundColor)
                         }
                     }
@@ -101,8 +100,11 @@ struct WorkPitcher: View {
                     }
 
                     Button(action: {
-                        uploadManager.uploadallFiles()
-                        navigationTrue = true
+                        // Trigger upload and navigation when button is clicked
+                        Task {
+                            await uploadManager.uploadallFiles() // Assuming this is async
+                            navigationTrue = true // Navigate after upload completes
+                        }
                     }) {
                         Text("Upload All")
                             .frame(maxWidth: .infinity)
@@ -116,7 +118,8 @@ struct WorkPitcher: View {
                     }
                     .disabled(
                         uploadManager.isProcessingUpload
-                            || uploadManager.selectedResumes.isEmpty)
+                            || uploadManager.selectedResumes.isEmpty
+                    )
                 }
                 .padding()
             }
@@ -144,14 +147,14 @@ struct WorkPitcher: View {
             .sheet(isPresented: $isPhotoPickerPresented) {
                 PhotoPicker { url in
                     if let url = url {
-                        uploadManager.addSelectedResume(fileURL: url)
+                        uploadManager.addSelectedResume(fileURL: url) // Just add, no upload yet
                     }
                 }
             }
             .background(
                 NavigationLink(
                     destination: LocationClientiew(),
-                    isActive: $uploadManager.navigationTrigger
+                    isActive: $navigationTrue
                 ) {
                     EmptyView()
                 }
@@ -161,5 +164,5 @@ struct WorkPitcher: View {
 }
 
 #Preview {
-    ResumeUpload()
+    WorkPitcher()
 }
