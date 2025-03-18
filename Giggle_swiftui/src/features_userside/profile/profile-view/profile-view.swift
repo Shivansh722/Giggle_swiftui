@@ -25,6 +25,7 @@ struct ProfileScreen: View {
     @State private var jobApplied:String = ""
     @State private var endorsed:String = "0"
     @State private var bioGraphy:String = ""
+    @State private var GiggleGrade:String = "No Grade"
 
     var body: some View {
         GeometryReader { geometry in
@@ -105,7 +106,7 @@ struct ProfileScreen: View {
                         // Stats Section
                         HStack(spacing: geometry.size.width / 6) {
                             StatView(title: jobApplied, subtitle: "Applied")
-                            StatView(title: "G+", subtitle: "Giggle Grade")
+                            StatView(title: GiggleGrade, subtitle: "Giggle Grade")
                             StatView(title: endorsed, subtitle: "Endorses")
                         }
                         .padding()
@@ -316,8 +317,9 @@ struct ProfileScreen: View {
     
     private func loadUserDetails() async {
         do {
-            let result = try await saveUserInfo.fetchUser()
-            jobApplied = result
+            let (jobCount, grade) = try await saveUserInfo.fetchUser()
+            jobApplied = jobCount
+            GiggleGrade = grade
         } catch {
             print("Error loading user details: \(error)")
         }

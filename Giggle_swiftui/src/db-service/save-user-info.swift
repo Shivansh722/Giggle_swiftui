@@ -159,17 +159,23 @@ class SaveUserInfo:ObservableObject {
         return false
     }
     
-    func fetchUser() async throws -> String {
+    func fetchUser() async throws -> (String,String) {
         let userDefaults = UserDefaults.standard
         let storedUserId = userDefaults.string(forKey: "userID")
         var arrayCount = "0"
+        var gigGrade = "No Grade"
         let result = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!)
         
         if let countm = result.data["applied_job_id"]?.value as? [String] {
             arrayCount = String(countm.count)
         }
         
-        return arrayCount
+        if let grade = result.data["fln_id"]?.value as? String {
+            let gradding = try await database.getDocument(databaseId: databaseID, collectionId: "67a9ae4e003d4845905c", documentId: grade)
+            gigGrade = gradding.data["giggle_grade"]?.value as? String ?? "No Grade"
+        }
+        
+        return (arrayCount,gigGrade)
     }
     
     @MainActor
