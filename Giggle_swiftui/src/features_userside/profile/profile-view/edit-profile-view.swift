@@ -13,9 +13,7 @@ struct edit_profile_view: View {
     @State private var isImagePickerPresented = false
     @State private var name = FormManager.shared.formData.name  // Editable name
     @State private var email = ""  // Editable email
-    @State private var biography = """
-        Hello, my name is Haley and I am a digital artist based in Mumbai. After graduating with a bachelor's degree in graphic design, I began my freelancing career by creating pop culture digital art. I have been creating commissions for two years and have designed art for popular businesses such as Spiced and The Paper Pepper Club.
-        """  // Editable biography
+    @State private var biography = FormManager.shared.formData.Biography // Editable biography
 
     // States for Experience Section
     @State private var companyName = ""

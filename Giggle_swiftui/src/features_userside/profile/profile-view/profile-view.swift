@@ -24,6 +24,7 @@ struct ProfileScreen: View {
     )
     @State private var jobApplied:String = ""
     @State private var endorsed:String = "0"
+    @State private var bioGraphy:String = ""
 
     var body: some View {
         GeometryReader { geometry in
@@ -119,7 +120,7 @@ struct ProfileScreen: View {
                                 .foregroundColor(Theme.onPrimaryColor)
 
                             Text(
-                                FormManager.shared.formData.Biography
+                                bioGraphy
                             )
                             .foregroundColor(.gray)
                             .font(.system(size: 14))
@@ -291,8 +292,18 @@ struct ProfileScreen: View {
                 Task {
                     await loadUserFiles()
                     await loadUserDetails()
+                    await loadBioGraphy()
                 }
             }
+        }
+    }
+    
+    private func loadBioGraphy() async {
+        do{
+            let result = try await saveUserInfo.getBio()
+            bioGraphy = result
+        } catch {
+            
         }
     }
 

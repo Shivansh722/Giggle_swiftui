@@ -186,6 +186,22 @@ class SaveUserInfo:ObservableObject {
     }
     
     @MainActor
+    func getBio() async throws -> String {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        var setBio:String = ""
+        
+        do{
+            let bio = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!)
+            setBio = bio.data["biography"]?.value as? String ?? ""
+            FormManager.shared.formData.Biography = setBio
+        }catch{
+            print(error)
+        }
+        return setBio
+    }
+    
+    @MainActor
     func updateName(_ updatedName:String) async throws {
         let userDefaults = UserDefaults.standard
         let storedUserId = userDefaults.string(forKey: "userID")
