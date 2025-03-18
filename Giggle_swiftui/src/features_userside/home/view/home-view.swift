@@ -50,11 +50,20 @@ struct HomeView: View {
                             .padding()
                             Spacer()
                             NavigationLink(destination: ProfileScreen()) {
-                                Image(systemName: "person.crop.circle")
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundColor(Color.gray)
-                                    .padding()
+                                if let profileImage = GlobalData.shared.profileImage {
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                        .padding()
+                                } else {
+                                    Image(systemName: "person.crop.circle")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .foregroundColor(Color.gray)
+                                        .padding()
+                                }
                             }
                         }
                         Spacer()

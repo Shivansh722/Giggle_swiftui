@@ -95,8 +95,10 @@ class SaveUserInfo:ObservableObject {
     }
     
     @MainActor
-    func fetchFiles(userId: String) async -> [[String]] {
-        print("fetchFiles() called for userId:", userId)
+    func fetchFiles() async -> [[String]] {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        print("fetchFiles() called for userId:", storedUserId!)
         
         let databaseId = databaseID
         let collectionId = collectionID
@@ -106,7 +108,7 @@ class SaveUserInfo:ObservableObject {
             let document = try await database.getDocument(
                 databaseId: databaseId,
                 collectionId: collectionId,
-                documentId: userId
+                documentId: storedUserId!
             )
 
             if let fileArray = document.data["resumeIds"]?.value as? [String] {
@@ -155,5 +157,59 @@ class SaveUserInfo:ObservableObject {
             return false
         }
         return false
+    }
+    
+    func fetchUser() async throws -> String {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        var arrayCount = "0"
+        let result = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!)
+        
+        if let countm = result.data["applied_job_id"]?.value as? [String] {
+            arrayCount = String(countm.count)
+        }
+        
+        return arrayCount
+    }
+    
+    @MainActor
+    func updateBiographhy(_ updatedBio:String) async throws {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        
+        do{
+            _ =  try await database.updateDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!,data: ["biography":updatedBio])
+            FormManager.shared.formData.Biography = updatedBio
+        }catch{
+            print(error)
+        }
+    }
+    
+    @MainActor
+    func updateName(_ updatedName:String) async throws {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        
+        do{
+           _ =  try await database.updateDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!,data: ["name":updatedName])
+            
+            FormManager.shared.formData.name = updatedName
+        }catch{
+            print(error)
+        }
+    }
+    
+    func updateUserInfoResume() async throws{
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        do{
+            print(FormManager.shared.formData.resumeIds)
+            let updatedIDS:[String:Any] = ["resumeIds":FormManager.shared.formData.resumeIds]
+            _ = try await database.updateDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!,data: updatedIDS)
+        }catch{
+            print(error)
+        }
+        
+        
     }
 }
