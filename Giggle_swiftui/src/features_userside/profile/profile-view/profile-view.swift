@@ -50,12 +50,12 @@ struct ProfileScreen: View {
                                     {
                                         navigateToEdit = true
                                     }
-                                    Templates.MenuButton(title: "Saved Gigs") {
-                                        print("Button 2 pressed")
-                                    }
-                                    Templates.MenuButton(title: "Set Passkey") {
-                                        print("Button 2 pressed")
-                                    }
+//                                    Templates.MenuButton(title: "Saved Gigs") {
+//                                        print("Button 2 pressed")
+//                                    }
+//                                    Templates.MenuButton(title: "Set Passkey") {
+//                                        print("Button 2 pressed")
+//                                    }
                                     Templates.MenuButton(title: "Logout") {
                                         Task {
                                             await handleLogout()
@@ -209,32 +209,34 @@ struct ProfileScreen: View {
                                     }
                             }
 
-                            HStack {
-                                Image(systemName: "music.note")  // Replace with company logo if available
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .clipShape(Circle())
-
-                                VStack(alignment: .leading) {
-                                    Text("UX Intern")
-                                        .foregroundColor(.white)
-                                        .font(.body)
-
-                                    Text("Spotify")
-                                        .foregroundColor(.gray)
-                                        .font(.caption)
-                                }
-
-                                Spacer()
-
-                                VStack(alignment: .trailing) {
-                                    Text("San Jose, US")
-                                        .foregroundColor(Theme.onPrimaryColor)
-                                        .font(.caption)
-
-                                    Text("Dec 20 - Feb 21")
-                                        .foregroundColor(.gray)
-                                        .font(.caption)
+                            ForEach(ExperienceStore.shared.experiences) { experience in
+                                HStack {
+                                    Image(systemName: "music.note")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text(experience.position)
+                                            .foregroundColor(.white)
+                                            .font(.body)
+                                        
+                                        Text(experience.companyName)
+                                            .foregroundColor(.gray)
+                                            .font(.caption)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    VStack(alignment: .trailing) {
+                                        Text(experience.location)
+                                            .foregroundColor(Theme.onPrimaryColor)
+                                            .font(.caption)
+                                        
+                                        Text("\(experience.startDate) - \(experience.endDate)")
+                                            .foregroundColor(.gray)
+                                            .font(.caption)
+                                    }
                                 }
                             }
                             .padding()
@@ -245,39 +247,39 @@ struct ProfileScreen: View {
                         .padding(.top, 8)
 
                         // Portfolio Section
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Portfolio")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(Theme.onPrimaryColor)
-
-                                Spacer()
-
-                                Text("See all")
-                                    .foregroundColor(.blue)
-                                    .font(.callout)
-                                    .onTapGesture {
-                                        // Handle see all action
-                                    }
-                            }
-
-                            LazyVGrid(
-                                columns: [
-                                    GridItem(.flexible()),
-                                    GridItem(.flexible()),
-                                    GridItem(.flexible()),
-                                ], spacing: 16
-                            ) {
-                                ForEach(1...6, id: \.self) { index in
-                                    Image("portfolio\(index)")  // Replace with portfolio images
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 100)
-                                        .cornerRadius(8)
-                                }
-                            }
-                        }
+//                        VStack(alignment: .leading, spacing: 8) {
+//                            HStack {
+//                                Text("Portfolio")
+//                                    .font(.title3)
+//                                    .fontWeight(.semibold)
+//                                    .foregroundColor(Theme.onPrimaryColor)
+//
+//                                Spacer()
+//
+//                                Text("See all")
+//                                    .foregroundColor(.blue)
+//                                    .font(.callout)
+//                                    .onTapGesture {
+//                                        // Handle see all action
+//                                    }
+//                            }
+//
+//                            LazyVGrid(
+//                                columns: [
+//                                    GridItem(.flexible()),
+//                                    GridItem(.flexible()),
+//                                    GridItem(.flexible()),
+//                                ], spacing: 16
+//                            ) {
+//                                ForEach(1...6, id: \.self) { index in
+//                                    Image("portfolio\(index)")  // Replace with portfolio images
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .frame(height: 100)
+//                                        .cornerRadius(8)
+//                                }
+//                            }
+//                        }
                         .padding(.horizontal)
                         .padding(.top, 8)
                     }

@@ -110,133 +110,149 @@ struct edit_profile_view: View {
                         .padding(.top)
                         // Experience Section
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Experience")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .foregroundColor(Theme.onPrimaryColor)
-
-                            // Company Name TextField
-                            ZStack(alignment: .leading) {
-                                if companyName.isEmpty {
-                                    Text("Company Name")
-                                        .foregroundColor(Theme.onPrimaryColor)
-                                        .padding(.horizontal, 10)
-                                        .font(.system(size: 16))
-                                }
-                                TextField("", text: $companyName)
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding(14)
-                                    .background(
-                                        Color(hex: "343434").opacity(0.6)
-                                    )
-                                    .cornerRadius(8)
-                                    .font(.system(size: 14))
-                                    .textFieldStyle(PlainTextFieldStyle())
-                            }
-
-                            // Position TextField
-                            ZStack(alignment: .leading) {
-                                if companyName.isEmpty {
-                                    Text("Position")
-                                        .foregroundColor(Theme.onPrimaryColor)
-                                        .padding(.horizontal, 10)
-                                        .font(.system(size: 16))
-                                }
-                                TextField("", text: $companyName)
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding(14)
-                                    .background(
-                                        Color(hex: "343434").opacity(0.6)
-                                    )
-                                    .cornerRadius(8)
-                                    .font(.system(size: 14))
-                                    .textFieldStyle(PlainTextFieldStyle())
-                            }
-
-                            // Company Branch TextField
-                            ZStack(alignment: .leading) {
-                                if companyName.isEmpty {
-                                    Text("Company Branch (City, State)")
-                                        .foregroundColor(Theme.onPrimaryColor)
-                                        .padding(.horizontal, 10)
-                                        .font(.system(size: 16))
-                                }
-                                TextField("", text: $companyName)
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding(14)
-                                    .background(
-                                        Color(hex: "343434").opacity(0.6)
-                                    )
-                                    .cornerRadius(8)
-                                    .font(.system(size: 14))
-                                    .textFieldStyle(PlainTextFieldStyle())
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Select Start and End Dates")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .foregroundColor(Theme.onPrimaryColor)
-
-                            // Start Date Picker
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Start Date")
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .font(.headline)
-
-                                HStack {
-                                    Picker("Month", selection: $startMonth) {
-                                        ForEach(0..<months.count, id: \.self) {
-                                            index in
-                                            Text(months[index]).tag(index)
+                                        Text("Experience")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Theme.onPrimaryColor)
+                                        
+                                        // Company Name
+                                        ZStack(alignment: .leading) {
+                                            if companyName.isEmpty {
+                                                Text("Company Name")
+                                                    .foregroundColor(Theme.onPrimaryColor)
+                                                    .padding(.horizontal, 10)
+                                                    .font(.system(size: 16))
+                                            }
+                                            TextField("", text: $companyName)
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .padding(14)
+                                                .background(Color(hex: "343434").opacity(0.6))
+                                                .cornerRadius(8)
+                                                .font(.system(size: 14))
+                                                .textFieldStyle(PlainTextFieldStyle())
+                                        }
+                                        
+                                        // Position
+                                        ZStack(alignment: .leading) {
+                                            if position.isEmpty {
+                                                Text("Position")
+                                                    .foregroundColor(Theme.onPrimaryColor)
+                                                    .padding(.horizontal, 10)
+                                                    .font(.system(size: 16))
+                                            }
+                                            TextField("", text: $position)
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .padding(14)
+                                                .background(Color(hex: "343434").opacity(0.6))
+                                                .cornerRadius(8)
+                                                .font(.system(size: 14))
+                                                .textFieldStyle(PlainTextFieldStyle())
+                                        }
+                                        
+                                        // Company Branch
+                                        ZStack(alignment: .leading) {
+                                            if companyBranch.isEmpty {
+                                                Text("Company Branch (City, State)")
+                                                    .foregroundColor(Theme.onPrimaryColor)
+                                                    .padding(.horizontal, 10)
+                                                    .font(.system(size: 16))
+                                            }
+                                            TextField("", text: $companyBranch)
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .padding(14)
+                                                .background(Color(hex: "343434").opacity(0.6))
+                                                .cornerRadius(8)
+                                                .font(.system(size: 14))
+                                                .textFieldStyle(PlainTextFieldStyle())
                                         }
                                     }
-                                    .pickerStyle(MenuPickerStyle())  // Use MenuPickerStyle for a dropdown
-                                    .frame(maxWidth: .infinity)
-
-                                    Picker("Year", selection: $startYear) {
-                                        ForEach(yearRange, id: \.self) { year in
-                                            Text(String(year)).tag(year)
+                                    .padding(.horizontal)
+                                    .padding(.top, 8)
+                                    
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text("Select Start and End Dates")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Theme.onPrimaryColor)
+                                        
+                                        // Start Date Picker
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Start Date")
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .font(.headline)
+                                            
+                                            HStack {
+                                                Picker("Month", selection: $startMonth) {
+                                                    ForEach(0..<months.count, id: \.self) { index in
+                                                        Text(months[index]).tag(index)
+                                                    }
+                                                }
+                                                .pickerStyle(MenuPickerStyle())
+                                                .frame(maxWidth: .infinity)
+                                                
+                                                Picker("Year", selection: $startYear) {
+                                                    ForEach(yearRange, id: \.self) { year in
+                                                        Text(String(year)).tag(year)
+                                                    }
+                                                }
+                                                .pickerStyle(MenuPickerStyle())
+                                                .frame(maxWidth: .infinity)
+                                            }
+                                            .padding(14)
+                                            .background(Color(hex: "343434").opacity(0.6))
+                                            .cornerRadius(8)
+                                        }
+                                        
+                                        // End Date Picker
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("End Date")
+                                                .foregroundColor(Theme.onPrimaryColor)
+                                                .font(.headline)
+                                            
+                                            HStack {
+                                                Picker("Month", selection: $endMonth) {
+                                                    ForEach(0..<months.count, id: \.self) { index in
+                                                        Text(months[index]).tag(index)
+                                                    }
+                                                }
+                                                .pickerStyle(MenuPickerStyle())
+                                                .frame(maxWidth: .infinity)
+                                                
+                                                Picker("Year", selection: $endYear) {
+                                                    ForEach(yearRange, id: \.self) { year in
+                                                        Text(String(year)).tag(year)
+                                                    }
+                                                }
+                                                .pickerStyle(MenuPickerStyle())
+                                                .frame(maxWidth: .infinity)
+                                            }
+                                            .padding(14)
+                                            .background(Color(hex: "343434").opacity(0.6))
+                                            .cornerRadius(8)
                                         }
                                     }
-                                    .pickerStyle(MenuPickerStyle())  // Use MenuPickerStyle for a dropdown
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .padding(14)
-                                .background(Color(hex: "343434").opacity(0.6))
-                                .cornerRadius(8)
-                            }
-
-                            // End Date Picker
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("End Date")
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .font(.headline)
-
-                                HStack {
-                                    Picker("Month", selection: $endMonth) {
-                                        ForEach(0..<months.count, id: \.self) {
-                                            index in
-                                            Text(months[index]).tag(index)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                    .frame(maxWidth: .infinity)
-
-                                    Picker("Year", selection: $endYear) {
-                                        ForEach(yearRange, id: \.self) { year in
-                                            Text(String(year)).tag(year)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                    .frame(maxWidth: .infinity)
-                                }
-                                .padding(14)
-                                .background(Color(hex: "343434").opacity(0.6))
-                                .cornerRadius(8)
-                            }
+                                    .padding(.horizontal)
+                                    
+                                    Button("Save Experience") {
+                                        let startDate = "\(months[startMonth]) \(startYear)"
+                                        let endDate = "\(months[endMonth]) \(endYear)"
+                                        let experience = Experience(
+                                            position: position,
+                                            companyName: companyName,
+                                            location: companyBranch,
+                                            startDate: startDate,
+                                            endDate: endDate
+                                        )
+                                        ExperienceStore.shared.addExperience(experience)
+                                        
+                                        // Reset fields after saving
+                                        companyName = ""
+                                        position = ""
+                                        companyBranch = ""
+                                        startMonth = 0
+                                        endMonth = 0
+                                        startYear = Calendar.current.component(.year, from: Date())
+                                        endYear = startYear
                         }
                         .padding(.horizontal)
                         .padding(.top, 8)
@@ -297,6 +313,32 @@ class GlobalData: ObservableObject {
     @Published var profileImage: UIImage?
 
     private init() {}
+}
+
+// Experience Model
+struct Experience: Identifiable {
+    let id = UUID()
+    var position: String
+    var companyName: String
+    var location: String
+    var startDate: String
+    var endDate: String
+}
+
+// Singleton Global Store
+class ExperienceStore {
+    static let shared = ExperienceStore()
+    private(set) var experiences: [Experience] = []
+    
+    private init() {}
+    
+    func addExperience(_ experience: Experience) {
+        experiences.append(experience)
+    }
+    
+    func clearExperiences() {
+        experiences.removeAll()
+    }
 }
 
 // ImagePicker Helper for selecting images
