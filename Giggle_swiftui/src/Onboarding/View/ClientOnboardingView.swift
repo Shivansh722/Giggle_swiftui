@@ -18,17 +18,18 @@ struct ClientOnboardingView: View {
             VStack {
                 Image("logo")
                     .resizable()
-                    .frame(width: 300, height: 150)
-                    .padding(.top,40)
+                    .frame(width: 200, height: 120)
+                    .padding(.top,60)
+                    .padding(.bottom, 80)
                 
-                Spacer()
+//                Spacer()
                 
-                VStack(spacing: 20) {  
+                VStack(spacing: 20) {
                     FeatureItem(
                         icon: "local", text: selectedRole == .user ? "Find gigs easily near you" : "Find employees near you")
                     FeatureItem(
                         icon: "Pass Fail",
-                        text: selectedRole == .user ? "Prove your skills through FLN assessment":"Get Giggle graded skilled employees")
+                        text: selectedRole == .user ? "Prove your skills through FLN assessment":"Giggle graded employees")
                     FeatureItem(
                         icon: "Marked assignment papers",
                         text:selectedRole == .user ? "Get a Giggle grading and stand out from others" : "Find the best fit for the Gig")

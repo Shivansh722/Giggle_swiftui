@@ -1,35 +1,22 @@
-//
-//  edit-profile-view.swift
-//  Giggle_swiftui
-//
-//  Created by rjk on 08/01/25.
-//
-
 import SwiftUI
-import PhotosUI // For image picker functionality
+import PhotosUI
 
 struct edit_profile_view: View {
-    @State private var selectedImage: UIImage? = nil // To hold the selected image
+    @ObservedObject var viewModel: ProfileViewModel // Shared view model
     @State private var isImagePickerPresented = false
-    @State private var name = "Haley Jessica" // Editable name
-    @State private var email = "demo@gmail.com" // Editable email
-    @State private var biography = """
-        Hello, my name is Haley and I am a digital artist based in Mumbai. After graduating with a bachelor's degree in graphic design, I began my freelancing career by creating pop culture digital art. I have been creating commissions for two years and have designed art for popular businesses such as Spiced and The Paper Pepper Club.
-        """ // Editable biography
     
-    // States for Experience Section
+    // States for Experience Section (unchanged)
     @State private var companyName = ""
     @State private var position = ""
     @State private var companyBranch = ""
     
-    // States for Month and Year Selection
-    @State private var startMonth = 0 // Index for the selected start month
-    @State private var startYear = Calendar.current.component(.year, from: Date()) // Default to current year
-    @State private var endMonth = 0 // Index for the selected end month
-    @State private var endYear = Calendar.current.component(.year, from: Date()) // Default to current year
+    @State private var startMonth = 0
+    @State private var startYear = Calendar.current.component(.year, from: Date())
+    @State private var endMonth = 0
+    @State private var endYear = Calendar.current.component(.year, from: Date())
 
-    let months = Calendar.current.monthSymbols // Array of month names
-    let yearRange = Array(2000...Calendar.current.component(.year, from: Date())) // Year range
+    let months = Calendar.current.monthSymbols
+    let yearRange = Array(2000...Calendar.current.component(.year, from: Date()))
 
     var body: some View {
         GeometryReader { geometry in
@@ -37,11 +24,9 @@ struct edit_profile_view: View {
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack(spacing: 16) {
-                        // Profile Picture and Name Section
                         VStack(spacing: 8) {
                             ZStack(alignment: .bottomTrailing) {
-                                // Profile Image
-                                if let selectedImage = selectedImage {
+                                if let selectedImage = viewModel.selectedImage {
                                     Image(uiImage: selectedImage)
                                         .resizable()
                                         .scaledToFill()
@@ -49,7 +34,7 @@ struct edit_profile_view: View {
                                         .clipShape(Circle())
                                         .shadow(radius: 5)
                                 } else {
-                                    Image("face-id") // Default image
+                                    Image("face-id")
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: 110, height: 110)
@@ -57,7 +42,6 @@ struct edit_profile_view: View {
                                         .shadow(radius: 5)
                                 }
 
-                                // Edit Pen Icon
                                 Button(action: {
                                     isImagePickerPresented = true
                                 }) {
@@ -70,32 +54,30 @@ struct edit_profile_view: View {
                                 }
                             }
 
-                            // Editable Name
                             ZStack(alignment: .leading) {
-                                TextField("", text: $name)
+                                TextField("", text: $viewModel.name)
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .font(.title)
                                     .multilineTextAlignment(.center)
                                     .textFieldStyle(PlainTextFieldStyle())
                             }
-                            // Editable Name
                             ZStack(alignment: .center) {
-                                TextField("", text: $email)
+                                TextField("", text: $viewModel.email)
                                     .foregroundColor(.gray)
                                     .multilineTextAlignment(.center)
                                     .textFieldStyle(PlainTextFieldStyle())
                             }
                         }
                         .padding(.top, 16)
-                        // Biography Section
+
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Biography")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Theme.onPrimaryColor)
 
-                            TextEditor(text: $biography)
-                                .frame(height: 150) // Adjust height as needed
+                            TextEditor(text: $viewModel.biography)
+                                .frame(height: 150)
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .padding(4)
                                 .font(.system(size: 14))
@@ -106,16 +88,16 @@ struct edit_profile_view: View {
                         }
                         .padding(.horizontal)
                         .padding(.top)
-                        // Experience Section
+
+                        // Experience Section (unchanged)
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Experience")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Theme.onPrimaryColor)
 
-                            // Company Name TextField
                             ZStack(alignment: .leading) {
-                                if companyName.isEmpty{
+                                if companyName.isEmpty {
                                     Text("Company Name")
                                         .foregroundColor(Theme.onPrimaryColor)
                                         .padding(.horizontal, 10)
@@ -130,15 +112,14 @@ struct edit_profile_view: View {
                                     .textFieldStyle(PlainTextFieldStyle())
                             }
 
-                            // Position TextField
                             ZStack(alignment: .leading) {
-                                if companyName.isEmpty{
+                                if position.isEmpty {
                                     Text("Position")
                                         .foregroundColor(Theme.onPrimaryColor)
                                         .padding(.horizontal, 10)
                                         .font(.system(size: 16))
                                 }
-                                TextField("", text: $companyName)
+                                TextField("", text: $position)
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .padding(14)
                                     .background(Color(hex: "343434").opacity(0.6))
@@ -147,15 +128,14 @@ struct edit_profile_view: View {
                                     .textFieldStyle(PlainTextFieldStyle())
                             }
 
-                            // Company Branch TextField
                             ZStack(alignment: .leading) {
-                                if companyName.isEmpty{
+                                if companyBranch.isEmpty {
                                     Text("Company Branch (City, State)")
                                         .foregroundColor(Theme.onPrimaryColor)
                                         .padding(.horizontal, 10)
                                         .font(.system(size: 16))
                                 }
-                                TextField("", text: $companyName)
+                                TextField("", text: $companyBranch)
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .padding(14)
                                     .background(Color(hex: "343434").opacity(0.6))
@@ -166,25 +146,25 @@ struct edit_profile_view: View {
                         }
                         .padding(.horizontal)
                         .padding(.top, 8)
+
+                        // Date Pickers (unchanged)
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Select Start and End Dates")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Theme.onPrimaryColor)
-                            
-                            // Start Date Picker
+
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Start Date")
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .font(.headline)
-                                
                                 HStack {
                                     Picker("Month", selection: $startMonth) {
                                         ForEach(0..<months.count, id: \.self) { index in
                                             Text(months[index]).tag(index)
                                         }
                                     }
-                                    .pickerStyle(MenuPickerStyle()) // Use MenuPickerStyle for a dropdown
+                                    .pickerStyle(MenuPickerStyle())
                                     .frame(maxWidth: .infinity)
 
                                     Picker("Year", selection: $startYear) {
@@ -192,7 +172,7 @@ struct edit_profile_view: View {
                                             Text(String(year)).tag(year)
                                         }
                                     }
-                                    .pickerStyle(MenuPickerStyle()) // Use MenuPickerStyle for a dropdown
+                                    .pickerStyle(MenuPickerStyle())
                                     .frame(maxWidth: .infinity)
                                 }
                                 .padding(14)
@@ -200,12 +180,10 @@ struct edit_profile_view: View {
                                 .cornerRadius(8)
                             }
 
-                            // End Date Picker
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("End Date")
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .font(.headline)
-                                
                                 HStack {
                                     Picker("Month", selection: $endMonth) {
                                         ForEach(0..<months.count, id: \.self) { index in
@@ -230,11 +208,12 @@ struct edit_profile_view: View {
                         }
                         .padding(.horizontal)
                         .padding(.top, 8)
+
                         CustomButton(
                             title: "SAVE",
                             backgroundColor: Theme.primaryColor,
                             action: {
-                                
+                                // Save logic here if needed
                             },
                             width: geometry.size.width * 0.8,
                             height: 50,
@@ -249,13 +228,13 @@ struct edit_profile_view: View {
             }
             .background(Theme.backgroundColor)
             .sheet(isPresented: $isImagePickerPresented) {
-                ImagePicker(image: $selectedImage)
+                ImagePicker(image: $viewModel.selectedImage)
             }
         }
     }
 }
 
-// ImagePicker Helper for selecting images
+// ImagePicker remains unchanged
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
 
@@ -293,5 +272,5 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    edit_profile_view()
+    edit_profile_view(viewModel: ProfileViewModel())
 }

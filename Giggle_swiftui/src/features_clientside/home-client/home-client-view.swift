@@ -84,7 +84,9 @@ struct HomeClientView: View {
         .sheet(isPresented: $showGigLister) {
             GigDetailsScreen(gigManager: gigManager)
         }
+        .navigationBarBackButtonHidden(true)
     }
+        
 }
 
 

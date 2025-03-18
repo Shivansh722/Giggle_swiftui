@@ -2,17 +2,16 @@ import SwiftUI
 
 @main
 struct Giggle_swiftuiApp: App {
-    @StateObject private var viewModel = RegisterViewModel(service:AppService()) // Create the ViewModel instance here
+    @StateObject private var viewModel = RegisterViewModel(service: AppService()) // For RegisterViewModel
+    @StateObject private var profileViewModel = ProfileViewModel() // For ProfileViewModel
 
     var body: some Scene {
         WindowGroup {
-
-           
-
-            SplashScreen()
-
-                .environmentObject(viewModel) // Inject ViewModel as an environment object
+            NavigationStack { // Add NavigationStack for navigation support
+                HomeClientView()
+                    .environmentObject(viewModel) // Inject RegisterViewModel
+                    .environmentObject(profileViewModel) // Inject ProfileViewModel
+            }
         }
     }
 }
-//@EnvironmentObject is used to share data across the entire view hierarchy by injecting an object at the root view
