@@ -113,11 +113,10 @@ struct HomeView: View {
                                     .padding(.top, 5)
                                 } else {
                                     FLNGradeCardView(grade: "G+", lastUpdate: updatedAt!)
-                                        .padding(.bottom, 250)
+                                        .padding(.bottom, 170)
                                 }
                             }
                         }
-                        Spacer()
 
                         VStack {
                             Text("Recommendations")
@@ -133,7 +132,7 @@ struct HomeView: View {
                                 }
                             }.padding(.top, 20)
                         }
-                        .padding(.top, 20)
+                        .padding(.top, flnID != nil ? 20 : 40)
                         .padding(.top, geometry.size.height * -0.3)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
