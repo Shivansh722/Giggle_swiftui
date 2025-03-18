@@ -15,8 +15,15 @@ struct ProfileScreen: View {
     @StateObject var logout = AppService()
     @State private var navigate: Bool = false
     @State private var navigateToEdit = false
-
-    let userId = "67a9e3659de7bda07a47"
+    @State private var showPickerChoice:Bool = false
+    @State private var isFilePickerPresented:Bool = false
+    @StateObject private var uploadManager = ResumeUploadManager(
+        apiEndpoint: "https://cloud.appwrite.io/v1",
+        projectIdentifier: "677299c0003044510787",
+        storageBucketId: "67863b500019e5de0dd8"
+    )
+    @State private var jobApplied:String = ""
+    @State private var endorsed:String = "0"
 
     var body: some View {
         GeometryReader { geometry in
@@ -68,12 +75,21 @@ struct ProfileScreen: View {
                         }
                         // Profile Picture and Name
                         VStack(spacing: 8) {
-                            Image("face-id")  // Replace with your profile image asset
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 110, height: 110)
-                                .clipShape(Circle())
-                                .shadow(radius: 5)
+                            if let profileImage = GlobalData.shared.profileImage {
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 110, height: 110)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 5)
+                                } else {
+                                    Image("face-id")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 110, height: 110)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 5)
+                                }
 
                             Text(FormManager.shared.formData.name)
                                 .font(.title)
@@ -87,9 +103,9 @@ struct ProfileScreen: View {
 
                         // Stats Section
                         HStack(spacing: geometry.size.width / 6) {
-                            StatView(title: "27", subtitle: "Applied")
+                            StatView(title: jobApplied, subtitle: "Applied")
                             StatView(title: "G+", subtitle: "Giggle Grade")
-                            StatView(title: "14", subtitle: "Endorses")
+                            StatView(title: endorsed, subtitle: "Endorses")
                         }
                         .padding()
                         .padding(.top, 16)
@@ -103,7 +119,7 @@ struct ProfileScreen: View {
                                 .foregroundColor(Theme.onPrimaryColor)
 
                             Text(
-                                "Hello, my name is Haley and I am a digital artist based in Mumbai. After graduating with a bachelor's degree in graphic design, I began my freelancing career by creating pop culture digital art. I have been creating commissions for two years and have designed art for popular businesses such as Spiced and The Paper Pepper Club."
+                                FormManager.shared.formData.Biography
                             )
                             .foregroundColor(.gray)
                             .font(.system(size: 14))
@@ -124,7 +140,34 @@ struct ProfileScreen: View {
                                     .foregroundColor(.blue)
                                     .font(.callout)
                                     .onTapGesture {
-                                        // Handle upload resume action
+                                        showPickerChoice = true
+                                    }
+                                    .actionSheet(isPresented: $showPickerChoice){
+                                        ActionSheet(
+                                            title: Text("Select Source"),
+                                            buttons: [
+                                                .default(Text("Files")) {
+                                                    isFilePickerPresented = true
+                                                },
+                                                .cancel()
+                                            ]
+                                        )
+                                    }
+                                    .sheet(isPresented: $isFilePickerPresented) {
+                                        DocumentPicker { url in
+                                            if let url = url {
+                                                uploadManager.addSelectedResume(fileURL: url)
+                                                Task {
+                                                    do{
+                                                        try await uploadManager.updateResume()
+                                                        await loadUserFiles()
+                                                    }catch{
+                                                        
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
                                     }
                             }
                             if resumeFiles.isEmpty {
@@ -247,15 +290,25 @@ struct ProfileScreen: View {
             .onAppear {
                 Task {
                     await loadUserFiles()
+                    await loadUserDetails()
                 }
             }
         }
     }
 
     private func loadUserFiles() async {
-        let files = await saveUserInfo.fetchFiles(userId: userId)
+        let files = await saveUserInfo.fetchFiles()
         DispatchQueue.main.async {
             self.resumeFiles = files
+        }
+    }
+    
+    private func loadUserDetails() async {
+        do {
+            let result = try await saveUserInfo.fetchUser()
+            jobApplied = result
+        } catch {
+            print("Error loading user details: \(error)")
         }
     }
 

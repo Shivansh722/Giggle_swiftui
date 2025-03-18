@@ -83,6 +83,36 @@ class ResumeUploadManager: ObservableObject {
         }
     }
     
+    func updateResume()async throws{
+        Task{
+            for selectedResume in selectedResumes {
+                FormManager.shared.formData.resumeIds.append(selectedResume.id.uuidString)
+                do{
+                    guard
+                        let inputResume = try? InputFile.fromPath(
+                            selectedResume.localPath)
+                    else {
+                        print(
+                            "Failed to create InputFile for \(selectedResume.fileName)")
+                        continue
+                    }
+                    let uploadedResume = try await appwriteStorage.createFile(
+                        bucketId: appwriteBucketId,
+                        fileId: selectedResume.id.uuidString,
+                        file: inputResume
+                    )
+                    
+                    print("upload things", uploadedResume.id)
+                    try await SaveUserInfo(appService: AppService()).updateUserInfoResume()
+
+                    
+                }catch{
+                    print(error)
+                }
+            }
+        }
+    }
+    
     func uploadallFiles(){
         guard !isProcessingUpload else { return }
         isProcessingUpload = true
