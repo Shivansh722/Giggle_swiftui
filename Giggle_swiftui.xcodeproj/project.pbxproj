@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		192332C92D89B28700495F09 /* empty-screen.gif in Resources */ = {isa = PBXBuildFile; fileRef = 192332C82D89B28700495F09 /* empty-screen.gif */; };
+		192332CD2D89B54F00495F09 /* job-list.gif in Resources */ = {isa = PBXBuildFile; fileRef = 192332CC2D89B54F00495F09 /* job-list.gif */; };
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
 		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		192332C82D89B28700495F09 /* empty-screen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "empty-screen.gif"; sourceTree = "<group>"; };
+		192332CC2D89B54F00495F09 /* job-list.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "job-list.gif"; sourceTree = "<group>"; };
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -41,6 +45,8 @@
 		19E9A9882CD20FA5009F768B = {
 			isa = PBXGroup;
 			children = (
+				192332CC2D89B54F00495F09 /* job-list.gif */,
+				192332C82D89B28700495F09 /* empty-screen.gif */,
 				19E9A9932CD20FA5009F768B /* Giggle_swiftui */,
 				19E9A9922CD20FA5009F768B /* Products */,
 			);
@@ -126,6 +132,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				192332CD2D89B54F00495F09 /* job-list.gif in Resources */,
+				192332C92D89B28700495F09 /* empty-screen.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,4 +1,21 @@
 import SwiftUI
+import WebKit
+
+// WebView for displaying GIF (matching your existing implementation)
+struct WebClientHomeView: UIViewRepresentable {
+    let url: URL
+
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.isOpaque = false // Make webview transparent
+        webView.backgroundColor = .clear // Set clear background
+        let request = URLRequest(url: url)
+        webView.load(request)
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
 
 // Define a Job struct
 struct Job: Identifiable {
@@ -14,11 +31,11 @@ struct Job: Identifiable {
 struct HomeClientView: View {
     @ObservedObject var gigManager = GigManager() // Shared Gig Manager
     @State private var showGigLister = false
-    
+
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 // Custom Header
                 HStack {
@@ -33,9 +50,9 @@ struct HomeClientView: View {
                             .foregroundColor(Theme.onPrimaryColor)
                     }
                     .padding()
-                    
+
                     Spacer()
-                    
+
                     NavigationLink(destination: ProfileScreen()) {
                         Image(systemName: "person.crop.circle")
                             .resizable()
@@ -44,7 +61,7 @@ struct HomeClientView: View {
                             .padding()
                     }
                 }
-                
+
                 ScrollView {
                     VStack(spacing: 10) {
                         // Display newly added gigs
@@ -63,7 +80,28 @@ struct HomeClientView: View {
                     .opacity(1.0)
                 }
             }
-            
+
+            // Show GIF only when no gigs are present
+            if gigManager.gigs.isEmpty {
+                VStack {
+                    WebClientHomeView(
+                        url: Bundle.main.url(forResource: "empty-screen", withExtension: "gif")
+                        ?? URL(fileURLWithPath: NSTemporaryDirectory())
+                    )
+                    .frame(width: 300, height: 300)
+
+                    Text("Post your Gigs here!")
+                        .font(.system(size: 23))
+                        .fontWeight(.bold)
+                        .foregroundColor(Theme.onPrimaryColor)
+                }
+                .position(
+                    x: UIScreen.main.bounds.width / 2,
+                    y: UIScreen.main.bounds.height / 2 - 50
+                )
+                .padding(.bottom, 50)
+            }
+
             // Floating Action Button
             VStack {
                 Spacer()
@@ -74,7 +112,7 @@ struct HomeClientView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.red)
+                        .background(Theme.primaryColor)
                         .clipShape(Circle())
                         .shadow(radius: 5)
                 }
@@ -86,9 +124,7 @@ struct HomeClientView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-        
 }
-
 
 // Preview
 struct HomeClientView_Previews: PreviewProvider {
