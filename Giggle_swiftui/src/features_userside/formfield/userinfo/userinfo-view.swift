@@ -13,7 +13,7 @@ struct UserInfoView: View {
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var showAlert = false
     @State private var alertMessage = ""
-    @State private var navigateToLocation:Bool = false
+    @State private var navigateToLocation: Bool = false
     
     let genders = ["Male", "Female", "Other"]
     
@@ -24,7 +24,6 @@ struct UserInfoView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: geometry.size.height * 0.005) {
                             HStack {
@@ -81,10 +80,8 @@ struct UserInfoView: View {
                             }
                         }
                     }
-
                     
                     VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
-                        
                         Text("Name")
                             .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                             .foregroundColor(Theme.onPrimaryColor)
@@ -118,16 +115,17 @@ struct UserInfoView: View {
                     .padding(.horizontal, geometry.size.width * 0.08)
                     
                     Spacer()
+                    
                     NavigationLink(
-                        destination:LocationView(),
+                        destination: LocationView(),
                         isActive: $navigateToLocation
-                    ){
+                    ) {
                         EmptyView()
                     }
+                    
                     // Next Button
                     Button(action: {
-                        setData()
-                        navigateToLocation = true
+                        validateAndProceed()
                     }) {
                         Text("NEXT")
                             .font(.headline)
@@ -144,10 +142,36 @@ struct UserInfoView: View {
             .navigationBarBackButtonHidden(true)
             .onAppear {
                 loadUserDataFromUserDefaults()
-                }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Incomplete Form"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
     }
-    private func setData(){
+    
+    private func validateAndProceed() {
+        // Check if required fields are empty
+        if name.isEmpty {
+            alertMessage = "Please enter your name."
+            showAlert = true
+        } else if phoneNumber.isEmpty {
+            alertMessage = "Please enter your phone number."
+            showAlert = true
+        } else if selectedImage == nil {
+            alertMessage = "Please select a profile image."
+            showAlert = true
+        } else {
+            // All fields are filled, proceed
+            setData()
+            navigateToLocation = true
+        }
+    }
+    
+    private func setData() {
         formManager.formData.name = name
         formManager.formData.phone = phoneNumber
         formManager.formData.gender = selectedGender
@@ -158,7 +182,7 @@ struct UserInfoView: View {
         UserDefaults.standard.set(phoneNumber, forKey: "userPhone")
         print("User data saved: Name = \(name), Phone = \(phoneNumber)")
     }
-
+    
     private func loadUserDataFromUserDefaults() {
         if UserPreference.shared.shouldLoadUserDetailsAutomatically {
             if let resumeData = UserDefaults.standard.data(forKey: "resumeData") {
@@ -187,6 +211,6 @@ struct UserInfoView: View {
     }
 }
 
-#Preview() {
+#Preview {
     UserInfoView()
 }
