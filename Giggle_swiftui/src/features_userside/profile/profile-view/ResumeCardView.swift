@@ -1,7 +1,6 @@
 import SwiftUI
 struct ResumeCardView: View {
     let ResumeName: String
-    let ResumeSize: String
 
     var body: some View {
         HStack {
@@ -11,9 +10,6 @@ struct ResumeCardView: View {
             VStack(alignment: .leading) {
                 Text(ResumeName)
                     .foregroundColor(Theme.onPrimaryColor)
-                Text(ResumeSize)
-                    .foregroundColor(.gray)
-                    .font(.caption)
             }
         }
         .padding()

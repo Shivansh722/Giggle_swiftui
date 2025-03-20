@@ -11,8 +11,8 @@ struct HomeView: View {
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
     @State private var jobresult: [[String: Any]] = []
-    @State private var searchText: String = "" // Added for search input
-    @State private var filteredJobs: [[String: Any]] = [] // Added for filtered results
+    @State private var searchText: String = ""
+    @State private var filteredJobs: [[String: Any]] = []
 
     init() {
         let appearance = UITabBarAppearance()
@@ -31,7 +31,6 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
-            // Home Tab (unchanged)
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
@@ -88,13 +87,11 @@ struct HomeView: View {
                                         Text("Take FLN")
                                             .font(.headline)
                                             .foregroundColor(Theme.secondaryColor)
-                                        
                                         Text("To start applying for gigs you need to take the FLN test first.")
                                             .font(.system(size: 16))
                                             .foregroundColor(Theme.tertiaryColor)
                                             .multilineTextAlignment(.center)
                                             .padding(.horizontal, 24)
-                                        
                                         CustomButton(
                                             title: "NEXT",
                                             backgroundColor: Theme.primaryColor,
@@ -103,7 +100,6 @@ struct HomeView: View {
                                             height: 50
                                         )
                                         .padding(.leading, 65)
-                                        
                                         NavigationLink(destination: FlnIntroView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }
@@ -125,7 +121,6 @@ struct HomeView: View {
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .padding(.horizontal, geometry.size.width * -0.45)
                                 .padding(.top, 40)
-                            
                             ScrollView {
                                 ForEach(jobresult.indices, id: \.self) { index in
                                     JobCardView(jobs: jobresult[index], flnID: flnID)
@@ -145,66 +140,63 @@ struct HomeView: View {
             .onAppear {
                 Task {
                     await fetchUser()
-                    let result = try await jobs.get_job_post()
-                    jobresult = result
-                    filteredJobs = result // Initialize filteredJobs with all jobs
+                    do {
+                        let result = try await jobs.get_job_post()
+                        jobresult = result
+                        filteredJobs = result
+                        print("Fetched \(jobresult.count) jobs")
+                    } catch {
+                        print("Failed to fetch job posts: \(error.localizedDescription)")
+                    }
                 }
             }
             
-            // Modified Search Tab
-            GeometryReader { geometry in
-                            ZStack {
-                                Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                                VStack(spacing: 20) {
-                                    ZStack(alignment: .leading) {
-                                        Text("Search Gigs")
-                                            .font(.title)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Theme.onPrimaryColor)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                    .padding(.leading, 16)
-                                    
-                                    TextField("Search gigs...", text: $searchText)
-                                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                                        .padding()
-                                        .frame(height: 65)
-                                        .onChange(of: searchText) { newValue in
-                                            filterJobs(searchText: newValue)
-                                        }
-                                    
-                                    ScrollView {
-                                        if filteredJobs.isEmpty && !searchText.isEmpty {
-                                            Text("No jobs found matching '\(searchText)'")
-                                                .foregroundColor(Theme.onPrimaryColor)
-                                                .padding()
-                                        } else {
-                                            ForEach(filteredJobs.indices, id: \.self) { index in
-                                                JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                                    .padding(.horizontal)
-                                                    .padding(.bottom, 10)
-                                            }
-                                        }
-                                    }
-                                }
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                            }
-                        }
-                        .tabItem {
-                            Image(systemName: "magnifyingglass")
-                            Text("Search")
-                        }
-            
-            // Notifications Tab (unchanged)
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack {
-                        Text("Notifications View")
-                            .font(.largeTitle)
-                            .foregroundColor(Theme.onPrimaryColor)
+                    VStack(spacing: 20) {
+                        ZStack(alignment: .leading) {
+                            Text("Search Gigs")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding(.leading, 16)
+                        
+                        TextField("Search by job title...", text: $searchText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                            .frame(height: 65)
+                            .onChange(of: searchText) { newValue in
+                                filterJobs(searchText: newValue)
+                            }
+                        
+                        ScrollView {
+                            if filteredJobs.isEmpty && !searchText.isEmpty {
+                                Text("No jobs found matching '\(searchText)'")
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .padding()
+                            } else {
+                                ForEach(filteredJobs.indices, id: \.self) { index in
+                                    JobCardView(jobs: filteredJobs[index], flnID: flnID)
+                                        .padding(.horizontal)
+                                        .padding(.bottom, 10)
+                                }
+                            }
+                        }
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+            }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+            }
+            
+            GeometryReader { geometry in
+                ZStack {
+                    NotificationScreen()
                 }
             }
             .tabItem {
@@ -226,26 +218,31 @@ struct HomeView: View {
         isLoading = false
     }
     
-    // New function to filter jobs based on search text
     func filterJobs(searchText: String) {
         if searchText.isEmpty {
             filteredJobs = jobresult
+            print("Search cleared, showing all \(filteredJobs.count) jobs")
         } else {
-            filteredJobs = jobresult.filter { job in
-                // Adjust these keys based on your job dictionary structure
-                let title = job["title"] as? String ?? ""
-                let description = job["description"] as? String ?? ""
-                let company = job["company"] as? String ?? ""
-                
-                return title.lowercased().contains(searchText.lowercased()) ||
-                       description.lowercased().contains(searchText.lowercased()) ||
-                       company.lowercased().contains(searchText.lowercased())
+            let filteredTitles = GlobalDataTitle.shared.jobTitles.filter { title in
+                title.lowercased().contains(searchText.lowercased())
             }
+            print("Hard-coded titles: \(GlobalDataTitle.shared.jobTitles)")
+            print("Filtered titles: \(filteredTitles)")
+            
+            // Filter jobs based on index matching the hard-coded titles
+            filteredJobs = jobresult.enumerated().filter { (index, job) in
+                if index < GlobalDataTitle.shared.jobTitles.count {
+                    let title = GlobalDataTitle.shared.jobTitles[index]
+                    return title.lowercased().contains(searchText.lowercased())
+                }
+                return false
+            }.map { $1 }
+            
+            print("Filtered jobs count: \(filteredJobs.count)")
         }
     }
 }
 
-// Assuming these structs exist elsewhere in your code
 struct FLNGradeCardView: View {
     let grade: String
     let lastUpdate: String
@@ -256,12 +253,10 @@ struct FLNGradeCardView: View {
             RoundedRectangle(cornerRadius: 22)
                 .stroke(Color.white, lineWidth: 1)
                 .cornerRadius(20)
-            
             VStack(alignment: .leading, spacing: 10) {
                 Text("Your FLN Grade:")
                     .font(.headline)
                     .foregroundColor(.white)
-                
                 Text(grade)
                     .font(.title2)
                     .bold()
@@ -283,12 +278,10 @@ struct FLNGradeCardView: View {
                         Text("Last Update")
                             .font(.caption)
                             .foregroundColor(.gray)
-                        
                         Text(lastUpdate)
                             .font(.caption)
                             .foregroundColor(.white)
                     }
-                    
                     NavigationLink(destination: FLNScoreView(), isActive: $navigate) {
                         EmptyView()
                     }
@@ -304,3 +297,4 @@ struct FLNGradeCardView: View {
 #Preview {
     HomeView()
 }
+

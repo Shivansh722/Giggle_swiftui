@@ -5,17 +5,19 @@ import UIKit
 class JobPost: ObservableObject {
     let client: Client
     let database: Databases
+    let messaging: Messaging
     let appService: AppService
     
-    let databaseID: String = "67729cb100158022ba8e"
-    let posted_job = "67c803360001275e630b"
-    let ClientCollection = "67a88597000fd8837adf"
-    let userCollection = "67729cdc0016234d1704"
-    let BucketId = "67863b500019e5de0dd8"
+    let databaseID: String = "67da78cd00052312da62"
+    let posted_job = "67da7b190038325b3b99"
+    let ClientCollection = "67da7b8e001f23053dd5"
+    let userCollection = "67da79a900157497cced"
+    let BucketId = "67da7d55000bf31fb062"
     
     init(appService: AppService) {
         self.client = appService.client
         self.database = Databases(client)
+        self.messaging = Messaging(client)
         self.appService = appService
     }
     
@@ -29,11 +31,12 @@ class JobPost: ObservableObject {
             var jobPosts: [[String: Any]] = []
             
             for document in documentList.documents {
-                let data = document.data as [String: Any]
+                var data = document.data as [String: Any]
+                data["$id"] = document.id // Include document ID
                 jobPosts.append(data)
             }
             
-            print(jobPosts)
+            print("Job Posts: \(jobPosts)")
             return jobPosts
             
         } catch {
@@ -42,29 +45,39 @@ class JobPost: ObservableObject {
         }
     }
     
-    func postJob() async throws{
+    func postJob() async throws {
         let userDefaults = UserDefaults.standard
         let storedUserId = userDefaults.string(forKey: "userID")
         
-        do{
-            let data:[String:Any] = [
-                "job_title" : JobFormManager.shared.formData.jobTitle,
+        do {
+            let data: [String: Any] = [
+                "job_title": JobFormManager.shared.formData.jobTitle,
                 "location": JobFormManager.shared.formData.location,
                 "salary": JobFormManager.shared.formData.salary,
                 "job_type": JobFormManager.shared.formData.jobType,
                 "job_trait": JobFormManager.shared.formData.jobTrait,
-                "client_id":storedUserId!
+                "client_id": storedUserId!
             ]
             
-            let result = try await database.createDocument(databaseId: databaseID, collectionId: posted_job, documentId: String(describing:JobFormManager.shared.formData.id), data: data)
+            let result = try await database.createDocument(
+                databaseId: databaseID,
+                collectionId: posted_job,
+                documentId: String(describing: JobFormManager.shared.formData.id),
+                data: data
+            )
             
             print(result.id)
-            let idString:[String] = [String(describing:JobFormManager.shared.formData.id)]
-            let clientUpdateId:[String:Any] = [
-                "job_post_id":idString]
+            let idString: [String] = [String(describing: JobFormManager.shared.formData.id)]
+            let clientUpdateId: [String: Any] = ["job_post_id": idString]
             
-            _ = try await database.updateDocument(databaseId: databaseID, collectionId: ClientCollection, documentId: storedUserId!, data: clientUpdateId)
-        }catch{
+            _ = try await database.updateDocument(
+                databaseId: databaseID,
+                collectionId: ClientCollection,
+                documentId: storedUserId!,
+                data: clientUpdateId
+            )
+            
+        } catch {
             print(error)
         }
     }
@@ -118,27 +131,34 @@ class JobPost: ObservableObject {
     }
     
     func fetchImage(_ jobId: String) async throws -> String {
-        let result = try await database.getDocument(databaseId: databaseID, collectionId: posted_job, documentId: jobId)
+        let result = try await database.getDocument(
+            databaseId: databaseID,
+            collectionId: posted_job,
+            documentId: jobId
+        )
         
-        print(result.data["client_id"]?.value as? String ?? "undefines")
+        print(result.data["client_id"]?.value as? String ?? "undefined")
         
-        let getClientImageId = try await database.getDocument(databaseId: databaseID, collectionId: ClientCollection, documentId: result.data["client_id"]?.value as? String ?? "undefines")
+        let getClientImageId = try await database.getDocument(
+            databaseId: databaseID,
+            collectionId: ClientCollection,
+            documentId: result.data["client_id"]?.value as? String ?? "undefined"
+        )
         
         print(getClientImageId.data["photos"])
         
         guard let photos = getClientImageId.data["photos"]?.value as? [String],
-                  let photoId = photos.first else {
-                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No photos found"])
-            }
+              let photoId = photos.first else {
+            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No photos found"])
+        }
         print("Photo ID: \(photoId)")
         let storage = Storage(client)
-        let imageData = try await storage.getFilePreview (
-                bucketId: BucketId,
-                fileId: photoId
-            )
+        let imageData = try await storage.getFilePreview(
+            bucketId: BucketId,
+            fileId: photoId
+        )
         
         var byteBuffer = imageData
-        
         let data = byteBuffer.readData(length: byteBuffer.readableBytes)
         
         return String((data?.base64EncodedString())!)

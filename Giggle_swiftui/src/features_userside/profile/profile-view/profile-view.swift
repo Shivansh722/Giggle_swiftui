@@ -19,8 +19,8 @@ struct ProfileScreen: View {
     @State private var isFilePickerPresented:Bool = false
     @StateObject private var uploadManager = ResumeUploadManager(
         apiEndpoint: "https://cloud.appwrite.io/v1",
-        projectIdentifier: "677299c0003044510787",
-        storageBucketId: "67863b500019e5de0dd8"
+        projectIdentifier: "67da77af003e5e94f856",
+        storageBucketId: "67da7d55000bf31fb062"
     )
     @State private var jobApplied:String = ""
     @State private var endorsed:String = "0"
@@ -179,7 +179,7 @@ struct ProfileScreen: View {
                             } else {
                                 ForEach(resumeFiles, id: \.self) { file in
                                     ResumeCardView(
-                                        ResumeName: file[0], ResumeSize: file[1]
+                                        ResumeName: file[0]
                                     )
                                 }
                             }

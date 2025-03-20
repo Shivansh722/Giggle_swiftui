@@ -1,17 +1,14 @@
 import SwiftUI
+import AuthenticationServices // Ensure this is imported
 
 struct LoginSimpleView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
-   
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isValidEmail = true
     @State private var isValidPassword = true
     @State private var navigateToNextScreen = false // Navigation trigger
 
-    // State variable that toggles visibility as the view changes ( also within the view )
-    
-    
     var body: some View {
         GeometryReader { geometry in
             NavigationView {
@@ -87,35 +84,64 @@ struct LoginSimpleView: View {
                         .disabled(viewModel.isLoading) // Disable button when loading
                         .padding(.top, -10) // Reduced padding to move button up
                         .padding(.horizontal, 50)
+                        .padding(.bottom, 10)
 
                         // Divider
                         HStack {
-                                           Divider()
-                                               .frame(width: 110, height: 1)
-                                               .background(Color.gray)
-                                               .padding(.leading, 30)
+                            Divider()
+                                .frame(width: 95, height: 1)
+                                .background(Color.gray)
+                                .padding(.leading, 30)
 
-                                           Text("OR")
-                                               .foregroundColor(Color.gray)
+                            Text("OR Sign In with")
+                                .foregroundColor(Color.gray)
 
-                                           Divider()
-                                               .frame(width: 110, height: 1)
-                                               .background(Color.gray)
-                                               .padding(.trailing, 30)
-                                       }
-                                       .padding(.vertical, 20)
-                                       .padding(.top, 25)
+                            Divider()
+                                .frame(width: 95, height: 1)
+                                .background(Color.gray)
+                                .padding(.trailing, 30)
+                        }
+                        .padding(.vertical, 20)
+                        .padding(.top, 25)
 
                         // Google and Apple login options
                         HStack(spacing: geometry.size.width * 0.1) {
-                            Image("google-logo")
-                                .resizable()
-                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
-                            Image("apple-logo")
-                                .resizable()
-                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                            Button(action: {
+                                // Google login action
+                            }) {
+                                Image("google-logo2")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .scaleEffect(1.2)
+                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1) // Adjust size of the logo
+                                    .padding()
+                                    .background(Color.white) // White background
+                                    .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded corners
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.clear, lineWidth: 1)
+                                    )
+                            }
+
+                            // Custom Apple Sign In Button
+                            Button(action: {
+                                handleAppleSignInButtonTapped()
+                            }) {
+                                Image(systemName: "apple.logo") // Use SF Symbol for Apple logo
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.black)
+                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1) // Adjust size of the logo
+                                    .padding()
+                                    .background(Color.white) // White background
+                                    .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded corners
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.black, lineWidth: 2) // Black border
+                                    )
+                            }
+                            .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
                         }
-                        .padding(.top, 10)
                         .padding(.bottom, 10)
 
                         Spacer()
@@ -154,8 +180,19 @@ struct LoginSimpleView: View {
             .navigationBarHidden(true)
         }
     }
+
+    private func handleAppleSignInButtonTapped() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = AppleSignInDelegate(viewModel: viewModel, navigateToUserDetail: $navigateToNextScreen)
+        authorizationController.performRequests()
+    }
 }
 
 #Preview {
     LoginSimpleView()
 }
+

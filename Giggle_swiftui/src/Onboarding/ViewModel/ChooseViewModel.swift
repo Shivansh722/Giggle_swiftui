@@ -29,7 +29,7 @@ struct FeatureItem: View {
                 .resizable()
                 .font(.title2)
                 .foregroundColor(.red)
-                .frame(width: 32,height: 47)
+                .frame(width: 28,height: 36)
             Text(text)
                 .foregroundColor(.white)
                 .bold()

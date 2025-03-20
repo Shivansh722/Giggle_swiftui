@@ -63,7 +63,7 @@ class AppService: ObservableObject {
     init() {
         self.client = Client()
             .setEndpoint("https://cloud.appwrite.io/v1")  // Ensure endpoint is correct
-            .setProject("677299c0003044510787")
+            .setProject("67da77af003e5e94f856")
             .setSelfSigned(true)
 
         self.account = Account(client)
@@ -90,6 +90,17 @@ class AppService: ObservableObject {
 
         do {
             _ = try await account.createEmailPasswordSession(email: email, password: password)
+//            let session = try await account.createEmailPasswordSession(email: email, password: password)
+//            if let token = UserDefaults.standard.string(forKey: "apnsToken") {
+//                let target = try await account.createPushTarget(
+//                    targetId: ID.unique(),
+//                    identifier: token,
+//                    providerId: "67d9112700349d6ec5de"
+//                )
+//                print("Push target created: \(target.id)")
+//            } else {
+//                print("No APNs token found in UserDefaults")
+//            }
             if let user = try? await account.get() {
                 let userId = user.id
                 let userDefaults = UserDefaults.standard
@@ -114,7 +125,52 @@ class AppService: ObservableObject {
             return .error(error.localizedDescription)
         }
     }
-
+    
+    func createAppleSession() async -> RequestStatus {
+        do {
+            // This will open the Apple OAuth2 flow in a web view
+            _ = try await account.createOAuth2Session(provider: .apple)
+            if let user = try? await account.get() {
+                self.userId = user.id
+                FormManager.shared.formData.userId = user.id
+                FormManager.shared.formData.email = user.email
+            }
+            return .success
+        } catch {
+            return .error(error.localizedDescription)
+        }
+    }
+    
+    func createGoogleSession(with openURL: OpenURLAction?) async -> RequestStatus {
+            do {
+                if let openURL = openURL {
+                    // Use modern WebView OAuth approach for iOS 14+
+                    _ = try await account.createOAuth2Session(
+                        provider: .google,
+                        success: nil, failure: nil, scopes: ["profile", "email"]
+                    )
+                } else {
+                    // Fallback for testing/preview environment
+                    print("Warning: OpenURLAction not available - OAuth may not complete properly")
+                    _ = try await account.createOAuth2Session(provider: .google)
+                }
+                
+                // If we get here without error, try to fetch the user details
+                if let user = try? await account.get() {
+                    DispatchQueue.main.async {
+                        self.userId = user.id
+                        FormManager.shared.formData.userId = user.id
+                        FormManager.shared.formData.email = user.email
+                        
+                        // Save to UserDefaults for persistence
+                        UserDefaults.standard.set(user.id, forKey: "userID")
+                    }
+                }
+                return .success
+            } catch {
+                return .error(error.localizedDescription)
+            }
+        }
 
     func logout() async -> RequestStatus {
         do {

@@ -56,9 +56,10 @@
 //}
 
 import Foundation
+import AuthenticationServices
+import SwiftUICore
 
-@MainActor//brings the query to the main running thread
-
+@MainActor
 class RegisterViewModel: ObservableObject {
     private let service: AppService
     @Published var showAlert = false
@@ -66,27 +67,16 @@ class RegisterViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isLoggedIn = false
     
-    /*
-     
-     @Published:
-     
-     This property wrapper is used in conjunction with the ObservableObject protocol to create observable objects. It's commonly used in SwiftUI apps with the MVVM pattern to represent the ViewModel layer. @Published is used to expose properties from the ViewModel that the View observes for changes. When a property marked with @Published changes, it automatically triggers the view to update any affected parts of its UI.
-     
-     @state:
-     
-     This property wrapper is used to declare state information within a SwiftUI view. It's typically used for local state within a view, meaning data that is relevant only to that specific view and doesn't need to be shared across multiple views or persisted beyond the lifetime of the view. @State is useful for managing things like whether a button is currently pressed, the current selection in a picker, or whether a modal is presented.
-
-
-
-
-     */
-    
-    
     // Keeps track of any ongoing login task
     private var loginTask: Task<Void, Never>?
+    private var openURL: OpenURLAction?
     
     init(service: AppService) {
         self.service = service
+    }
+    
+    func setOpenURLAction(_ action: OpenURLAction) {
+        self.openURL = action
     }
     
     func createUser(email: String, password: String) async {
@@ -98,6 +88,42 @@ class RegisterViewModel: ObservableObject {
         case .success:
             isLoggedIn = true
             alertMessage = "User created successfully!"
+        case .error(let message):
+            alertMessage = message
+        }
+        
+        showAlert = true
+        isLoading = false
+    }
+    
+    func signInWithApple(credential: ASAuthorizationAppleIDCredential) async {
+        guard !isLoading else { return }
+        isLoading = true
+        
+        let status = await service.createAppleSession()
+        
+        switch status {
+        case .success:
+            isLoggedIn = true
+            alertMessage = "Successfully signed in with Apple!"
+        case .error(let message):
+            alertMessage = message
+        }
+        
+        showAlert = true
+        isLoading = false
+    }
+    
+    func signInWithGoogle() async {
+        guard !isLoading else { return }
+        isLoading = true
+        
+        let status = await service.createGoogleSession(with: openURL)
+        
+        switch status {
+        case .success:
+            isLoggedIn = true
+            alertMessage = "Successfully signed in with Google!"
         case .error(let message):
             alertMessage = message
         }

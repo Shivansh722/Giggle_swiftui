@@ -101,7 +101,7 @@ class UserDetailAutoView {
             """
         
         let apiKey = ProcessInfo.processInfo.environment["GEMINI_API_KEY"] ?? ""
-        let model = GenerativeModel(name: "gemini-pro", apiKey: apiKey)
+        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyDDTPOZonoyL72gpye_bczBg90XLdXlBUs")
         do {
             let response = try await model.generateContent(prompt)
             if let text = response.text {

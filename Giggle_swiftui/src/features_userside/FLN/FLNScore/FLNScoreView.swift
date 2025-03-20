@@ -11,6 +11,7 @@ struct FLNScoreView: View {
     @State private var navigatetoHome:Bool = false
     @State private var flnID: String? = nil
     @State private var naviagtetoLiteracy:Bool = false
+    @State private var fluencyScore = FlnDataManager.shared.flnData.fluencyScore
     var body: some View {
         ZStack {
             Theme.backgroundColor
@@ -41,12 +42,12 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(.white)
-                                Text("Average User Score: 67%")
+                                Text("Average User Score: \(fluencyScore)%")
                                     .foregroundColor(.white)
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("67%")
+                            Text("\(FlnDataManager.shared.flnData.fluencyScore)%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -62,7 +63,7 @@ struct FLNScoreView: View {
                                 let numeracyScores = FlnDataManager.shared.flnData.numeracyScore
                                 let literacyScores = FlnDataManager.shared.flnData.literacyScore
                                 let averageScore = (numeracyScores + literacyScores) / 2
-                                Text("Average User Score: 67%")
+                                Text("Average User Score: \(averageScore)%")
                                     .foregroundColor(Theme.tertiaryColor)
                                     .font(.subheadline)
                             }
@@ -147,8 +148,20 @@ struct FLNScoreView: View {
                 }
                 .padding([.horizontal, .bottom], 20)
             }
+            .task{
+                reverse()
+            }
         }
     }
+    
+    func reverse() {
+        if var store = Int(fluencyScore), store >= 35 || store <= 65 {
+            store += 20
+            fluencyScore = String(store)
+            print(fluencyScore)
+        }
+    }
+
 }
 
 #Preview {

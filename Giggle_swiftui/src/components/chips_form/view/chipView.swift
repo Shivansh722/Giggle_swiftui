@@ -10,19 +10,18 @@ struct PreferenceView: View {
             .lineLimit(1)
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
-            .foregroundColor(isSelected ? .white : .black)
+            .foregroundColor(isSelected ? .white : .white)
             .background(
                 RoundedRectangle(cornerRadius: 100)
-                    .fill(isSelected ? Color.red : Color.yellow)
+                    .fill(isSelected ? Theme.primaryColor : .clear)  // Transparent when unselected
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 100)
-                    .stroke(Color.white, lineWidth: isSelected ? 0 : 1)
+                    .stroke(Theme.primaryColor, lineWidth: isSelected ? 0 : 1)  // Stroke only when unselected
             )
             .onTapGesture {
                 isSelected.toggle()
             }
     }
 }
-
 //https://github.com/manish-chaurasiya-23/CustomChipViewSwiftUI

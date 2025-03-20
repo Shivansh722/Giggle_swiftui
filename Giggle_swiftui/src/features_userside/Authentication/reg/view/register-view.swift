@@ -1,19 +1,17 @@
 import SwiftUI
+import AuthenticationServices
 
 struct RegisterView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
-    @Environment(\.dismiss) var dismiss // to dismiss a view as it changes
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) private var openURL
+    
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
     @State private var isPasswordVisible: Bool = false
     @State private var navigateToUserDetail: Bool = false
     @State private var showPasswordMismatchAlert: Bool = false
-
-    
-    //`@EnvironmentObject` in SwiftUI is used to inject an observable object into the view hierarchy, allowing child views to access and update shared data. It simplifies state management by avoiding the need to pass data manually through each view.
-    //This is a property wrapper that SwiftUI uses to create and manage a mutable state in a view. Whenever the state changes, the view is re-rendered.
-
     
     var body: some View {
         GeometryReader { geometry in
@@ -64,42 +62,65 @@ struct RegisterView: View {
                         cornerRadius: 6
                     )
                     .padding(.top, 16)
-                    .padding(.bottom, 30)
-
-                    HStack {
-                        Divider()
-                            .frame(width: 110, height: 1)
-                            .background(Color.gray)
-                            .padding(.leading, 30)
-
-                        Text("OR")
-                            .foregroundColor(Color.gray)
-
-                        Divider()
-                            .frame(width: 110, height: 1)
-                            .background(Color.gray)
-                            .padding(.trailing, 30)
-                    }
-                    .padding(.vertical, 20)
-                    .padding(.top, 10)
-
-                    HStack(spacing: geometry.size.width * 0.1) {
-                        Button(action: {
-                            // Google login action
-                        }) {
-                            Image("google-logo")
-                                .resizable()
-                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
-                        }
-                        Button(action: {
-                            // Apple login action
-                        }) {
-                            Image("apple-logo")
-                                .resizable()
-                                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
-                        }
-                    }
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 50)
+//\*
+//                    HStack {
+//                        Divider()
+//                            .frame(width: 95, height: 1)
+//                            .background(Color.gray)
+//                            .padding(.leading, 30)
+//
+//                        Text("OR Sign Up with ")
+//                            .foregroundColor(Color.gray)
+//
+//                        Divider()
+//                            .frame(width: 95, height: 1)
+//                            .background(Color.gray)
+//                            .padding(.trailing, 30)
+//                    }
+//                    .padding(.bottom, 10)
+//                    .padding(.top, 20)
+//
+//                    HStack(spacing: geometry.size.width * 0.1) {
+//                        Button(action: {
+//                            handleGoogleSignInButtonTapped()
+//                        }) {
+//                            Image("google-logo2")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .scaleEffect(1.2)
+//                                .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
+//                                .padding()
+//                                .background(Color.white)
+//                                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 10)
+//                                        .stroke(Color.clear, lineWidth: 1)
+//                                )
+//                        }
+//                        .disabled(viewModel.isLoading)
+//                        
+//                        Button(action: {
+//                            handleAppleSignInButtonTapped()
+//                        }) {
+//                            Image(systemName: "apple.logo")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .foregroundColor(.black)
+//                                .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
+//                                .padding()
+//                                .background(Color.white)
+//                                .clipShape(RoundedRectangle(cornerRadius: 10))
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 10)
+//                                        .stroke(Color.clear, lineWidth: 1)
+//                                )
+//                        }
+//                        .disabled(viewModel.isLoading)
+//                        .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+//                    }
+//                    .padding(.bottom, 20)
+//                    */
 
                     Spacer()
 
@@ -119,6 +140,15 @@ struct RegisterView: View {
                     EmptyView()
                 }
                 .hidden()
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .scaleEffect(2)
+                        .progressViewStyle(CircularProgressViewStyle(tint: Theme.primaryColor))
+                        .background(Color.white.opacity(0.3))
+                        .frame(width: 100, height: 100)
+                        .cornerRadius(10)
+                }
             }
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
@@ -128,15 +158,82 @@ struct RegisterView: View {
             .alert(isPresented: $showPasswordMismatchAlert) {
                 Alert(title: Text("Password Mismatch"), message: Text("Passwords do not match. Please try again."), dismissButton: .default(Text("OK")))
             }
+            .onAppear {
+                // Pass the OpenURLAction to the view model
+                viewModel.setOpenURLAction(openURL)
+            }
+            .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
+                if isLoggedIn {
+                    navigateToUserDetail = true
+                }
+            }
         }
     }
 
     private func registerUser() async {
         await viewModel.createUser(email: email, password: password)
-        if viewModel.isLoggedIn {
-            navigateToUserDetail = true
+    }
+    
+    private func handleAppleSignInButtonTapped() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = AppleSignInDelegate(viewModel: viewModel, navigateToUserDetail: $navigateToUserDetail)
+        authorizationController.performRequests()
+    }
+    
+    private func handleGoogleSignInButtonTapped() {
+        Task {
+            await viewModel.signInWithGoogle()
         }
     }
 }
-//register view - exchange new laptop
+
+class AppleSignInDelegate: NSObject, ASAuthorizationControllerDelegate {
+    private let viewModel: RegisterViewModel
+    @Binding private var navigateToUserDetail: Bool
+
+    init(viewModel: RegisterViewModel, navigateToUserDetail: Binding<Bool>) {
+        self.viewModel = viewModel
+        self._navigateToUserDetail = navigateToUserDetail
+        super.init()
+    }
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            Task {
+                await viewModel.signInWithApple(credential: appleIDCredential)
+            }
+        }
+    }
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        Task { @MainActor in
+            viewModel.alertMessage = "Apple Sign In failed: \(error.localizedDescription)"
+            if let authError = error as? ASAuthorizationError {
+                switch authError.code {
+                case .canceled:
+                    viewModel.alertMessage = "Sign In was canceled"
+                case .failed:
+                    viewModel.alertMessage = "Sign In failed. Check your configuration"
+                case .invalidResponse:
+                    viewModel.alertMessage = "Invalid response from Apple"
+                case .notHandled:
+                    viewModel.alertMessage = "Sign In not handled"
+                case .unknown:
+                    viewModel.alertMessage = "Unknown error occurred"
+                @unknown default:
+                    viewModel.alertMessage = "Unexpected error: \(error.localizedDescription)"
+                }
+            }
+            viewModel.showAlert = true
+        }
+    }
+}
+
+#Preview {
+    RegisterView()
+}
 

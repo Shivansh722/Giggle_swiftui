@@ -13,9 +13,9 @@ class SaveUserInfo:ObservableObject {
     let client: Client
     let database: Databases
     let appService: AppService
-    let databaseID:String = "67729cb100158022ba8e"
-    let collectionID:String = "67729cdc0016234d1704"
-    let storageBucketId:String = "67863b500019e5de0dd8"
+    let databaseID:String = "67da78cd00052312da62"
+    let collectionID:String = "67da79a900157497cced"
+    let storageBucketId:String = "67da7d55000bf31fb062"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -102,7 +102,7 @@ class SaveUserInfo:ObservableObject {
         
         let databaseId = databaseID
         let collectionId = collectionID
-        var fileDetails: [[String]] = [] 
+        var fileDetails: [[String]] = []
 
         do {
             let document = try await database.getDocument(
@@ -171,7 +171,7 @@ class SaveUserInfo:ObservableObject {
         }
         
         if let grade = result.data["fln_id"]?.value as? String {
-            let gradding = try await database.getDocument(databaseId: databaseID, collectionId: "67a9ae4e003d4845905c", documentId: grade)
+            let gradding = try await database.getDocument(databaseId: databaseID, collectionId: "67da7a890023a1f7ed53", documentId: grade)
             gigGrade = gradding.data["giggle_grade"]?.value as? String ?? "No Grade"
         }
         

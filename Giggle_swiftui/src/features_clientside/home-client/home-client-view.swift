@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 // Define a Job struct
 struct Job: Identifiable {
@@ -8,6 +9,21 @@ struct Job: Identifiable {
     let salary: String
     let jobTrait: String
     let jobType: String
+}
+
+struct WebClientHomeView: UIViewRepresentable {
+    let url: URL
+
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.isOpaque = false // Make webview transparent
+        webView.backgroundColor = .clear // Set clear background
+        let request = URLRequest(url: url)
+        webView.load(request)
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
 }
 
 // HomeClientView
@@ -36,13 +52,13 @@ struct HomeClientView: View {
                     
                     Spacer()
                     
-                    NavigationLink(destination: ProfileScreen()) {
-                        Image(systemName: "person.crop.circle")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(Color.gray)
-                            .padding()
-                    }
+//                    NavigationLink(destination: ProfileScreen()) {
+//                        Image(systemName: "person.crop.circle")
+//                            .resizable()
+//                            .frame(width: 40, height: 40)
+//                            .foregroundColor(Color.gray)
+//                            .padding()
+//                    }
                 }
                 
                 ScrollView {
@@ -63,6 +79,25 @@ struct HomeClientView: View {
                     .opacity(1.0)
                 }
             }
+            if gigManager.gigs.isEmpty {
+                            VStack {
+                                WebClientHomeView(
+                                    url: Bundle.main.url(forResource: "empty-screen", withExtension: "gif")
+                                    ?? URL(fileURLWithPath: NSTemporaryDirectory())
+                                )
+                                .frame(width: 300, height: 300)
+
+                                Text("Post your Gigs here!")
+                                    .font(.system(size: 23))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                            }
+                            .position(
+                                x: UIScreen.main.bounds.width / 2,
+                                y: UIScreen.main.bounds.height / 2 - 50
+                            )
+                            .padding(.bottom, 50)
+                        }
             
             // Floating Action Button
             VStack {
@@ -74,7 +109,7 @@ struct HomeClientView: View {
                         .font(.system(size: 30))
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.red)
+                        .background(Theme.primaryColor)
                         .clipShape(Circle())
                         .shadow(radius: 5)
                 }
@@ -84,6 +119,7 @@ struct HomeClientView: View {
         .sheet(isPresented: $showGigLister) {
             GigDetailsScreen(gigManager: gigManager)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

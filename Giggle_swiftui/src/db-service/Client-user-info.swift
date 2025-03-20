@@ -13,8 +13,8 @@ class ClientHandlerUserInfo: ObservableObject {
     let client: Client
     let database: Databases
     let appService: AppService
-    let databaseID:String = "67729cb100158022ba8e"
-    let collectionID:String = "67a88597000fd8837adf"
+    let databaseID:String = "67da78cd00052312da62"
+    let collectionID:String = "67da7b8e001f23053dd5"
     
     init(appService: AppService) {
         self.client = appService.client

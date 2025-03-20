@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct Giggle_swiftuiApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var viewModel = RegisterViewModel(service:AppService()) // Create the ViewModel instance here
 
     var body: some Scene {

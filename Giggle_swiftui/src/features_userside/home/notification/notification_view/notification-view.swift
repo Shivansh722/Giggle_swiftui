@@ -23,23 +23,23 @@ struct NotificationScreen: View {
         Notification(
             avatarInitials: "AB",
             avatarIcon: nil,
-            title: "Ashwin Bose is requesting access to Design File - Final Project.",
+            title: "Ashwin Bose has invited you to apply for a UI/UX Designer role.",
             subtitle: nil,
             timestamp: "15h",
             hasActions: true
         ),
         Notification(
             avatarInitials: nil,
-            avatarIcon: "person.fill",
-            title: "Your manager has something to say",
-            subtitle: "“Final testing for Personalization can be done (with all the edge...",
+            avatarIcon: "briefcase.fill",
+            title: "Your manager has shared a job opening",
+            subtitle: "“A new position for Machine Learning Engineer is open. Apply now!”",
             timestamp: "15h",
             hasActions: false
         ),
         Notification(
             avatarInitials: nil,
             avatarIcon: "person.fill",
-            title: "Samantha endorsed you",
+            title: "Samantha recommended you for a Software Developer position.",
             subtitle: nil,
             timestamp: "15h",
             hasActions: false
@@ -47,11 +47,12 @@ struct NotificationScreen: View {
         Notification(
             avatarInitials: "SJ",
             avatarIcon: nil,
-            title: "Steve has a feedback for you.",
+            title: "Steve has referred you for a Data Analyst role.",
             subtitle: nil,
             timestamp: "15h",
             hasActions: false
         )
+
     ]
 
     var body: some View {
@@ -148,27 +149,27 @@ struct NotificationScreen: View {
                                     // Action buttons (if present)
                                     if notification.hasActions {
                                         HStack(spacing: 12) {
-                                            Button(action: {}) {
-                                                Text("Apply")
-                                                    .font(.system(size: 16))
-                                                    .fontWeight(.medium)
-                                                    .foregroundColor(.white)
-                                                    .frame(maxWidth: .infinity)
-                                                    .padding(.vertical, 8)
-                                                    .background(Theme.primaryColor)
-                                                    .cornerRadius(8)
-                                            }
+//                                            Button(action: {}) {
+//                                                Text("Apply")
+//                                                    .font(.system(size: 16))
+//                                                    .fontWeight(.medium)
+//                                                    .foregroundColor(.white)
+//                                                    .frame(maxWidth: .infinity)
+//                                                    .padding(.vertical, 8)
+//                                                    .background(Theme.primaryColor)
+//                                                    .cornerRadius(8)
+//                                            }
                                             
-                                            Button(action: {}) {
-                                                Text("Decline")
-                                                    .font(.system(size: 16))
-                                                    .fontWeight(.medium)
-                                                    .foregroundColor(.white)
-                                                    .frame(maxWidth: .infinity)
-                                                    .padding(.vertical, 8)
-                                                    .background(Color.gray.opacity(0.3))
-                                                    .cornerRadius(8)
-                                            }
+//                                            Button(action: {}) {
+//                                                Text("Decline")
+//                                                    .font(.system(size: 16))
+//                                                    .fontWeight(.medium)
+//                                                    .foregroundColor(.white)
+//                                                    .frame(maxWidth: .infinity)
+//                                                    .padding(.vertical, 8)
+//                                                    .background(Color.gray.opacity(0.3))
+//                                                    .cornerRadius(8)
+//                                            }
                                         }
                                     }
                                 }

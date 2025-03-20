@@ -1,11 +1,23 @@
-//
-//  gig-lister-view.swift
-//  Giggle_swiftui
-//
-//  Created by admin49 on 12/03/25.
-//
+// gig-lister-view.swift
+// Giggle_swiftui
+// Created by admin49 on 12/03/25.
 
 import SwiftUI
+import WebKit
+
+// WebView definition matching your existing implementation
+struct WebClientView: UIViewRepresentable {
+    let url: URL
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        let request = URLRequest(url: url)
+        webView.load(request)
+        return webView
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
 
 // Gig Model
 struct Gig: Identifiable {
@@ -16,6 +28,14 @@ struct Gig: Identifiable {
     var location: String
     var isRemote: Bool
     var postedDate: Date
+    var jobDescription: String
+    var requirements: [String]
+    var position: String
+    var qualification: String
+    var experience: String
+    var jobType: String
+    var specialization: String
+    var facilities: [String]
 }
 
 // Gig Manager
@@ -24,6 +44,67 @@ class GigManager: ObservableObject {
     
     func addGig(_ gig: Gig) {
         gigs.append(gig)
+    }
+}
+
+// Bullet Point Input View
+struct BulletPointInput: View {
+    @Binding var items: [String]
+    @State private var newItem = ""
+    @State private var showWarning = false
+    
+    var placeholder: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(items.indices, id: \.self) { index in
+                HStack {
+                    Text("•")
+                        .foregroundColor(.red)
+                    TextField("", text: $items[index])
+                        .foregroundColor(.white)
+                        .frame(height: 44)
+                        .padding(.horizontal, 8)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.white.opacity(0.5))
+                        )
+                }
+            }
+            
+            HStack {
+                Text("•")
+                    .foregroundColor(.red)
+                TextField(placeholder, text: $newItem)
+                    .foregroundColor(.white)
+                    .frame(height: 44)
+                    .padding(.horizontal, 8)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white.opacity(0.5))
+                    )
+                    .submitLabel(.done)
+                    .onSubmit {
+                        if !newItem.isEmpty {
+                            if items.count < 5 {
+                                items.append(newItem)
+                                newItem = ""
+                            } else {
+                                showWarning = true
+                            }
+                        }
+                    }
+            }
+        }
+        .alert("Maximum Limit Reached", isPresented: $showWarning) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("You can only add up to 5 items.")
+        }
     }
 }
 
@@ -37,89 +118,192 @@ struct GigDetailsScreen: View {
     @State private var location = ""
     @State private var isRemote = false
     @State private var postedDate = Date()
+    @State private var jobDescription = ""
+    @State private var requirements: [String] = []
+    @State private var position = ""
+    @State private var qualification = ""
+    @State private var experience = ""
+    @State private var jobType = "Full-time"
+    @State private var specialization = ""
+    @State private var facilities: [String] = []
     
     @Environment(\.dismiss) var dismiss
+    
+    private let jobTypeOptions = ["Full-time", "Part-time", "Contract", "Temporary", "Internship"]
     
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-
-            VStack(spacing: 20) {
-                Text("List Your Gig")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding(.top, 20)
-                
-                VStack(spacing: 15) {
-                    CustomTextField(placeholder: "Company Name", isSecure: false, text: $companyName, icon: "building.2.fill")
-                    CustomTextField(placeholder: "Category", isSecure: false, text: $category, icon: "briefcase.fill")
-                    CustomTextField(placeholder: "Hours per Week", isSecure: false, text: $hoursPerWeek, icon: "clock.fill")
-                    CustomTextField(placeholder: "Location", isSecure: false, text: $location, icon: "map.fill")
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("List Your Gig")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(Theme.onPrimaryColor)
+                        .padding(.top, 20)
                     
-                    Toggle("Remote Work", isOn: $isRemote)
-                        .padding(.horizontal, 20)
-                        .foregroundColor(.white)
+                    // GIF View using your existing WebView approach
+                    WebView(url: Bundle.main.url(forResource: "job-list", withExtension: "gif") ?? URL(fileURLWithPath: NSTemporaryDirectory()))
+                        .frame(width: 300, height: 300)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 10)
                     
-                    DatePicker("Posted Date", selection: $postedDate, displayedComponents: .date)
-                        .padding(.horizontal, 20)
-                        .datePickerStyle(.compact)
-                        .colorInvert()
-                }
-                .padding(.horizontal, 20)
-                
-                Spacer()
-                
-                // Buttons at the bottom
-                HStack(spacing: 10) {
-                    CustomButton(
-                        title: "Cancel",
-                        backgroundColor: Theme.primaryColor,
-                        action: { dismiss() },
-                        width: nil,
-                        height: 60,
-                        cornerRadius: 10,
-                        hasStroke: false
-                    )
-                    .frame(maxWidth: .infinity)
-
-                    CustomButton(
-                        title: "Save Gig",
-                        backgroundColor: .clear,
-                        action: {
-                            let newGig = Gig(
-                                companyName: companyName,
-                                category: category,
-                                hoursPerWeek: hoursPerWeek,
-                                location: location,
-                                isRemote: isRemote,
-                                postedDate: postedDate
-                            )
-                            gigManager.addGig(newGig)
-                            dismiss() // Close the modal
+                    // Basic Information Section
+                    VStack(spacing: 15) {
+                        Text("Basic Information")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        CustomTextField(placeholder: "Company Name", isSecure: false, text: $companyName, icon: "building.2.fill")
+                        CustomTextField(placeholder: "Category", isSecure: false, text: $category, icon: "briefcase.fill")
+                        CustomTextField(placeholder: "Hours per Week", isSecure: false, text: $hoursPerWeek, icon: "clock.fill")
+                        CustomTextField(placeholder: "Location", isSecure: false, text: $location, icon: "map.fill")
+                        Toggle("Remote Work", isOn: $isRemote)
+                            .padding(.horizontal)
+                            .foregroundColor(.white)
+                        DatePicker("Posted Date", selection: $postedDate, displayedComponents: .date)
+                            .padding(.horizontal)
+                            .datePickerStyle(.compact)
+                            .colorInvert()
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    // Job Details Section
+                    VStack(spacing: 15) {
+                        Text("Job Details")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Job Description (max 60 words)")
+                                .foregroundColor(.white)
+                            TextEditor(text: $jobDescription)
+                                .foregroundColor(.white)
+                                .frame(height: 100)
+                                .frame(maxWidth: 350)
+                                .colorMultiply(.gray.opacity(0.2))
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white.opacity(0.5))
+                                )
+                                .onChange(of: jobDescription) { newValue in
+                                    let words = newValue.split { $0.isWhitespace }.count
+                                    if words > 60 {
+                                        jobDescription = String(newValue.split { $0.isWhitespace }.prefix(60).joined(separator: " "))
+                                    }
+                                }
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Requirements")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, -4)
+                            BulletPointInput(items: $requirements, placeholder: "Add requirement")
+                        }
+                        
+                        CustomTextField(placeholder: "Position", isSecure: false, text: $position, icon: "person.fill")
+                        CustomTextField(placeholder: "Qualification", isSecure: false, text: $qualification, icon: "graduationcap.fill")
+                        CustomTextField(placeholder: "Experience", isSecure: false, text: $experience, icon: "clock.arrow.circlepath")
+                        
+                        HStack(alignment: .center, spacing: 10) {
+                            Text("Job Type")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
                             
-                            JobFormManager.shared.formData.id = UUID()
-                            JobFormManager.shared.formData.jobTitle = companyName
-                            JobFormManager.shared.formData.location = location
-                            JobFormManager.shared.formData.salary = hoursPerWeek
-                            JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
-                            JobFormManager.shared.formData.jobTitle = category
+                            Spacer()
                             
-                            Task{
-                                try await JobPost(appService: AppService()).postJob()
+                            Picker("Job Type", selection: $jobType) {
+                                ForEach(jobTypeOptions, id: \.self) { option in
+                                    Text(option)
+                                }
                             }
-                        },
-                        width: nil,
-                        height: 60,
-                        cornerRadius: 10,
-                        hasStroke: true
-                    )
-                    .frame(maxWidth: .infinity)
-                    .disabled(companyName.isEmpty || category.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
+                            .pickerStyle(MenuPickerStyle())
+                            .accentColor(.white)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                        }
+                        
+                        CustomTextField(placeholder: "Specialization", isSecure: false, text: $specialization, icon: "star.fill")
+                        
+                        VStack(alignment: .leading) {
+                            Text("Facilities")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                            BulletPointInput(items: $facilities, placeholder: "Add facility")
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    // Buttons with additional bottom padding
+                    HStack(spacing: 10) {
+                        CustomButton(
+                            title: "Cancel",
+                            backgroundColor: Theme.primaryColor,
+                            action: { dismiss() },
+                            width: nil,
+                            height: 60,
+                            cornerRadius: 10,
+                            hasStroke: false
+                        )
+                        .frame(maxWidth: .infinity)
+                        
+                        CustomButton(
+                            title: "Save Gig",
+                            backgroundColor: .clear,
+                            action: {
+                                let newGig = Gig(
+                                    companyName: companyName,
+                                    category: category,
+                                    hoursPerWeek: hoursPerWeek,
+                                    location: location,
+                                    isRemote: isRemote,
+                                    postedDate: postedDate,
+                                    jobDescription: jobDescription,
+                                    requirements: requirements,
+                                    position: position,
+                                    qualification: qualification,
+                                    experience: experience,
+                                    jobType: jobType,
+                                    specialization: specialization,
+                                    facilities: facilities
+                                )
+                                gigManager.addGig(newGig)
+                                dismiss()
+                                
+                                JobFormManager.shared.formData.id = UUID()
+                                JobFormManager.shared.formData.jobTitle = companyName
+                                JobFormManager.shared.formData.location = location
+                                JobFormManager.shared.formData.salary = hoursPerWeek
+                                JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
+                                JobFormManager.shared.formData.jobTitle = category
+                                
+                                Task {
+                                    try await JobPost(appService: AppService()).postJob()
+                                }
+                            },
+                            width: nil,
+                            height: 60,
+                            cornerRadius: 10,
+                            hasStroke: true
+                        )
+                        .frame(maxWidth: .infinity)
+                        .disabled(companyName.isEmpty || category.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 20)
+                    .padding(.bottom, 38) // Added extra bottom padding
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 200)
-                .frame(maxWidth: .infinity)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -128,5 +312,5 @@ struct GigDetailsScreen: View {
 
 // Preview Fix
 #Preview {
-    GigDetailsScreen(gigManager: GigManager()) // Passes a GigManager instance for preview
+    GigDetailsScreen(gigManager: GigManager())
 }

@@ -15,9 +15,9 @@ class FLNInfo: ObservableObject {
     let client: Client
     let database: Databases
     let appService: AppService
-    let databaseID:String = "67729cb100158022ba8e"
-    let UserCollectionID:String = "67729cdc0016234d1704"
-    let FLNCollectionID:String = "67a9ae4e003d4845905c"
+    let databaseID:String = "67da78cd00052312da62"
+    let UserCollectionID:String = "67da79a900157497cced"
+    let FLNCollectionID:String = "67da7a890023a1f7ed53"
     
     init(appService: AppService) {
         self.client = appService.client
