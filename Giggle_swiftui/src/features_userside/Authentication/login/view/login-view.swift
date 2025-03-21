@@ -8,6 +8,7 @@ struct LoginSimpleView: View {
     @State private var isValidEmail = true
     @State private var isValidPassword = true
     @State private var navigateToNextScreen = false // Navigation trigger
+    @State private var destinationView: AnyView? // Dynamic destination view
 
     var body: some View {
         GeometryReader { geometry in
@@ -67,8 +68,28 @@ struct LoginSimpleView: View {
                                 Task {
                                     guard !viewModel.isLoading else { return } // Prevent duplicate tasks
                                     do {
+                                        // Attempt login first
                                         try await viewModel.login(email: email, password: password)
                                         if viewModel.isLoggedIn {
+                                            // Check where the logged-in person belongs
+                                            let userExists = try await SaveUserInfo(appService: AppService()).checkForUserExistence()
+                                            if userExists {
+                                                // User exists, go to HomeView
+                                                let userDefault = UserDefaults.standard
+                                                userDefault.set("completed user", forKey: "status")
+                                                destinationView = AnyView(HomeView())
+                                            } else {
+                                                let userDefault = UserDefaults.standard
+                                                userDefault.set("completed client", forKey: "status")
+                                                let clientExists = try await ClientHandlerUserInfo(appService: AppService()).checkForCleintExixtence()
+                                                if clientExists {
+                                                    // Client exists, go to ClientHomeView
+                                                    destinationView = AnyView(HomeClientView())
+                                                } else {
+                                                    // Neither user nor client exists, go to ChooseView
+                                                    destinationView = AnyView(ChooseView())
+                                                }
+                                            }
                                             navigateToNextScreen = true
                                         }
                                     } catch {
@@ -107,16 +128,16 @@ struct LoginSimpleView: View {
                         // Google and Apple login options
                         HStack(spacing: geometry.size.width * 0.1) {
                             Button(action: {
-                                // Google login action
+                                // Google login action (implement as needed)
                             }) {
                                 Image("google-logo2")
                                     .resizable()
                                     .scaledToFit()
                                     .scaleEffect(1.2)
-                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1) // Adjust size of the logo
+                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
                                     .padding()
-                                    .background(Color.white) // White background
-                                    .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded corners
+                                    .background(Color.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 10)
                                             .stroke(Color.clear, lineWidth: 1)
@@ -127,17 +148,17 @@ struct LoginSimpleView: View {
                             Button(action: {
                                 handleAppleSignInButtonTapped()
                             }) {
-                                Image(systemName: "apple.logo") // Use SF Symbol for Apple logo
+                                Image(systemName: "apple.logo")
                                     .resizable()
                                     .scaledToFit()
                                     .foregroundColor(.black)
-                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1) // Adjust size of the logo
+                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
                                     .padding()
-                                    .background(Color.white) // White background
-                                    .clipShape(RoundedRectangle(cornerRadius: 10)) // Rounded corners
+                                    .background(Color.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.black, lineWidth: 2) // Black border
+                                            .stroke(Color.black, lineWidth: 2)
                                     )
                             }
                             .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
@@ -161,8 +182,9 @@ struct LoginSimpleView: View {
                     }
                     .padding(.horizontal, 20)
 
+                    // Dynamic NavigationLink
                     NavigationLink(
-                        destination: HomeView(), // Replace with the actual next screen view
+                        destination: destinationView ?? AnyView(EmptyView()), // Fallback to EmptyView if nil
                         isActive: $navigateToNextScreen
                     ) {
                         EmptyView()
@@ -195,4 +217,3 @@ struct LoginSimpleView: View {
 #Preview {
     LoginSimpleView()
 }
-

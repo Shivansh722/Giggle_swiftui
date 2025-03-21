@@ -118,6 +118,11 @@ struct LocationClientiew: View {
                                     print("Proceed to the next screen or step")
                                     Task {
                                         await saveClientInfo.saveClientInfo()
+                                        let userDefault = UserDefaults.standard
+                                        userDefault.set(FormManager.shared.formData.userId, forKey: "userID")
+                                        userDefault.set("completed client", forKey: "status")
+                                        let status = UserDefaults.standard.string(forKey: "status")
+                                        print(status!)
                                         navigateToEduView1 = true
                                     }
                                 }

@@ -58,7 +58,7 @@ struct ProfileScreen: View {
 //                                    }
                                     Templates.MenuButton(title: "Logout") {
                                         Task {
-                                            await handleLogout()
+                                            handleLogout()
                                         }
                                     }
                                 } label: { _ in
@@ -327,20 +327,13 @@ struct ProfileScreen: View {
         }
     }
 
-    private func handleLogout() async {
-        let result = await logout.logout()
-
-        switch result {
-        case .success:
-            DispatchQueue.main.async {
-                navigate = true
-            }
-        case .error(let message):
-            print("Logout failed: \(message)")
-        }
+    private func handleLogout() {
+        let userDefault = UserDefaults.standard
+        userDefault.set("", forKey: "status")
+        let status = UserDefaults.standard.string(forKey: "status")
+        print(status!)
+        navigate = true
     }
-
-
 }
 
 struct StatView: View {

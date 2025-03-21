@@ -75,6 +75,20 @@ class AppService: ObservableObject {
                 userId: ID.unique(), email: email, password: password)
             FormManager.shared.formData.userId = user.id
             FormManager.shared.formData.email = user.email
+            let userId = user.id
+            let userDefaults = UserDefaults.standard
+            let storedUserId = userDefaults.string(forKey: "userID")
+            DispatchQueue.main.async {
+                if storedUserId != userId {
+                    // Update userId in FormManager and UserDefaults if it's different
+                    FormManager.shared.formData.userId = userId
+                    userDefaults.set(userId, forKey: "userID")
+                    print("UserId updated to: \(userId)")
+                } else {
+                    FormManager.shared.formData.userId = userId
+                    print("UserId remains the same: \(userId)")
+                }
+            }
             return .success
         } catch {
             return .error(error.localizedDescription)
@@ -103,6 +117,7 @@ class AppService: ObservableObject {
 //            }
             if let user = try? await account.get() {
                 let userId = user.id
+                FormManager.shared.formData.email = user.email
                 let userDefaults = UserDefaults.standard
                 let storedUserId = userDefaults.string(forKey: "userID")
                 DispatchQueue.main.async {
