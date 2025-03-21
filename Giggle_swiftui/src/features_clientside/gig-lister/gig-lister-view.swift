@@ -11,16 +11,19 @@ struct WebClientView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
-        let request = URLRequest(url: url)
-        webView.load(request)
+        webView.isOpaque = false // Make webview transparent
+        webView.backgroundColor = .clear // Set clear background
+        webView.scrollView.backgroundColor = .clear
         return webView
     }
     
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        uiView.load(URLRequest(url: url))
+    }
 }
 
 // Gig Model
-struct Gig: Identifiable {
+struct Gig: Identifiable, Equatable {
     let id: UUID = UUID()
     var companyName: String
     var category: String
@@ -40,10 +43,16 @@ struct Gig: Identifiable {
 
 // Gig Manager
 class GigManager: ObservableObject {
+    static let shared = GigManager()
     @Published var gigs: [Gig] = []
     
+    private init() {}
+    
     func addGig(_ gig: Gig) {
-        gigs.append(gig)
+        DispatchQueue.main.async {
+            self.gigs.append(gig)
+            print("Gig added: \(gig.companyName), Total gigs: \(self.gigs.count)")
+        }
     }
 }
 
@@ -143,7 +152,6 @@ struct GigDetailsScreen: View {
                         .foregroundColor(Theme.onPrimaryColor)
                         .padding(.top, 20)
                     
-                    // GIF View using your existing WebView approach
                     WebView(url: Bundle.main.url(forResource: "job-list", withExtension: "gif") ?? URL(fileURLWithPath: NSTemporaryDirectory()))
                         .frame(width: 300, height: 300)
                         .frame(maxWidth: .infinity)
@@ -245,7 +253,7 @@ struct GigDetailsScreen: View {
                     }
                     .padding(.horizontal, 20)
                     
-                    // Buttons with additional bottom padding
+                    // Buttons
                     HStack(spacing: 10) {
                         CustomButton(
                             title: "Cancel",
@@ -279,18 +287,26 @@ struct GigDetailsScreen: View {
                                     facilities: facilities
                                 )
                                 gigManager.addGig(newGig)
-                                dismiss()
                                 
+                                // Update JobFormManager
                                 JobFormManager.shared.formData.id = UUID()
                                 JobFormManager.shared.formData.jobTitle = companyName
                                 JobFormManager.shared.formData.location = location
                                 JobFormManager.shared.formData.salary = hoursPerWeek
                                 JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
-                                JobFormManager.shared.formData.jobTitle = category
+                                JobFormManager.shared.formData.jobTitle = category // Note: Overwriting jobTitle here
                                 
+                                // Post job asynchronously
                                 Task {
-                                    try await JobPost(appService: AppService()).postJob()
+                                    do {
+                                        try await JobPost(appService: AppService()).postJob()
+                                        print("Job posted successfully")
+                                    } catch {
+                                        print("Failed to post job: \(error)")
+                                    }
                                 }
+                                
+                                dismiss()
                             },
                             width: nil,
                             height: 60,
@@ -302,7 +318,7 @@ struct GigDetailsScreen: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 20)
-                    .padding(.bottom, 38) // Added extra bottom padding
+                    .padding(.bottom, 38)
                 }
             }
         }
@@ -312,5 +328,5 @@ struct GigDetailsScreen: View {
 
 // Preview Fix
 #Preview {
-    GigDetailsScreen(gigManager: GigManager())
+    GigDetailsScreen(gigManager: GigManager.shared)
 }

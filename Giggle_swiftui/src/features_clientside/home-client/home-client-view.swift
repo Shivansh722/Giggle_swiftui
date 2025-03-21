@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-// Define a Job struct
+// Define a Job struct (unchanged)
 struct Job: Identifiable {
     let id: String
     let title: String
@@ -13,30 +13,33 @@ struct Job: Identifiable {
 
 struct WebClientHomeView: UIViewRepresentable {
     let url: URL
-
+    
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.isOpaque = false // Make webview transparent
         webView.backgroundColor = .clear // Set clear background
-        let request = URLRequest(url: url)
-        webView.load(request)
+        webView.scrollView.backgroundColor = .clear
         return webView
     }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        uiView.load(URLRequest(url: url))
+    }
 }
 
 // HomeClientView
 struct HomeClientView: View {
-    @ObservedObject var gigManager = GigManager() // Shared Gig Manager
+    @ObservedObject var gigManager = GigManager.shared // Shared Gig Manager
+    @StateObject private var appService = AppService() // Instantiate AppService
     @State private var showGigLister = false
+    @State private var navigateToLogin = false // State for navigation after logout
     
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
             
             VStack {
-                // Custom Header
+                // Custom Header with Logout Button
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Hi")
@@ -52,13 +55,27 @@ struct HomeClientView: View {
                     
                     Spacer()
                     
-//                    NavigationLink(destination: ProfileScreen()) {
-//                        Image(systemName: "person.crop.circle")
-//                            .resizable()
-//                            .frame(width: 40, height: 40)
-//                            .foregroundColor(Color.gray)
-//                            .padding()
-//                    }
+                    Button(action: {
+                        Task {
+                            let status = await appService.logout()
+                            switch status {
+                            case .success:
+                                print("Logged out successfully")
+                                navigateToLogin = true // Navigate to login screen
+                            case .error(let message):
+                                print("Logout failed: \(message)")
+                            }
+                        }
+                    }) {
+                        Text("Logout")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Theme.primaryColor)
+                            .cornerRadius(8)
+                    }
+                    .padding(.trailing)
                 }
                 
                 ScrollView {
@@ -69,7 +86,7 @@ struct HomeClientView: View {
                                 "$id": gig.id.uuidString,
                                 "job_title": gig.companyName,
                                 "location": gig.location,
-                                "salary": "N/A", // Salary not available
+                                "salary": "N/A",
                                 "job_trait": gig.isRemote ? "Remote" : "On-Site",
                                 "job_type": gig.category
                             ], flnID: "asdf")
@@ -79,31 +96,30 @@ struct HomeClientView: View {
                     .opacity(1.0)
                 }
             }
+            
+            // Show empty state if no gigs
             if gigManager.gigs.isEmpty {
-                            VStack {
-                                WebClientHomeView(
-                                    url: Bundle.main.url(forResource: "empty-screen", withExtension: "gif")
-                                    ?? URL(fileURLWithPath: NSTemporaryDirectory())
-                                )
-                                .frame(width: 300, height: 300)
+                VStack {
+                    WebClientHomeView(url: Bundle.main.url(forResource: "empty-screen", withExtension: "gif") ?? URL.desktopDirectory)
+                    .frame(width: 300, height: 300)
 
-                                Text("Post your Gigs here!")
-                                    .font(.system(size: 23))
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Theme.onPrimaryColor)
-                            }
-                            .position(
-                                x: UIScreen.main.bounds.width / 2,
-                                y: UIScreen.main.bounds.height / 2 - 50
-                            )
-                            .padding(.bottom, 50)
-                        }
+                    Text("Post your Gigs here!")
+                        .font(.system(size: 23))
+                        .fontWeight(.bold)
+                        .foregroundColor(Theme.onPrimaryColor)
+                }
+                .position(
+                    x: UIScreen.main.bounds.width / 2,
+                    y: UIScreen.main.bounds.height / 2 - 50
+                )
+                .padding(.bottom, 50)
+            }
             
             // Floating Action Button
             VStack {
                 Spacer()
                 Button(action: {
-                    showGigLister = true // Open the gig lister
+                    showGigLister = true
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 30))
@@ -115,14 +131,24 @@ struct HomeClientView: View {
                 }
                 .padding(.bottom, 20)
             }
+            
+            // Navigation to Login Screen after Logout
+            NavigationLink(
+                destination: LoginView(), // Replace with your actual login view
+                isActive: $navigateToLogin
+            ) {
+                EmptyView()
+            }
         }
         .sheet(isPresented: $showGigLister) {
             GigDetailsScreen(gigManager: gigManager)
         }
         .navigationBarBackButtonHidden(true)
+        .onChange(of: gigManager.gigs) { newGigs in
+            print("Gigs updated: \(newGigs.count) gigs") // Debug log
+        }
     }
 }
-
 
 // Preview
 struct HomeClientView_Previews: PreviewProvider {

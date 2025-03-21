@@ -21,7 +21,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         case .denied, .restricted:
             print("Location access denied")
         case .authorizedWhenInUse, .authorizedAlways:
-            // Location access is granted
+            // Permission already granted, no need to request again
             break
         @unknown default:
             break
@@ -29,29 +29,30 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func requestLocationPermission() {
-        // Request permission when button is pressed
+        // Request permission when needed
         locationManager.requestWhenInUseAuthorization()
     }
     
-    func startUpdatingLocation() {
-        // Start location updates only when the button is pressed
+    func fetchLocation() {
+        // Fetch location once when called
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse || CLLocationManager.authorizationStatus() == .authorizedAlways {
-            locationManager.startUpdatingLocation()
+            locationManager.requestLocation() // Fetch location once
         } else {
-            // If permission isn't granted, request permission
-            requestLocationPermission() // Make sure to request permission again if needed
+            requestLocationPermission() // Request permission if not granted
         }
     }
     
+    // Handle authorization changes
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
-            // Start updating location after authorization
-            break
+            // Fetch location once authorization is granted
+            locationManager.requestLocation()
         case .denied, .restricted:
             print("Location access denied")
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization() // Request permission if it's not determined
+            // Do nothing, wait for user action
+            break
         @unknown default:
             break
         }
@@ -60,8 +61,11 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Handle location updates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.first else { return }
-        self.currentLocation = newLocation
-        print("New Location: \(newLocation.coordinate.latitude), \(newLocation.coordinate.longitude)") // For debugging
+        DispatchQueue.main.async { // Ensure UI updates on main thread
+            self.currentLocation = newLocation
+            print("New Location: \(newLocation.coordinate.latitude), \(newLocation.coordinate.longitude)") // For debugging
+        }
+        // No need to stop updates explicitly since requestLocation() only fetches once
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

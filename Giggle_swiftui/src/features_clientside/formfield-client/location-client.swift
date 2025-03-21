@@ -1,23 +1,16 @@
-//
-//  location-client.swift
-//  Giggle_swiftui
-//
-//  Created by user@91 on 11/02/25.
-//
-
 import SwiftUI
 import CoreLocation
 import MapKit
 
 struct LocationClientiew: View {
-    @StateObject private var locationManager = LocationManager() // Create an instance of LocationManager
+    @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
     
-    @State private var isLocationPicked = false // Track if location is picked
-    @State private var showLocationEditIcon = false // Track if edit icon should be shown
+    @State private var isLocationPicked = false
+    @State private var showLocationEditIcon = false
     @State private var navigateToEduView1 = false
     @StateObject var saveClientInfo = ClientHandlerUserInfo(appService: AppService())
 
@@ -86,7 +79,7 @@ struct LocationClientiew: View {
                                         // Reset location and region
                                         isLocationPicked = false
                                         region.center = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194) // Reset to default
-                                        locationManager.startUpdatingLocation() // Allow user to pick location again
+                                        locationManager.fetchLocation() // Fetch a new location
                                     }) {
                                         Image(systemName: "pencil.circle.fill")
                                             .resizable()
@@ -119,17 +112,14 @@ struct LocationClientiew: View {
                             backgroundColor: Theme.primaryColor,
                             action: {
                                 if !isLocationPicked {
-                                    locationManager.requestLocationPermission() // Request permission if not granted
-                                    locationManager.startUpdatingLocation()  // Start location updates after button press
+                                    locationManager.fetchLocation() // Fetch location once
                                 } else {
                                     // Proceed to the next step
                                     print("Proceed to the next screen or step")
-//                                    navigateToEduView1 = true
-                                    
-                                        Task{
-                                            await saveClientInfo.saveClientInfo()
-                                            navigateToEduView1 = true
-                                        }
+                                    Task {
+                                        await saveClientInfo.saveClientInfo()
+                                        navigateToEduView1 = true
+                                    }
                                 }
                             },
                             width: 320,
@@ -137,9 +127,9 @@ struct LocationClientiew: View {
                             cornerRadius: 6
                         )
                         .padding(.top, 8)
-                        .padding(.bottom, 20) // Add bottom padding to ensure the button isn't too close to the edge
+                        .padding(.bottom, 20)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure the VStack takes up the full space
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }
@@ -155,7 +145,7 @@ struct LocationClientiew: View {
         }
     }
     
-    private func setLocation(){
+    private func setLocation() {
         ClientFormManager.shared.clientData.location = "37.3347302 , -122.0089189"
     }
 }

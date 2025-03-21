@@ -18,7 +18,7 @@ struct LocationView: View {
             ZStack {
                 Theme.backgroundColor
                     .edgesIgnoringSafeArea(.all)
-                VStack {  // Changed from ScrollView to VStack
+                VStack {
                     // Header and Progress
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 5) {
@@ -77,7 +77,7 @@ struct LocationView: View {
                                 Button(action: {
                                     isLocationPicked = false
                                     region.center = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-                                    locationManager.startUpdatingLocation()
+                                    locationManager.fetchLocation() // Fetch a new location instead of continuous updates
                                 }) {
                                     Image(systemName: "pencil.circle.fill")
                                         .resizable()
@@ -92,7 +92,7 @@ struct LocationView: View {
                         Text("Current Location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
                             .font(.subheadline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.top, 10) // Reduced padding
+                            .padding(.top, 10)
                     }
 
                     Spacer() // Pushes the button to the bottom
@@ -110,8 +110,7 @@ struct LocationView: View {
                         backgroundColor: Theme.primaryColor,
                         action: {
                             if !isLocationPicked {
-                                locationManager.requestLocationPermission()
-                                locationManager.startUpdatingLocation()
+                                locationManager.fetchLocation() // Fetch location once
                             } else {
                                 print("Proceed to the next screen or step")
                                 navigateToEduView1 = true
@@ -121,7 +120,7 @@ struct LocationView: View {
                         height: 50,
                         cornerRadius: 6
                     )
-                    .padding(.bottom, 20) // Keep button at bottom with minimal padding
+                    .padding(.bottom, 20)
                 }
             }
         }
