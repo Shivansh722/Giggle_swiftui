@@ -54,13 +54,27 @@ class ClientHandlerUserInfo: ObservableObject {
                     print("UserId remains the same: \(userId)")
                 }
             }
-            
+            userDefaults.set("completed client", forKey: "status")
             print("Data saved Successfully. \(result.data)")
         }
         catch{
             print(error)
         }
         
+    }
+    
+    func checkForCleintExixtence() async throws -> Bool {
+        do{
+            let userDefaults = UserDefaults.standard
+            let storedUserId = userDefaults.string(forKey: "userID")
+            let documentId = FormManager.shared.formData.userId.isEmpty ? storedUserId : FormManager.shared.formData.userId
+            let result = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!)
+            print("Retrieved document data: \(result.data)")
+            return !result.data.isEmpty
+        }catch{
+            print(error)
+            return false
+        }
     }
 }
 

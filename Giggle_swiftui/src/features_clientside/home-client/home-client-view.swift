@@ -57,14 +57,11 @@ struct HomeClientView: View {
                     
                     Button(action: {
                         Task {
-                            let status = await appService.logout()
-                            switch status {
-                            case .success:
-                                print("Logged out successfully")
-                                navigateToLogin = true // Navigate to login screen
-                            case .error(let message):
-                                print("Logout failed: \(message)")
-                            }
+                            let userDefault = UserDefaults.standard
+                            userDefault.set("", forKey: "status")
+                            let status = UserDefaults.standard.string(forKey: "status")
+                            print(status!)
+                            navigateToLogin = true
                         }
                     }) {
                         Text("Logout")
@@ -134,7 +131,7 @@ struct HomeClientView: View {
             
             // Navigation to Login Screen after Logout
             NavigationLink(
-                destination: LoginView(), // Replace with your actual login view
+                destination: LoginSimpleView(), // Replace with your actual login view
                 isActive: $navigateToLogin
             ) {
                 EmptyView()

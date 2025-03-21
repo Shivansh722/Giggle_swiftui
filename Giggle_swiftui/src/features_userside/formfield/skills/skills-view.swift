@@ -98,10 +98,13 @@ struct skillView: View {
                                     Task {
                                         let result = await saveUserInfo.saveInfo()
                                         if result {
-                                            navigateToHome = true
                                             userDetailAutoView.deleteAllUserDefaults()
                                             let userDefault = UserDefaults.standard
                                             userDefault.set(FormManager.shared.formData.userId, forKey: "userID")
+                                            userDefault.set("completed user", forKey: "status")
+                                            let status = UserDefaults.standard.string(forKey: "status")
+                                            print(status!)
+                                            navigateToHome = true
                                         } else {
                                             print("Failed to save user info")
                                         }

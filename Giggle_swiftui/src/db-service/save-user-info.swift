@@ -79,13 +79,15 @@ class SaveUserInfo:ObservableObject {
     func fetchUser(userId: String) async{
         let databaseId = databaseID
         let collectionId = collectionID
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
 
         do {
             // Fetch the document using the userId as the document ID
             let document = try await database.getDocument(
                 databaseId: databaseId,
                 collectionId: collectionId,
-                documentId: userId
+                documentId: storedUserId!
             )
             print(document.data)
             FormManager.shared.formData.name = (document.data["name"]?.value as? String) ?? ""
@@ -233,5 +235,29 @@ class SaveUserInfo:ObservableObject {
         }
         
         
+    }
+    
+    func checkForUserExistence() async throws -> Bool {
+        do {
+            let userDefaults = UserDefaults.standard
+            let storedUserId = userDefaults.string(forKey: "userID") ?? ""
+            print("Stored User ID from UserDefaults: \(storedUserId)")
+            print("FormManager User ID: \(FormManager.shared.formData.userId)")
+            
+            let documentId = FormManager.shared.formData.userId.isEmpty ? storedUserId : FormManager.shared.formData.userId
+            
+            let result = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: collectionID,
+                documentId: documentId
+            )
+            
+            print("Retrieved document data: \(result.data)")
+            
+            return !result.data.isEmpty
+        } catch {
+            print("Error fetching document: \(error)")
+            return false
+        }
     }
 }
