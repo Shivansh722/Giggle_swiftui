@@ -12,7 +12,7 @@ struct ResumeUpload: View {
 
     @State private var isFilePickerPresented = false
     @State private var isProcessingComplete = false
-    @State private var isSkipped = false  // State to trigger navigation when skipping
+    @State private var isSkipped = false
     @State private var navigate = false
 
     var body: some View {
@@ -21,7 +21,6 @@ struct ResumeUpload: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
-
                 Text("Upload Resume")
                     .font(.title)
                     .bold()
@@ -111,7 +110,7 @@ struct ResumeUpload: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(uploadManager.selectedResumes.isEmpty ? Color.gray : Color.green) // Dynamically change color
+                    .background(uploadManager.selectedResumes.isEmpty ? Color.gray : Color.green)
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .disabled(uploadManager.isProcessingUpload || uploadManager.selectedResumes.isEmpty)
@@ -134,7 +133,7 @@ struct ResumeUpload: View {
                 }
             )
         }
-        .navigationBarHidden(true) // Hide navigation bar completely
+        .navigationBarHidden(true)
     }
 }
 

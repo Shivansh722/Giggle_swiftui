@@ -16,9 +16,7 @@ class ResumeUploadManager: ObservableObject {
     private let appwriteStorage: Storage
     private let appwriteBucketId: String
 
-    init(
-        apiEndpoint: String, projectIdentifier: String, storageBucketId: String
-    ) {
+    init(apiEndpoint: String, projectIdentifier: String, storageBucketId: String) {
         self.appwriteClient = Client()
             .setEndpoint(apiEndpoint)
             .setProject(projectIdentifier)
@@ -31,8 +29,12 @@ class ResumeUploadManager: ObservableObject {
         let resumeSize = calculateFileSize(fileURL: fileURL)
         selectedResumes.append(
             ResumeFile(
-                id: UUID(), fileName: resumeName, fileSize: resumeSize,
-                localPath: fileURL.path))
+                id: UUID(),
+                fileName: resumeName,
+                fileSize: resumeSize,
+                fileURL: fileURL // Store the URL object instead of path string
+            )
+        )
     }
 
     func uploadAllSelectedResumes() {
@@ -44,12 +46,17 @@ class ResumeUploadManager: ObservableObject {
             for resume in selectedResumes {
                 FormManager.shared.formData.resumeIds.append(resume.id.uuidString)
                 do {
-                    guard
-                        let inputResume = try? InputFile.fromPath(
-                            resume.localPath)
-                    else {
-                        print(
-                            "Failed to create InputFile for \(resume.fileName)")
+                    // Start accessing the security-scoped resource
+                    let didStartAccessing = resume.fileURL.startAccessingSecurityScopedResource()
+                    defer {
+                        // Stop accessing when done (even if an error occurs)
+                        if didStartAccessing {
+                            resume.fileURL.stopAccessingSecurityScopedResource()
+                        }
+                    }
+
+                    guard let inputResume = try? InputFile.fromPath(resume.fileURL.path) else {
+                        print("Failed to create InputFile for \(resume.fileName)")
                         continue
                     }
 
@@ -70,64 +77,67 @@ class ResumeUploadManager: ObservableObject {
                         self.extractTextFromPDF(resume: resume)
                     }
                 } catch {
-                    print(
-                        "Failed to upload \(resume.fileName): \(error.localizedDescription)"
-                    )
+                    print("Failed to upload \(resume.fileName): \(error.localizedDescription)")
                 }
             }
 
-            DispatchQueue.main.async { [self] in
-                selectedResumes.removeAll()
-                isProcessingUpload = false
+            DispatchQueue.main.async {
+                self.selectedResumes.removeAll()
+                self.isProcessingUpload = false
             }
         }
     }
-    
-    func updateResume()async throws{
-        Task{
-            for selectedResume in selectedResumes {
-                FormManager.shared.formData.resumeIds.append(selectedResume.id.uuidString)
-                do{
-                    guard
-                        let inputResume = try? InputFile.fromPath(
-                            selectedResume.localPath)
-                    else {
-                        print(
-                            "Failed to create InputFile for \(selectedResume.fileName)")
-                        continue
+
+    func updateResume() async throws {
+        for resume in selectedResumes {
+            FormManager.shared.formData.resumeIds.append(resume.id.uuidString)
+            do {
+                // Start accessing the security-scoped resource
+                let didStartAccessing = resume.fileURL.startAccessingSecurityScopedResource()
+                defer {
+                    if didStartAccessing {
+                        resume.fileURL.stopAccessingSecurityScopedResource()
                     }
-                    let uploadedResume = try await appwriteStorage.createFile(
-                        bucketId: appwriteBucketId,
-                        fileId: selectedResume.id.uuidString,
-                        file: inputResume
-                    )
-                    
-                    print("upload things", uploadedResume.id)
-                    try await SaveUserInfo(appService: AppService()).updateUserInfoResume()
-
-                    
-                }catch{
-                    print(error)
                 }
+
+                guard let inputResume = try? InputFile.fromPath(resume.fileURL.path) else {
+                    print("Failed to create InputFile for \(resume.fileName)")
+                    continue
+                }
+
+                let uploadedResume = try await appwriteStorage.createFile(
+                    bucketId: appwriteBucketId,
+                    fileId: resume.id.uuidString,
+                    file: inputResume
+                )
+
+                print("upload things", uploadedResume.id)
+                try await SaveUserInfo(appService: AppService()).updateUserInfoResume()
+            } catch {
+                print(error)
             }
         }
     }
-    
-    func uploadallFiles(){
+
+    func uploadallFiles() {
         guard !isProcessingUpload else { return }
         isProcessingUpload = true
         uploadProgressValue = 0.0
-        
-        Task{
+
+        Task {
             for resume in selectedResumes {
                 ClientFormManager.shared.clientData.photos.append(resume.id.uuidString)
                 do {
-                    guard
-                        let inputResume = try? InputFile.fromPath(
-                            resume.localPath)
-                    else {
-                        print(
-                            "Failed to create InputFile for \(resume.fileName)")
+                    // Start accessing the security-scoped resource
+                    let didStartAccessing = resume.fileURL.startAccessingSecurityScopedResource()
+                    defer {
+                        if didStartAccessing {
+                            resume.fileURL.stopAccessingSecurityScopedResource()
+                        }
+                    }
+
+                    guard let inputResume = try? InputFile.fromPath(resume.fileURL.path) else {
+                        print("Failed to create InputFile for \(resume.fileName)")
                         continue
                     }
 
@@ -148,9 +158,7 @@ class ResumeUploadManager: ObservableObject {
                         self.navigationTrigger = true
                     }
                 } catch {
-                    print(
-                        "Failed to upload \(resume.fileName): \(error.localizedDescription)"
-                    )
+                    print("Failed to upload \(resume.fileName): \(error.localizedDescription)")
                 }
             }
         }
@@ -161,8 +169,15 @@ class ResumeUploadManager: ObservableObject {
     }
 
     func extractTextFromPDF(resume: ResumeFile) {
-        let pdfURL = URL(fileURLWithPath: resume.localPath)
-        guard let pdfDocument = PDFDocument(url: pdfURL) else {
+        // Start accessing the security-scoped resource for PDF extraction
+        let didStartAccessing = resume.fileURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                resume.fileURL.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        guard let pdfDocument = PDFDocument(url: resume.fileURL) else {
             print("Failed to open PDF document: \(resume.fileName)")
             return
         }
@@ -170,8 +185,7 @@ class ResumeUploadManager: ObservableObject {
         var fullText = ""
         for pageIndex in 0..<pdfDocument.pageCount {
             if let page = pdfDocument.page(at: pageIndex),
-                let pageText = page.string
-            {
+               let pageText = page.string {
                 fullText += pageText + "\n"
             }
         }
@@ -179,11 +193,8 @@ class ResumeUploadManager: ObservableObject {
         DispatchQueue.main.async { [self] in
             print("Extracted text for \(resume.fileName): \(fullText)")
             Task {
-                let generatedText =
-                    await userDetailAutoView.generateTextForPrompt(
-                        promptText: fullText)
-                userDetailAutoView.storeResumeToUserDefaults(
-                    jsonString: generatedText)
+                let generatedText = await userDetailAutoView.generateTextForPrompt(promptText: fullText)
+                userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)
                 DispatchQueue.main.async {
                     UserPreference.shared.shouldLoadUserDetailsAutomatically = true
                     self.navigationTrigger = true
@@ -193,12 +204,19 @@ class ResumeUploadManager: ObservableObject {
     }
 
     private func calculateFileSize(fileURL: URL) -> Int {
+        // Start accessing the security-scoped resource for file size calculation
+        let didStartAccessing = fileURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                fileURL.stopAccessingSecurityScopedResource()
+            }
+        }
+
         do {
-            let fileAttributes = try fileURL.resourceValues(forKeys: [
-                .fileSizeKey
-            ])
-            return fileAttributes.fileSize!
+            let fileAttributes = try fileURL.resourceValues(forKeys: [.fileSizeKey])
+            return fileAttributes.fileSize ?? 0
         } catch {
+            print("Failed to calculate file size: \(error)")
             return 0
         }
     }
@@ -208,5 +226,5 @@ struct ResumeFile: Identifiable {
     let id: UUID
     let fileName: String
     let fileSize: Int  // File size in bytes
-    let localPath: String  // Local file path
+    let fileURL: URL   // Changed from localPath: String to fileURL: URL
 }
