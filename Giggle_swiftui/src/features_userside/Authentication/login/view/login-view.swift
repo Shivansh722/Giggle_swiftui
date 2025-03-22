@@ -144,7 +144,7 @@ struct LoginSimpleView: View {
 
                     // Dynamic NavigationLink
                     NavigationLink(
-                        destination: destinationView ?? AnyView(EmptyView()), // Fallback to EmptyView if nil
+                        destination: destinationView,
                         isActive: $navigateToNextScreen
                     ) {
                         EmptyView()

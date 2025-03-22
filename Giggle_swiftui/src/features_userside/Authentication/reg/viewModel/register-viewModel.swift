@@ -82,7 +82,7 @@ class RegisterViewModel: ObservableObject {
     func createUser(email: String, password: String) async {
         guard !isLoading else { return } // Prevents multiple simultaneous tasks
         isLoading = true
-        let status = await service.createUser(email: email, password: password)
+        let status:RequestStatus = await service.createUser(email: email, password: password)
         
         switch status {
         case .success:
