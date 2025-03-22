@@ -1,4 +1,11 @@
 //
+//  FluencyIntroView.swift
+//  Giggle_swiftui
+//
+//  Created by rjk on 22/03/25.
+//
+
+//
 //  Untitled.swift
 //  Giggle_swiftui
 //
@@ -9,7 +16,7 @@ import SwiftUI
 import WebKit
 
 // Create a WebView representable
-struct WebView: UIViewRepresentable {
+struct WebFluencyView: UIViewRepresentable {
     let url: URL
     
     func makeUIView(context: Context) -> WKWebView {
@@ -25,7 +32,7 @@ struct WebView: UIViewRepresentable {
     }
 }
 
-struct FlnIntroView: View {
+struct FluencyIntroView: View {
     var selectedRole: ChooseViewModel.Role?
     @State private var navigate: Bool = false
     
@@ -34,31 +41,38 @@ struct FlnIntroView: View {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
             
             VStack {
+                HStack {
+                    Text("Fluency")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.tertiaryColor)
+                        .padding(.top, 40)
+                    Spacer()
+                }
+                .padding(.leading, 20)
                 // Replace Image with WebView for GIF
-                WebView(url: Bundle.main.url(forResource: "block 2", withExtension: "gif") ?? URL.desktopDirectory)
-                    .frame(width: 200, height: 200)
-                    .padding(.top, 40)
+                WebFluencyView(url: Bundle.main.url(forResource: "mic", withExtension: "gif") ?? URL.desktopDirectory)
+                    .frame(width: 250, height: 250)
                 
                 
                 VStack(spacing: 30) {
                     IntroItem(
                         icon: "Pass Fail",
-                        text: "Complete 5 questions each from Literacy and Numeracy"
+                        text: "You will have 10 seconds to complete the fluency test"
                     )
                     IntroItem(
                         icon: "Clock",
-                        text: "You will have 5 minutes to complete each section"
+                        text: "Your time will start immediately after clicking on the button"
                     )
                     IntroItem(
                         icon: "microphone",
-                        text: "Fluency section will be a voice based assessment to check your fluency"
+                        text: "You have to speak about yourself as fluent as possible"
                     )
                     IntroItem(
                         icon: "proctor",
-                        text: "You will be monitored throughout the assessment"
+                        text: "Our model will determine your fluency based on your voice"
                     )
                 }
-                .padding(.top, 30 )
                 
                 Spacer()
                 
@@ -78,7 +92,7 @@ struct FlnIntroView: View {
                 .padding()
                 
                 NavigationLink(
-                    destination: LiteracyView(),
+                    destination: FluencyView(),
                     isActive: $navigate
                 ) {
                     EmptyView()
@@ -89,5 +103,5 @@ struct FlnIntroView: View {
 }
 
 #Preview {
-    FlnIntroView()
+    FluencyIntroView()
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct FluencyView: View {
-    @State var textValue: String = "Push To Talk"
+    @State var textValue: String = "Tap the button to start test"
     @State var speechRecognizer = SpeechRecognizer()
     @State var observer: ResultsObserver?
     @State var classificationScore: Double?
@@ -41,7 +41,7 @@ struct FluencyView: View {
                 Spacer()
 
                 VStack {
-                    Text("Hey Orlando!")
+                    Text("Hey " + FormManager.shared.formData.name + "!")
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(.gray)
 

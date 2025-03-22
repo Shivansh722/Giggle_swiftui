@@ -118,7 +118,7 @@ struct NumeracyView: View {
                             .font(.headline)
                     }
                     .background(
-                        NavigationLink("", destination: FluencyView(), isActive: $navigate)
+                        NavigationLink("", destination: FluencyIntroView(), isActive: $navigate)
                             .hidden()
                     )
                 }

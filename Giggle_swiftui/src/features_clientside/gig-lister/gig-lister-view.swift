@@ -152,7 +152,7 @@ struct GigDetailsScreen: View {
                         .foregroundColor(Theme.onPrimaryColor)
                         .padding(.top, 20)
                     
-                    WebView(url: Bundle.main.url(forResource: "job-list", withExtension: "gif") ?? URL(fileURLWithPath: NSTemporaryDirectory()))
+                    WebView(url: Bundle.main.url(forResource: "jobs-list", withExtension: "gif") ?? URL(fileURLWithPath: NSTemporaryDirectory()))
                         .frame(width: 300, height: 300)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 10)

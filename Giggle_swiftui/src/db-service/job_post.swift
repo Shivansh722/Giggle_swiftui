@@ -29,13 +29,23 @@ class JobPost: ObservableObject {
             )
             
             var jobPosts: [[String: Any]] = []
+            var jobPosts2: [GetJobPostTest] = []
             
             for document in documentList.documents {
                 var data = document.data as [String: Any]
-                data["$id"] = document.id // Include document ID
+                let jobTitle = String(describing: data["job_title"] ?? "")
+                data["$id"] = document.id
                 jobPosts.append(data)
+                let jobTitle2 = GetJobPostTest(jobTitle: jobTitle)
+                jobPosts2.append(jobTitle2)
             }
             
+            // Store globally - ensure this runs on main thread
+            await MainActor.run {
+                JobTitleManager.shared.jobPosts = jobPosts2
+            }
+            
+            print("Job Posts2: \(jobPosts2)")
             print("Job Posts: \(jobPosts)")
             return jobPosts
             

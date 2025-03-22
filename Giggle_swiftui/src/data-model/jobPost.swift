@@ -23,3 +23,13 @@ class JobFormManager: ObservableObject {
     @Published var formData = GetJobPost(id: UUID(), jobTitle: "", jobTrait: "", jobType: "", location: "", salary: "")
 }
 
+class JobTitleManager: ObservableObject {
+    static let shared = JobTitleManager()
+    private init() {} // Private initializer to ensure singleton
+    
+    @Published var jobPosts: [GetJobPostTest] = []
+}
+
+struct GetJobPostTest {
+    var jobTitle: String
+}

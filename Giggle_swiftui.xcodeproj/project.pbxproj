@@ -8,21 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
+		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
-		353FB1AC2D8D747700E62A96 /* block.gif in Resources */ = {isa = PBXBuildFile; fileRef = 353FB1AB2D8D747700E62A96 /* block.gif */; };
-		353FB1AE2D8D760000E62A96 /* empty-screen.gif in Resources */ = {isa = PBXBuildFile; fileRef = 353FB1AD2D8D760000E62A96 /* empty-screen.gif */; };
-		35BB65012D89E12900DF2ED7 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 35BB65002D89E12900DF2ED7 /* GoogleSignInSwift */; };
-		35BB65282D8A78BD00DF2ED7 /* job-list.gif in Resources */ = {isa = PBXBuildFile; fileRef = 35BB65272D8A78BD00DF2ED7 /* job-list.gif */; };
-		35BB652A2D8A78C600DF2ED7 /* skill-animate.gif in Resources */ = {isa = PBXBuildFile; fileRef = 35BB65292D8A78C600DF2ED7 /* skill-animate.gif */; };
-		3FD6F5992D8A8A1600BE9B6C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3FD6F5982D8A8A1600BE9B6C /* GoogleGenerativeAI */; };
+		357088BA2D8DEE0800CDED8F /* mic.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088B92D8DEE0800CDED8F /* mic.gif */; };
+		357088C02D8DFA6100CDED8F /* empty-jobs.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088BF2D8DFA6100CDED8F /* empty-jobs.gif */; };
+		357088C22D8DFAD600CDED8F /* jobs-list.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C12D8DFAD600CDED8F /* jobs-list.gif */; };
+		357088C42D8DFB0700CDED8F /* block 2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C32D8DFB0700CDED8F /* block 2.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		353FB1AB2D8D747700E62A96 /* block.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = block.gif; sourceTree = "<group>"; };
-		353FB1AD2D8D760000E62A96 /* empty-screen.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "empty-screen.gif"; sourceTree = "<group>"; };
-		35BB65272D8A78BD00DF2ED7 /* job-list.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "job-list.gif"; sourceTree = "<group>"; };
-		35BB65292D8A78C600DF2ED7 /* skill-animate.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "skill-animate.gif"; sourceTree = "<group>"; };
+		357088B92D8DEE0800CDED8F /* mic.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = mic.gif; sourceTree = "<group>"; };
+		357088BF2D8DFA6100CDED8F /* empty-jobs.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "empty-jobs.gif"; sourceTree = "<group>"; };
+		357088C12D8DFAD600CDED8F /* jobs-list.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "jobs-list.gif"; sourceTree = "<group>"; };
+		357088C32D8DFB0700CDED8F /* block 2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "block 2.gif"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -38,10 +37,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35BB65012D89E12900DF2ED7 /* GoogleSignInSwift in Frameworks */,
 				350EE9892D25629000F083D5 /* Popovers in Frameworks */,
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
-				3FD6F5992D8A8A1600BE9B6C /* GoogleGenerativeAI in Frameworks */,
+				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,10 +49,10 @@
 		19E9A9882CD20FA5009F768B = {
 			isa = PBXGroup;
 			children = (
-				353FB1AD2D8D760000E62A96 /* empty-screen.gif */,
-				353FB1AB2D8D747700E62A96 /* block.gif */,
-				35BB65292D8A78C600DF2ED7 /* skill-animate.gif */,
-				35BB65272D8A78BD00DF2ED7 /* job-list.gif */,
+				357088C32D8DFB0700CDED8F /* block 2.gif */,
+				357088C12D8DFAD600CDED8F /* jobs-list.gif */,
+				357088BF2D8DFA6100CDED8F /* empty-jobs.gif */,
+				357088B92D8DEE0800CDED8F /* mic.gif */,
 				19E9A9932CD20FA5009F768B /* Giggle_swiftui */,
 				19E9A9922CD20FA5009F768B /* Products */,
 			);
@@ -89,9 +87,8 @@
 			name = Giggle_swiftui;
 			packageProductDependencies = (
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
+				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
 				350EE9882D25629000F083D5 /* Popovers */,
-				35BB65002D89E12900DF2ED7 /* GoogleSignInSwift */,
-				3FD6F5982D8A8A1600BE9B6C /* GoogleGenerativeAI */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -123,9 +120,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
+				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */,
-				35BB64FD2D89E12900DF2ED7 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				3FD6F5972D8A8A1600BE9B6C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -142,10 +138,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35BB652A2D8A78C600DF2ED7 /* skill-animate.gif in Resources */,
-				353FB1AC2D8D747700E62A96 /* block.gif in Resources */,
-				35BB65282D8A78BD00DF2ED7 /* job-list.gif in Resources */,
-				353FB1AE2D8D760000E62A96 /* empty-screen.gif in Resources */,
+				357088C42D8DFB0700CDED8F /* block 2.gif in Resources */,
+				357088BA2D8DEE0800CDED8F /* mic.gif in Resources */,
+				357088C22D8DFAD600CDED8F /* jobs-list.gif in Resources */,
+				357088C02D8DFA6100CDED8F /* empty-jobs.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,7 +282,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Giggle_swiftui/Giggle_swiftui.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -325,7 +320,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Giggle_swiftui/Giggle_swiftui.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -391,28 +385,20 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
 		350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aheze/Popovers";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.3.2;
-			};
-		};
-		35BB64FD2D89E12900DF2ED7 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
-			};
-		};
-		3FD6F5972D8A8A1600BE9B6C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google-gemini/generative-ai-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -423,20 +409,15 @@
 			package = 1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
 			productName = Appwrite;
 		};
+		19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
 		350EE9882D25629000F083D5 /* Popovers */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */;
 			productName = Popovers;
-		};
-		35BB65002D89E12900DF2ED7 /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 35BB64FD2D89E12900DF2ED7 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
-		};
-		3FD6F5982D8A8A1600BE9B6C /* GoogleGenerativeAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3FD6F5972D8A8A1600BE9B6C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
-			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

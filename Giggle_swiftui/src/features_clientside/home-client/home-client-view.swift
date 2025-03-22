@@ -42,14 +42,14 @@ struct HomeClientView: View {
                 // Custom Header with Logout Button
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Hi")
+                        Text("Hey")
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(Theme.primaryColor)
-                        Text("Shivansh")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Theme.onPrimaryColor)
+//                        Text("Shivansh")
+//                            .font(.title)
+//                            .fontWeight(.bold)
+//                            .foregroundColor(Theme.onPrimaryColor)
                     }
                     .padding()
                     
@@ -97,7 +97,7 @@ struct HomeClientView: View {
             // Show empty state if no gigs
             if gigManager.gigs.isEmpty {
                 VStack {
-                    WebClientHomeView(url: Bundle.main.url(forResource: "empty-screen", withExtension: "gif") ?? URL.desktopDirectory)
+                    WebClientHomeView(url: Bundle.main.url(forResource: "empty-jobs", withExtension: "gif") ?? URL.desktopDirectory)
                     .frame(width: 300, height: 300)
 
                     Text("Post your Gigs here!")

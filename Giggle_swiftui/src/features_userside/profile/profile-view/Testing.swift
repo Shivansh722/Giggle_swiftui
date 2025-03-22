@@ -12,7 +12,7 @@ struct Testing: View {
     var body: some View {
         Button(action:{
             Task{
-                try await saveUserInfo.fetchImage("CEFBBD65-618E-4C49-B650-6D266111BEB8")
+                try await saveUserInfo.get_job_post()
             }
         }){
             Text("click")

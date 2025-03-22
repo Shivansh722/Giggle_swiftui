@@ -1,17 +1,11 @@
-//
-//  FLNScoreView.swift
-//  Giggle_swiftui
-//
-//  Created by admin49 on 09/01/25.
-//
-
 import SwiftUI
 
 struct FLNScoreView: View {
-    @State private var navigatetoHome:Bool = false
+    @State private var navigatetoHome: Bool = false
     @State private var flnID: String? = nil
-    @State private var naviagtetoLiteracy:Bool = false
+    @State private var naviagtetoLiteracy: Bool = false
     @State private var fluencyScore = FlnDataManager.shared.flnData.fluencyScore
+    
     var body: some View {
         ZStack {
             Theme.backgroundColor
@@ -23,8 +17,7 @@ struct FLNScoreView: View {
                         .font(.title)
                         .bold()
                         .foregroundColor(Theme.primaryColor)
-
-                        + Text(" Score")
+                    + Text(" Score")
                         .font(.title)
                         .bold()
                         .foregroundColor(Theme.tertiaryColor)
@@ -68,7 +61,8 @@ struct FLNScoreView: View {
                                     .font(.subheadline)
                             }
                             Spacer()
-                            Text("67%")
+                            // Compute averageScore inline here
+                            Text("\(((FlnDataManager.shared.flnData.numeracyScore + FlnDataManager.shared.flnData.literacyScore) / 2))%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -84,7 +78,6 @@ struct FLNScoreView: View {
                     .foregroundColor(Theme.tertiaryColor)
 
                 ZStack {
-
                     Text("G+")
                         .font(.system(size: 72))
                         .fontWeight(.semibold)
@@ -94,11 +87,8 @@ struct FLNScoreView: View {
                 .background(
                     LinearGradient(
                         stops: [
-                            Gradient.Stop(
-                                color: .white.opacity(0.2), location: 0.00),
-                            Gradient.Stop(
-                                color: Color(red: 0.6, green: 0.6, blue: 0.6)
-                                    .opacity(0.05), location: 1.00),
+                            Gradient.Stop(color: .white.opacity(0.2), location: 0.00),
+                            Gradient.Stop(color: Color(red: 0.6, green: 0.6, blue: 0.6).opacity(0.05), location: 1.00),
                         ],
                         startPoint: UnitPoint(x: 1.23, y: 0),
                         endPoint: UnitPoint(x: -0.2, y: 1.17)
@@ -113,7 +103,6 @@ struct FLNScoreView: View {
                 Spacer()
 
                 VStack(spacing: 20) {
-
                     Button(action: {
                         naviagtetoLiteracy = true
                     }) {
@@ -127,7 +116,7 @@ struct FLNScoreView: View {
                             )
                     }
                     
-                    NavigationLink(destination:LiteracyView(),isActive: $naviagtetoLiteracy){
+                    NavigationLink(destination: LiteracyView(), isActive: $naviagtetoLiteracy) {
                         EmptyView()
                     }
 
@@ -141,14 +130,13 @@ struct FLNScoreView: View {
                             .background(Theme.primaryColor)
                             .cornerRadius(6)
                     }
-                    NavigationLink(destination:HomeView(),isActive: $navigatetoHome){
+                    NavigationLink(destination: HomeView(), isActive: $navigatetoHome) {
                         EmptyView()
                     }
-                    
                 }
                 .padding([.horizontal, .bottom], 20)
             }
-            .task{
+            .task {
                 reverse()
             }
         }
@@ -161,7 +149,6 @@ struct FLNScoreView: View {
             print(fluencyScore)
         }
     }
-
 }
 
 #Preview {

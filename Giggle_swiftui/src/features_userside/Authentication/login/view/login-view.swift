@@ -125,46 +125,6 @@ struct LoginSimpleView: View {
                         .padding(.vertical, 20)
                         .padding(.top, 25)
 
-                        // Google and Apple login options
-                        HStack(spacing: geometry.size.width * 0.1) {
-                            Button(action: {
-                                // Google login action (implement as needed)
-                            }) {
-                                Image("google-logo2")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .scaleEffect(1.2)
-                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
-                                    .padding()
-                                    .background(Color.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.clear, lineWidth: 1)
-                                    )
-                            }
-
-                            // Custom Apple Sign In Button
-                            Button(action: {
-                                handleAppleSignInButtonTapped()
-                            }) {
-                                Image(systemName: "apple.logo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.black)
-                                    .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
-                                    .padding()
-                                    .background(Color.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.black, lineWidth: 2)
-                                    )
-                            }
-                            .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
-                        }
-                        .padding(.bottom, 10)
-
                         Spacer()
 
                         // Register text and link

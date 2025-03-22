@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var formManager = FormManager.shared
+    @ObservedObject var jobTitleManager = JobTitleManager.shared
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     @StateObject var flnInfo = FLNInfo(appService: AppService())
     @StateObject var jobs = JobPost(appService: AppService())
@@ -143,8 +144,9 @@ struct HomeView: View {
                     do {
                         let result = try await jobs.get_job_post()
                         jobresult = result
-                        filteredJobs = result
+                        filteredJobs = result  // Initialize filteredJobs here
                         print("Fetched \(jobresult.count) jobs")
+                        print("Singleton jobs: \(jobTitleManager.jobPosts.count)")
                     } catch {
                         print("Failed to fetch job posts: \(error.localizedDescription)")
                     }
@@ -193,6 +195,10 @@ struct HomeView: View {
                 Image(systemName: "magnifyingglass")
                 Text("Search")
             }
+            .onAppear {
+                filteredJobs = jobresult // Initialize with all jobs
+                print("Search tab appeared - jobs: \(filteredJobs.count)")
+            }
             
             GeometryReader { geometry in
                 ZStack {
@@ -219,28 +225,28 @@ struct HomeView: View {
     }
     
     func filterJobs(searchText: String) {
-        if searchText.isEmpty {
-            filteredJobs = jobresult
-            print("Search cleared, showing all \(filteredJobs.count) jobs")
-        } else {
-            let filteredTitles = GlobalDataTitle.shared.jobTitles.filter { title in
-                title.lowercased().contains(searchText.lowercased())
-            }
-            print("Hard-coded titles: \(GlobalDataTitle.shared.jobTitles)")
-            print("Filtered titles: \(filteredTitles)")
-            
-            // Filter jobs based on index matching the hard-coded titles
-            filteredJobs = jobresult.enumerated().filter { (index, job) in
-                if index < GlobalDataTitle.shared.jobTitles.count {
-                    let title = GlobalDataTitle.shared.jobTitles[index]
-                    return title.lowercased().contains(searchText.lowercased())
+            if searchText.isEmpty {
+                filteredJobs = jobresult
+                print("Search cleared, showing all \(filteredJobs.count) jobs")
+            } else {
+                // Filter based on job titles from singleton
+                let filteredTitles = jobTitleManager.jobPosts.filter { job in
+                    job.jobTitle.lowercased().contains(searchText.lowercased())
                 }
-                return false
-            }.map { $1 }
-            
-            print("Filtered jobs count: \(filteredJobs.count)")
+                
+                // Match filtered titles with jobresult dictionaries
+                filteredJobs = jobresult.filter { jobDict in
+                    guard let jobTitle = jobDict["job_title"] as? String else { return false }
+                    return filteredTitles.contains { $0.jobTitle == jobTitle } // Remove lowrcased() here
+                }
+                
+                print("Search text: '\(searchText)'")
+                print("Available titles in singleton: \(jobTitleManager.jobPosts.map { $0.jobTitle })")
+                print("Titles in jobresult: \(jobresult.compactMap { $0["job_title"] as? String })")
+                print("Filtered titles: \(filteredTitles.map { $0.jobTitle })")
+                print("Filtered jobs count: \(filteredJobs.count)")
+            }
         }
-    }
 }
 
 struct FLNGradeCardView: View {
@@ -293,8 +299,3 @@ struct FLNGradeCardView: View {
         .padding(.horizontal)
     }
 }
-
-#Preview {
-    HomeView()
-}
-
