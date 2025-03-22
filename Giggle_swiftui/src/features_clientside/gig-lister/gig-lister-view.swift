@@ -26,7 +26,7 @@ struct WebClientView: UIViewRepresentable {
 struct Gig: Identifiable, Equatable {
     let id: UUID = UUID()
     var companyName: String
-    var category: String
+    var jobRole: String
     var hoursPerWeek: String
     var location: String
     var isRemote: Bool
@@ -122,7 +122,7 @@ struct GigDetailsScreen: View {
     @ObservedObject var gigManager: GigManager
     
     @State private var companyName = ""
-    @State private var category = ""
+    @State private var jobRole = ""
     @State private var hoursPerWeek = ""
     @State private var location = ""
     @State private var isRemote = false
@@ -166,8 +166,8 @@ struct GigDetailsScreen: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         CustomTextField(placeholder: "Company Name", isSecure: false, text: $companyName, icon: "building.2.fill")
-                        CustomTextField(placeholder: "Category", isSecure: false, text: $category, icon: "briefcase.fill")
-                        CustomTextField(placeholder: "Hours per Week", isSecure: false, text: $hoursPerWeek, icon: "clock.fill")
+                        CustomTextField(placeholder: "Job Role", isSecure: false, text: $jobRole, icon: "briefcase.fill")
+                        CustomTextField(placeholder: "Salary (Per Month)", isSecure: false, text: $hoursPerWeek, icon: "dollarsign.circle.fill")
                         CustomTextField(placeholder: "Location", isSecure: false, text: $location, icon: "map.fill")
                         Toggle("Remote Work", isOn: $isRemote)
                             .padding(.horizontal)
@@ -272,7 +272,7 @@ struct GigDetailsScreen: View {
                             action: {
                                 let newGig = Gig(
                                     companyName: companyName,
-                                    category: category,
+                                    jobRole: jobRole,
                                     hoursPerWeek: hoursPerWeek,
                                     location: location,
                                     isRemote: isRemote,
@@ -290,11 +290,12 @@ struct GigDetailsScreen: View {
                                 
                                 // Update JobFormManager
                                 JobFormManager.shared.formData.id = UUID()
-                                JobFormManager.shared.formData.jobTitle = companyName
+                                JobFormManager.shared.formData.companyName = companyName
                                 JobFormManager.shared.formData.location = location
                                 JobFormManager.shared.formData.salary = hoursPerWeek
                                 JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
-                                JobFormManager.shared.formData.jobTitle = category // Note: Overwriting jobTitle here
+                                JobFormManager.shared.formData.jobTitle = jobRole // Note: Overwriting jobTitle here
+                                JobFormManager.shared.formData.jobTrait = specialization
                                 
                                 // Post job asynchronously
                                 Task {
@@ -314,7 +315,7 @@ struct GigDetailsScreen: View {
                             hasStroke: true
                         )
                         .frame(maxWidth: .infinity)
-                        .disabled(companyName.isEmpty || category.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
+                        .disabled(companyName.isEmpty || jobRole.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 20)

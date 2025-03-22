@@ -7,6 +7,7 @@ struct Job: Identifiable {
     let title: String
     let location: String
     let salary: String
+    let companyName: String
     let jobTrait: String
     let jobType: String
 }
@@ -82,11 +83,12 @@ struct HomeClientView: View {
                         ForEach(gigManager.gigs) { gig in
                             JobCardView(jobs: [
                                 "$id": gig.id.uuidString,
-                                "job_title": gig.companyName,
+                                "job_title": gig.jobRole,
+                                "companyName": gig.companyName,
                                 "location": gig.location,
-                                "salary": "N/A",
-                                "job_trait": gig.isRemote ? "Remote" : "On-Site",
-                                "job_type": gig.category
+                                "salary": gig.hoursPerWeek,
+                                "job_trait": gig.specialization,
+                                "job_type": gig.isRemote ? "Remote" : "On-Site"
                             ], flnID: "asdf")
                         }
                     }

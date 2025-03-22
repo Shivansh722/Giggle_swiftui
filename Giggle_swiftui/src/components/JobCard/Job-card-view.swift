@@ -46,10 +46,12 @@ struct JobCardView: View {
                                 Text("\(keysString)")
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundColor(.white)
-                                let location = jobs["location"]!
-                                Text("\(jobs["location"]!)")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(Color.gray)
+                                    Text("\(jobs["companyName"]!) . ")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(Color.gray) +
+                                    Text("\(jobs["location"]!)")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(Color.gray)
                             }
                         }
 

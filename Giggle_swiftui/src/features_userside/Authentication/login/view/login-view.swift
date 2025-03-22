@@ -107,24 +107,6 @@ struct LoginSimpleView: View {
                         .padding(.horizontal, 50)
                         .padding(.bottom, 10)
 
-                        // Divider
-                        HStack {
-                            Divider()
-                                .frame(width: 95, height: 1)
-                                .background(Color.gray)
-                                .padding(.leading, 30)
-
-                            Text("OR Sign In with")
-                                .foregroundColor(Color.gray)
-
-                            Divider()
-                                .frame(width: 95, height: 1)
-                                .background(Color.gray)
-                                .padding(.trailing, 30)
-                        }
-                        .padding(.vertical, 20)
-                        .padding(.top, 25)
-
                         Spacer()
 
                         // Register text and link

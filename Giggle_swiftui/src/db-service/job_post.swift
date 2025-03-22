@@ -36,7 +36,8 @@ class JobPost: ObservableObject {
                 let jobTitle = String(describing: data["job_title"] ?? "")
                 data["$id"] = document.id
                 jobPosts.append(data)
-                let jobTitle2 = GetJobPostTest(jobTitle: jobTitle)
+                
+                let jobTitle2 = GetJobPostTest(jobTitle: jobTitle, companyName: "")
                 jobPosts2.append(jobTitle2)
             }
             
@@ -66,7 +67,8 @@ class JobPost: ObservableObject {
                 "salary": JobFormManager.shared.formData.salary,
                 "job_type": JobFormManager.shared.formData.jobType,
                 "job_trait": JobFormManager.shared.formData.jobTrait,
-                "client_id": storedUserId!
+                "client_id": storedUserId!,
+                "companyName": JobFormManager.shared.formData.companyName,
             ]
             
             let result = try await database.createDocument(
