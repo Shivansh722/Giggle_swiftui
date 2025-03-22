@@ -61,6 +61,7 @@ struct HomeClientView: View {
                             userDefault.set("", forKey: "status")
                             let status = UserDefaults.standard.string(forKey: "status")
                             print(status!)
+                            RegisterViewModel(service: AppService()).isLoading = false
                             navigateToLogin = true
                         }
                     }) {
@@ -131,7 +132,7 @@ struct HomeClientView: View {
             
             // Navigation to Login Screen after Logout
             NavigationLink(
-                destination: LoginSimpleView(), // Replace with your actual login view
+                destination: RegisterView(), // Replace with your actual login view
                 isActive: $navigateToLogin
             ) {
                 EmptyView()

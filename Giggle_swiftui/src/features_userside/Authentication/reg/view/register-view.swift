@@ -52,6 +52,10 @@ struct RegisterView: View {
                             Task {
                                 if password == confirmPassword {
                                     await registerUser()
+                                    if viewModel.isLoggedIn {
+                                        navigateToUserDetail = true
+                                        viewModel.isLoggedIn = false
+                                    }
                                 } else {
                                     showPasswordMismatchAlert = true
                                 }
@@ -161,11 +165,6 @@ struct RegisterView: View {
             .onAppear {
                 // Pass the OpenURLAction to the view model
                 viewModel.setOpenURLAction(openURL)
-            }
-            .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
-                if isLoggedIn {
-                    navigateToUserDetail = true
-                }
             }
         }
     }
