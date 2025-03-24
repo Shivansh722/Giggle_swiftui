@@ -200,7 +200,7 @@ struct HomeView: View {
             
             GeometryReader { geometry in
                 ZStack {
-                    NotificationScreen()
+                    NotificationScreen(jobs:jobresult)
                 }
             }
             .tabItem {

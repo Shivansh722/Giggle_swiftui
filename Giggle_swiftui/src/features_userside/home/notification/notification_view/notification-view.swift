@@ -18,42 +18,8 @@ struct Notification: Identifiable {
 }
 
 struct NotificationScreen: View {
-    // State to manage the list of notifications
-    @State private var notifications: [Notification] = [
-        Notification(
-            avatarInitials: "AB",
-            avatarIcon: nil,
-            title: "Ashwin Bose has invited you to apply for a UI/UX Designer role.",
-            subtitle: nil,
-            timestamp: "15h",
-            hasActions: true
-        ),
-        Notification(
-            avatarInitials: nil,
-            avatarIcon: "briefcase.fill",
-            title: "Your manager has shared a job opening",
-            subtitle: "“A new position for Machine Learning Engineer is open. Apply now!”",
-            timestamp: "15h",
-            hasActions: false
-        ),
-        Notification(
-            avatarInitials: nil,
-            avatarIcon: "person.fill",
-            title: "Samantha recommended you for a Software Developer position.",
-            subtitle: nil,
-            timestamp: "15h",
-            hasActions: false
-        ),
-        Notification(
-            avatarInitials: "SJ",
-            avatarIcon: nil,
-            title: "Steve has referred you for a Data Analyst role.",
-            subtitle: nil,
-            timestamp: "15h",
-            hasActions: false
-        )
-
-    ]
+    let jobs: [[String: Any]]
+    @State private var notifications: [Notification] = []
 
     var body: some View {
         NavigationView {
@@ -68,19 +34,6 @@ struct NotificationScreen: View {
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        // Header icons
-                        HStack(spacing: 16) {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.white)
-                                .font(.system(size: 20))
-                            
-                            Image(systemName: "xmark")
-                                .foregroundColor(.white)
-                                .font(.system(size: 20))
-                        }
                     }
                     .padding(.horizontal)
                     .padding(.top, 10)
@@ -109,7 +62,6 @@ struct NotificationScreen: View {
                                             }
                                         )
                                     
-                                    // Red dot for the first notification
                                     if notification.hasActions {
                                         Circle()
                                             .frame(width: 12, height: 12)
@@ -127,7 +79,6 @@ struct NotificationScreen: View {
                                         
                                         Spacer()
                                         
-                                        // Timestamp and more icon
                                         VStack(alignment: .trailing) {
                                             Text(notification.timestamp)
                                                 .foregroundColor(.gray)
@@ -138,7 +89,6 @@ struct NotificationScreen: View {
                                         }
                                     }
                                     
-                                    // Subtitle (if present)
                                     if let subtitle = notification.subtitle {
                                         Text(subtitle)
                                             .foregroundColor(.gray)
@@ -146,40 +96,17 @@ struct NotificationScreen: View {
                                             .lineLimit(1)
                                     }
                                     
-                                    // Action buttons (if present)
                                     if notification.hasActions {
                                         HStack(spacing: 12) {
-//                                            Button(action: {}) {
-//                                                Text("Apply")
-//                                                    .font(.system(size: 16))
-//                                                    .fontWeight(.medium)
-//                                                    .foregroundColor(.white)
-//                                                    .frame(maxWidth: .infinity)
-//                                                    .padding(.vertical, 8)
-//                                                    .background(Theme.primaryColor)
-//                                                    .cornerRadius(8)
-//                                            }
-                                            
-//                                            Button(action: {}) {
-//                                                Text("Decline")
-//                                                    .font(.system(size: 16))
-//                                                    .fontWeight(.medium)
-//                                                    .foregroundColor(.white)
-//                                                    .frame(maxWidth: .infinity)
-//                                                    .padding(.vertical, 8)
-//                                                    .background(Color.gray.opacity(0.3))
-//                                                    .cornerRadius(8)
-//                                            }
+                                            // Your button code can be uncommented here if needed
                                         }
                                     }
                                 }
                             }
                             .listRowBackground(Theme.backgroundColor)
                             .listRowSeparatorTint(.gray)
-                            // Swipe to delete (right-to-left)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
-                                    // Delete the notification
                                     if let index = notifications.firstIndex(where: { $0.id == notification.id }) {
                                         notifications.remove(at: index)
                                     }
@@ -193,12 +120,26 @@ struct NotificationScreen: View {
                     .padding(.top, 10)
                 }
             }
-            .navigationBarHidden(true) // Hide default navigation bar
+            .navigationBarHidden(true)
+            .onAppear {
+                // Convert jobs to notifications
+                notifications = jobs.map { job in
+                    return Notification(
+                        avatarInitials: "",
+                        avatarIcon: nil,
+                        title: "New job has been posted of role\(job["job_title"]!) at \(job["companyName"]!)",
+                        subtitle: "Location: \(job["location"]!)",
+                        timestamp: job["$createdAt"] as? String ?? getCurrentTimestamp(),
+                        hasActions: true
+                    )
+                }
+            }
         }
     }
-}
-
-// Preview
-#Preview{
-    NotificationScreen()
+    
+    private func getCurrentTimestamp() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: Date())
+    }
 }
