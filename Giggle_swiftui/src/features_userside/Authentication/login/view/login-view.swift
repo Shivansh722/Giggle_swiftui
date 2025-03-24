@@ -166,7 +166,6 @@ struct LoginSimpleView: View {
                     // Reset alert state when the view appears
                     viewModel.showAlert = false
                     viewModel.alertMessage = ""
-                    navigateToNextScreen = false // Reset navigation state
                 }
             }
             .navigationBarHidden(true)

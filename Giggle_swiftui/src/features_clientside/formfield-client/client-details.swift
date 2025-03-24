@@ -15,7 +15,13 @@ struct ClientInfoView: View {
     @State private var selectedImage: UIImage?
     @State private var photosPickerItem: PhotosPickerItem?
     
-    @State private var navigate:Bool = false
+    @State private var navigate: Bool = false
+    
+    // Add FocusState to manage keyboard focus
+    @FocusState private var focusedField: Field?
+    enum Field {
+        case name, phoneNumber, companyName
+    }
     
     let genders = ["Male", "Female", "Other"]
     let workTraits = ["Technical", "Management", "Creative", "Support", "Sales"]
@@ -88,6 +94,11 @@ struct ClientInfoView: View {
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
                             CustomTextField(placeholder: "Name", isSecure: false, text: $name, icon: "person")
+                                .focused($focusedField, equals: .name)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    focusedField = .phoneNumber
+                                }
                                 .padding(.bottom, geometry.size.height * 0.015)
                                 .padding(.horizontal, -geometry.size.width * 0.05)
                             
@@ -98,7 +109,6 @@ struct ClientInfoView: View {
                             Text("Gender")
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
-                           
                             Picker("Gender", selection: $selectedGender) {
                                 ForEach(genders, id: \.self) { gender in
                                     Text(gender)
@@ -112,6 +122,11 @@ struct ClientInfoView: View {
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
                             PhoneNumberInputView(selectedCountryCode: $selectedCountryCode, phoneNumber: $phoneNumber, showAlert: $showAlert, alertMessage: $alertMessage)
+                                .focused($focusedField, equals: .phoneNumber)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    focusedField = .companyName
+                                }
                                 .padding(.bottom, geometry.size.height * 0.015)
                                 .padding(.horizontal, -geometry.size.width * 0.05)
                             
@@ -120,6 +135,11 @@ struct ClientInfoView: View {
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
                             CustomTextField(placeholder: "Enter your Company Name", isSecure: false, text: $companyName, icon: "")
+                                .focused($focusedField, equals: .companyName)
+                                .submitLabel(.go)
+                                .onSubmit {
+                                    focusedField = nil // Dismiss keyboard on "Go"
+                                }
                                 .padding(.bottom, geometry.size.height * 0.015)
                                 .padding(.horizontal, -geometry.size.width * 0.05)
                             
@@ -155,16 +175,19 @@ struct ClientInfoView: View {
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
                         
-                        NavigationLink(destination:WorkPitcher(), isActive: $navigate){
+                        NavigationLink(destination: WorkPitcher(), isActive: $navigate) {
                             EmptyView()
                         }
                     }
+                }
+                .onTapGesture {
+                    focusedField = nil // Dismiss keyboard on tap anywhere
                 }
             }
         }
     }
     
-    private func setData(){
+    private func setData() {
         ClientFormManager.shared.clientData.name = name
         ClientFormManager.shared.clientData.DOB = dateOfBirth
         ClientFormManager.shared.clientData.gender = selectedGender

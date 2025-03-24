@@ -42,7 +42,7 @@ struct skillView: View {
                         
                         // Animation
                         WebSkillHomeView(
-                            url: Bundle.main.url(forResource: "skill-animate", withExtension: "gif")
+                            url: Bundle.main.url(forResource: "jobs-list", withExtension: "gif")
                                 ?? URL(fileURLWithPath: NSTemporaryDirectory())
                         )
                         .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.3)
