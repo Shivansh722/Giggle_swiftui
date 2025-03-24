@@ -1,12 +1,19 @@
 //
-//  ClientOnboardingView.swift
+//  onboarding-main.swift
+//  Giggle_swiftui
+//
+//  Created by user@91 on 24/03/25.
+//
+
+//
+//  OnboardingView.swift
 //  Giggle_swiftui
 //
 
 import SwiftUI
 
-struct ClientOnboardingView: View {
-    var selectedRole: ChooseViewModel.Role?
+struct OnboardingView: View {
+    var selectedRole: ChooseViewModel.Role? // Assuming this comes from a role selection earlier
     @State private var navigate: Bool = false
     
     var body: some View {
@@ -14,38 +21,28 @@ struct ClientOnboardingView: View {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
 
             VStack {
-                Image("logo")
+                Image("logo") // Replace with your actual logo asset name
                     .resizable()
                     .frame(width: 200, height: 120)
                     .padding(.top, 60)
-                    .padding(.bottom, 40)
-                
-                Text(selectedRole == .user ? "Gigs are short-term jobs to kickstart your career!" : "Gigs are short-term jobs to fill your store’s needs!")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 20)
-                
-                Spacer(minLength: 6)
+                    .padding(.bottom, 80)
                 
                 VStack(spacing: 20) {
-                    OnboardingFeatureItem(  // Renamed here
-                        icon: "local",
-                        text: selectedRole == .user ? "Find gigs easily near you" : "Find employees near you"
+                    FeatureOnboardItem(
+                        icon: "local", // Ensure these icons exist in your assets
+                        text: selectedRole == .user ? "Kickstart your career with gigs at top retail stores" : "Post gigs and hire eager youth for your store"
                     )
-                    OnboardingFeatureItem(  // Renamed here
+                    FeatureOnboardItem(
                         icon: "Pass Fail",
-                        text: selectedRole == .user ? "Prove your skills through FLN assessment" : "Giggle graded employees"
+                        text: selectedRole == .user ? "Show off your skills and get noticed by big brands" : "Find skilled young talent ready to shine"
                     )
-                    OnboardingFeatureItem(  // Renamed here
+                    FeatureOnboardItem(
                         icon: "Marked assignment papers",
-                        text: selectedRole == .user ? "Get a Giggle grading and stand out from others" : "Find the best fit for the Gig"
+                        text: selectedRole == .user ? "Earn money while building real-world experience" : "Fill shifts fast with reliable gig workers"
                     )
-                    OnboardingFeatureItem(  // Renamed here
+                    FeatureOnboardItem(
                         icon: "Request Money",
-                        text: selectedRole == .user ? "Earn a respectable income" : "Reach out and get set"
+                        text: selectedRole == .user ? "Join a community of go-getters like you" : "Grow your team with Giggle’s vibrant youth"
                     )
                 }
                 
@@ -86,7 +83,7 @@ struct ClientOnboardingView: View {
     }
 }
 
-struct OnboardingFeatureItem: View {  // Renamed here
+struct FeatureOnboardItem: View {  // Renamed to match your naming convention
     let icon: String
     let text: String
     
@@ -99,10 +96,9 @@ struct OnboardingFeatureItem: View {  // Renamed here
                 .foregroundColor(.white)
             Spacer()
         }
-        .padding(.horizontal, 40)
     }
 }
 
 #Preview {
-    ClientOnboardingView(selectedRole: .user)
+    OnboardingView(selectedRole: .user) // Preview as gig seeker
 }
