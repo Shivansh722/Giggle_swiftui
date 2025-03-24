@@ -145,9 +145,6 @@ struct HomeView: View {
                         let result = try await jobs.get_job_post()
                         jobresult = result
                         filteredJobs = result
-                        // Verify sync
-                        let singletonTitles = Set(jobTitleManager.jobPosts.map { $0.jobTitle })
-                        let jobresultTitles = Set(jobresult.compactMap { $0["job_title"] as? String })
                     } catch {
                         print("Failed to fetch job posts: \(error.localizedDescription)")
                     }
@@ -197,6 +194,9 @@ struct HomeView: View {
                 filteredJobs = jobresult // Initialize with all jobs
                 print("Search tab appeared - jobs: \(filteredJobs.count)")
             }
+            .onChange(of: searchText) { newValue in
+                filterJobs(searchText: newValue) // Trigger filtering on search text change
+            }
             
             GeometryReader { geometry in
                 ZStack {
@@ -227,28 +227,13 @@ struct HomeView: View {
             if searchText.isEmpty {
                 filteredJobs = jobresult
             } else {
-                // Filter titles from singleton
-                let filteredTitles = jobTitleManager.jobPosts.filter { job in
-                    job.jobTitle.lowercased().contains(searchText.lowercased())
-                }
-                
-                // Ensure jobresult has the full data
-                if jobresult.isEmpty {
-                    do {
-                        jobresult = try await jobs.get_job_post()
-                    } catch {
-                        print("Error refetching jobs: \(error)")
-                        return
-                    }
-                }
-                
-                // Match filtered titles with jobresult dictionaries
+                // Filter directly from jobresult
                 filteredJobs = jobresult.filter { jobDict in
                     guard let jobTitle = jobDict["job_title"] as? String else { return false }
-                    return filteredTitles.contains { $0.jobTitle == jobTitle }
+                    return jobTitle.lowercased().contains(searchText.lowercased())
                 }
-                
             }
+            print("Filtered jobs count: \(filteredJobs.count) for search: '\(searchText)'")
         }
     }
 }

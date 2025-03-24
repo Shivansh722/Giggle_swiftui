@@ -11,9 +11,7 @@ struct WorkPitcher: View {
         storageBucketId: "67da7d55000bf31fb062"
     )
 
-    @State private var isFilePickerPresented = false
     @State private var isPhotoPickerPresented = false
-    @State private var showPickerChoice = false
     @State private var navigationTrue: Bool = false
 
     var body: some View {
@@ -22,7 +20,7 @@ struct WorkPitcher: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
-                Text("Upload Work Files & Images")
+                Text("Upload Your Company Logo")
                     .font(.title)
                     .bold()
                     .foregroundColor(.white)
@@ -31,7 +29,7 @@ struct WorkPitcher: View {
 
                 List {
                     if !uploadManager.selectedResumes.isEmpty {
-                        Section(header: Text("Selected Files").foregroundColor(.white)) {
+                        Section(header: Text("Selected Images").foregroundColor(.white)) {
                             ForEach(uploadManager.selectedResumes) { resume in
                                 HStack {
                                     VStack(alignment: .leading) {
@@ -56,7 +54,7 @@ struct WorkPitcher: View {
                     }
 
                     if !uploadManager.uploadedResumes.isEmpty {
-                        Section(header: Text("Uploaded Files").foregroundColor(.white)) {
+                        Section(header: Text("Uploaded Images").foregroundColor(.white)) {
                             ForEach(uploadManager.uploadedResumes) { resume in
                                 VStack(alignment: .leading) {
                                     Text(resume.fileName)
@@ -89,9 +87,9 @@ struct WorkPitcher: View {
 
                 VStack {
                     Button(action: {
-                        showPickerChoice = true
+                        isPhotoPickerPresented = true // Directly trigger photo picker
                     }) {
-                        Text("Add File or Image")
+                        Text("Add Image")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.blue)
@@ -102,8 +100,8 @@ struct WorkPitcher: View {
                     Button(action: {
                         // Trigger upload and navigation when button is clicked
                         Task {
-                            await uploadManager.uploadallFiles() // Assuming this is async
-                            navigationTrue = true // Navigate after upload completes
+                            await uploadManager.uploadallFiles()
+                            navigationTrue = true
                         }
                     }) {
                         Text("Upload All")
@@ -123,31 +121,10 @@ struct WorkPitcher: View {
                 }
                 .padding()
             }
-            .actionSheet(isPresented: $showPickerChoice) {
-                ActionSheet(
-                    title: Text("Select Source"),
-                    buttons: [
-                        .default(Text("Photos")) {
-                            isPhotoPickerPresented = true
-                        },
-                        .default(Text("Files")) {
-                            isFilePickerPresented = true
-                        },
-                        .cancel()
-                    ]
-                )
-            }
-            .sheet(isPresented: $isFilePickerPresented) {
-                DocumentPicker { url in
-                    if let url = url {
-                        uploadManager.addSelectedResume(fileURL: url)
-                    }
-                }
-            }
             .sheet(isPresented: $isPhotoPickerPresented) {
                 PhotoPicker { url in
                     if let url = url {
-                        uploadManager.addSelectedResume(fileURL: url) // Just add, no upload yet
+                        uploadManager.addSelectedResume(fileURL: url) // Add image to selected list
                     }
                 }
             }
