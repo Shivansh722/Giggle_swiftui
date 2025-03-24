@@ -15,6 +15,12 @@ struct UserInfoView: View {
     @State private var alertMessage = ""
     @State private var navigateToLocation: Bool = false
     
+    // Add FocusState to manage keyboard focus
+    @FocusState private var focusedField: Field?
+    enum Field {
+        case name, phoneNumber
+    }
+    
     let genders = ["Male", "Female", "Other"]
     
     var body: some View {
@@ -23,123 +29,156 @@ struct UserInfoView: View {
                 Theme.backgroundColor
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack {
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading, spacing: geometry.size.height * 0.005) {
-                            HStack {
-                                Text("Get")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Theme.primaryColor)
-                                Text("Started!")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Theme.onPrimaryColor)
+                ScrollView { // Wrap content in ScrollView for keyboard adjustment
+                    VStack {
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading, spacing: geometry.size.height * 0.005) {
+                                HStack {
+                                    Text("Get")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Theme.primaryColor)
+                                    Text("Started!")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Theme.onPrimaryColor)
+                                }
+                                .padding(.leading, geometry.size.width * 0.08)
                             }
-                            .padding(.leading, geometry.size.width * 0.08)
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                    .padding(.top, geometry.size.height * 0.02)
-                    
-                    ProgressView(value: 20, total: 100)
-                        .accentColor(Theme.primaryColor)
-                        .padding(.horizontal, geometry.size.width * 0.08)
-                        .padding(.bottom, geometry.size.height * 0.02)
-                    
-                    PhotosPicker(selection: $photosPickerItem, matching: .images) {
-                        if let selectedImage = selectedImage {
-                            Image(uiImage: selectedImage)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .padding(.bottom, geometry.size.height * 0.02)
-                        } else {
-                            Circle()
-                                .fill(Color.gray)
-                                .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
-                                .overlay(
-                                    Image(systemName: "person")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
-                                        .foregroundColor(.white)
-                                )
-                                .padding(.bottom, geometry.size.height * 0.02)
+                        .padding(.top, geometry.size.height * 0.02)
+                        
+                        ProgressView(value: 20, total: 100)
+                            .accentColor(Theme.primaryColor)
+                            .padding(.horizontal, geometry.size.width * 0.08)
+                            .padding(.bottom, geometry.size.height * 0.02)
+                        
+                        PhotosPicker(selection: $photosPickerItem, matching: .images) {
+                            if let selectedImage = selectedImage {
+                                Image(uiImage: selectedImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    .padding(.bottom, geometry.size.height * 0.02)
+                            } else {
+                                Circle()
+                                    .fill(Color.gray)
+                                    .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
+                                    .overlay(
+                                        Image(systemName: "person")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
+                                            .foregroundColor(.white)
+                                    )
+                                    .padding(.bottom, geometry.size.height * 0.02)
+                            }
                         }
-                    }
-                    .onChange(of: photosPickerItem) { newItem in
-                        if let newItem = newItem {
-                            Task {
-                                if let data = try? await newItem.loadTransferable(type: Data.self),
-                                   let uiImage = UIImage(data: data) {
-                                    selectedImage = uiImage
+                        .onChange(of: photosPickerItem) { newItem in
+                            if let newItem = newItem {
+                                Task {
+                                    if let data = try? await newItem.loadTransferable(type: Data.self),
+                                       let uiImage = UIImage(data: data) {
+                                        selectedImage = uiImage
+                                    }
                                 }
                             }
                         }
-                    }
-                    
-                    VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
-                        Text("Name")
-                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
-                            .foregroundColor(Theme.onPrimaryColor)
-                        CustomTextField(placeholder: "Name", isSecure: false, text: $name, icon: "person")
-                            .padding(.bottom, geometry.size.height * 0.015)
-                            .padding(.horizontal, -geometry.size.width * 0.05)
                         
-                        DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: geometry.size.width * 0.03)
-                            .padding(.bottom, geometry.size.height * 0.015)
-                        
-                        Text("Gender")
-                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
-                            .foregroundColor(Theme.onPrimaryColor)
-                       
-                        Picker("Gender", selection: $selectedGender) {
-                            ForEach(genders, id: \.self) { gender in
-                                Text(gender)
+                        VStack(alignment: .leading, spacing: geometry.size.height * 0.02) {
+                            Text("Name")
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            CustomTextField(
+                                placeholder: "Name",
+                                isSecure: false,
+                                text: $name,
+                                icon: "person"
+                            )
+                            .focused($focusedField, equals: .name)
+                            .submitLabel(.next)
+                            .onSubmit {
+                                focusedField = .phoneNumber
                             }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal, -geometry.size.width * 0.02)
-                        .padding(.top, -geometry.size.height * 0.01)
-                        
-                        Text("Phone Number")
-                            .font(.system(size: geometry.size.width * 0.04, weight: .bold))
-                            .foregroundColor(Theme.onPrimaryColor)
-                        PhoneNumberInputView(selectedCountryCode: $selectedCountryCode, phoneNumber: $phoneNumber, showAlert: $showAlert, alertMessage: $alertMessage)
                             .padding(.bottom, geometry.size.height * 0.015)
                             .padding(.horizontal, -geometry.size.width * 0.05)
+                            
+                            DateViewPicker(
+                                selectedDate: $dateOfBirth,
+                                title: "Date of Birth",
+                                BackgroundColor: Color.white,
+                                textColor: Theme.onPrimaryColor,
+                                padding: geometry.size.width * 0.03
+                            )
+                            .padding(.bottom, geometry.size.height * 0.015)
+                            
+                            Text("Gender")
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            
+                            Picker("Gender", selection: $selectedGender) {
+                                ForEach(genders, id: \.self) { gender in
+                                    Text(gender)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            .padding(.horizontal, -geometry.size.width * 0.02)
+                            .padding(.top, -geometry.size.height * 0.01)
+                            
+                            Text("Phone Number")
+                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            PhoneNumberInputView(
+                                selectedCountryCode: $selectedCountryCode,
+                                phoneNumber: $phoneNumber,
+                                showAlert: $showAlert,
+                                alertMessage: $alertMessage
+                            )
+                            .focused($focusedField, equals: .phoneNumber)
+                            .submitLabel(.return) // Add "Return" button to numpad
+                            .onSubmit {
+                                focusedField = nil // Dismiss keyboard on "Return"
+                            }
+                            .padding(.bottom, geometry.size.height * 0.015)
+                            .padding(.horizontal, -geometry.size.width * 0.05)
+                        }
+                        .padding(.horizontal, geometry.size.width * 0.08)
+                        
+                        Spacer()
+                        
+                        NavigationLink(
+                            destination: LocationView(),
+                            isActive: $navigateToLocation
+                        ) {
+                            EmptyView()
+                        }
+                        
+                        // Next Button
+                        Button(action: {
+                            validateAndProceed()
+                        }) {
+                            Text("NEXT")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Theme.primaryColor)
+                                .cornerRadius(geometry.size.width * 0.02)
+                        }
+                        .padding(.horizontal, geometry.size.width * 0.08)
+                        .padding(.bottom, geometry.size.height * 0.02)
                     }
-                    .padding(.horizontal, geometry.size.width * 0.08)
-                    
-                    Spacer()
-                    
-                    NavigationLink(
-                        destination: LocationView(),
-                        isActive: $navigateToLocation
-                    ) {
-                        EmptyView()
-                    }
-                    
-                    // Next Button
-                    Button(action: {
-                        validateAndProceed()
-                    }) {
-                        Text("NEXT")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Theme.primaryColor)
-                            .cornerRadius(geometry.size.width * 0.02)
-                    }
-                    .padding(.horizontal, geometry.size.width * 0.08)
-                    .padding(.bottom, geometry.size.height * 0.02)
+                    .frame(minHeight: geometry.size.height) // Ensure content fills screen height
                 }
+                .scrollDismissesKeyboard(.interactively) // Optional: Dismiss keyboard on scroll
             }
             .navigationBarBackButtonHidden(true)
+            .onTapGesture {
+                focusedField = nil // Dismiss keyboard on tap anywhere
+            }
             .onAppear {
                 loadUserDataFromUserDefaults()
             }
@@ -161,11 +200,8 @@ struct UserInfoView: View {
         } else if phoneNumber.isEmpty {
             alertMessage = "Please enter your phone number."
             showAlert = true
-        } else if selectedImage == nil {
-            alertMessage = "Please select a profile image."
-            showAlert = true
         } else {
-            // All fields are filled, proceed
+            // Profile photo is optional, proceed without checking selectedImage
             setData()
             navigateToLocation = true
         }

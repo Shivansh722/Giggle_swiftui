@@ -17,7 +17,7 @@ struct SplashScreen: View {
             case "completed client":
                 return AnyView(HomeClientView())
             default:
-                return AnyView(RegisterView())
+                return AnyView(OnboardingView())
             }
         }
     
@@ -45,7 +45,7 @@ struct SplashScreen: View {
                 
                 // Navigation Link
                 NavigationLink(
-                                    destination: destinationView ?? AnyView(RegisterView()),
+                    destination: destinationView,
                                     isActive: $isActive
                                 ) {
                                     EmptyView()

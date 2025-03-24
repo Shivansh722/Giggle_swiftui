@@ -1,5 +1,5 @@
 import SwiftUI
-import AuthenticationServices // Ensure this is imported
+import AuthenticationServices
 
 struct LoginSimpleView: View {
     @EnvironmentObject var viewModel: RegisterViewModel
@@ -7,8 +7,14 @@ struct LoginSimpleView: View {
     @State private var password: String = ""
     @State private var isValidEmail = true
     @State private var isValidPassword = true
-    @State private var navigateToNextScreen = false // Navigation trigger
-    @State private var destinationView: AnyView? // Dynamic destination view
+    @State private var navigateToNextScreen = false
+    @State private var destinationView: AnyView?
+    
+    // Add FocusState to manage keyboard focus
+    @FocusState private var focusedField: Field?
+    enum Field {
+        case email, password
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -17,6 +23,7 @@ struct LoginSimpleView: View {
                     Theme.backgroundColor
                         .edgesIgnoringSafeArea(.all)
 
+                    // Main content that adjusts with keyboard
                     VStack {
                         // Welcome back text
                         HStack(alignment: .top) {
@@ -49,16 +56,34 @@ struct LoginSimpleView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: geometry.size.width * 0.4, height: geometry.size.height * 0.2)
-                            .padding(.top, -geometry.size.height * 0.20) // Reduced padding to move fields up
-
-                        Spacer()
+                            .padding(.top, -geometry.size.height * 0.20)
 
                         // Email and password text fields
-                        CustomTextField(placeholder: "Email", isSecure: false, text: $email, icon: "envelope")
-                            .padding(.bottom, 12)
+                        CustomTextField(
+                            placeholder: "Email",
+                            isSecure: false,
+                            text: $email,
+                            icon: "envelope"
+                        )
+                        .focused($focusedField, equals: .email)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focusedField = .password
+                        }
+                        .padding(.bottom, 12)
 
-                        CustomTextField(placeholder: "Password", isSecure: true, text: $password, icon: "lock")
-                            .padding(.bottom, 20)
+                        CustomTextField(
+                            placeholder: "Password",
+                            isSecure: true,
+                            text: $password,
+                            icon: "lock"
+                        )
+                        .focused($focusedField, equals: .password)
+                        .submitLabel(.go)
+                        .onSubmit {
+                            focusedField = nil // Dismiss keyboard on "Go"
+                        }
+                        .padding(.bottom, 20)
 
                         // Sign-in button
                         CustomButton(
@@ -66,29 +91,18 @@ struct LoginSimpleView: View {
                             backgroundColor: Theme.primaryColor,
                             action: {
                                 Task {
-                                    guard !viewModel.isLoading else { return } // Prevent duplicate tasks
+                                    guard !viewModel.isLoading else { return }
                                     do {
-                                        // Attempt login first
                                         try await viewModel.login(email: email, password: password)
                                         if viewModel.isLoggedIn {
-                                            // Check where the logged-in person belongs
                                             let userExists = try await SaveUserInfo(appService: AppService()).checkForUserExistence()
                                             if userExists {
-                                                // User exists, go to HomeView
-                                                let userDefault = UserDefaults.standard
-                                                userDefault.set("completed user", forKey: "status")
+                                                UserDefaults.standard.set("completed user", forKey: "status")
                                                 destinationView = AnyView(HomeView())
                                             } else {
-                                                let userDefault = UserDefaults.standard
-                                                userDefault.set("completed client", forKey: "status")
+                                                UserDefaults.standard.set("completed client", forKey: "status")
                                                 let clientExists = try await ClientHandlerUserInfo(appService: AppService()).checkForCleintExixtence()
-                                                if clientExists {
-                                                    // Client exists, go to ClientHomeView
-                                                    destinationView = AnyView(HomeClientView())
-                                                } else {
-                                                    // Neither user nor client exists, go to ChooseView
-                                                    destinationView = AnyView(ChooseView())
-                                                }
+                                                destinationView = clientExists ? AnyView(HomeClientView()) : AnyView(ChooseView())
                                             }
                                             navigateToNextScreen = true
                                         }
@@ -102,18 +116,21 @@ struct LoginSimpleView: View {
                             height: 50,
                             cornerRadius: 6
                         )
-                        .disabled(viewModel.isLoading) // Disable button when loading
-                        .padding(.top, -10) // Reduced padding to move button up
+                        .disabled(viewModel.isLoading)
+                        .padding(.top, -10)
                         .padding(.horizontal, 50)
                         .padding(.bottom, 10)
 
-                        Spacer()
+                        Spacer() // Pushes content up, but won't affect bottom HStack
+                    }
+                    .padding(.horizontal, 20)
 
-                        // Register text and link
+                    // "Not a member?" stuck at the bottom
+                    VStack {
+                        Spacer() // Pushes the HStack to the bottom
                         HStack {
                             Text("Not a member?")
                                 .foregroundColor(Theme.onPrimaryColor)
-
                             NavigationLink(destination: RegisterView()) {
                                 Text("Register Now")
                                     .foregroundColor(Theme.primaryColor)
@@ -122,7 +139,7 @@ struct LoginSimpleView: View {
                         }
                         .padding(.bottom, 30)
                     }
-                    .padding(.horizontal, 20)
+                    .ignoresSafeArea(.keyboard)
 
                     // Dynamic NavigationLink
                     NavigationLink(
@@ -131,31 +148,32 @@ struct LoginSimpleView: View {
                     ) {
                         EmptyView()
                     }
-                    .hidden() // Keep the link hidden, but active when triggered
+                    .hidden()
                 }
                 .alert(isPresented: $viewModel.showAlert) {
                     Alert(
-                        title: Text("Error"),
+                        title: Text(viewModel.alertMessage == "User created successfully!" ? "Success" : "Error"),
                         message: Text(viewModel.alertMessage),
-                        dismissButton: .default(Text("OK"))
+                        dismissButton: .default(Text("OK")) {
+                            viewModel.showAlert = false // Reset alert after dismissal
+                        }
                     )
+                }
+                .onTapGesture {
+                    focusedField = nil // Dismiss keyboard on tap anywhere
+                }
+                .onAppear {
+                    // Reset alert state when the view appears
+                    viewModel.showAlert = false
+                    viewModel.alertMessage = ""
+                    navigateToNextScreen = false // Reset navigation state
                 }
             }
             .navigationBarHidden(true)
         }
     }
-
-    private func handleAppleSignInButtonTapped() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = AppleSignInDelegate(viewModel: viewModel, navigateToUserDetail: $navigateToNextScreen)
-        authorizationController.performRequests()
-    }
 }
 
 #Preview {
-    LoginSimpleView()
+    LoginSimpleView().environmentObject(RegisterViewModel(service: AppService()))
 }

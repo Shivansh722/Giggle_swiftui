@@ -4,24 +4,23 @@ import CoreLocation
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
     
-    @Published var currentLocation: CLLocation? // Published location property to be observed by the view
+    @Published var currentLocation: CLLocation?
+    @Published var isLoading: Bool = false // Added for progress indicator
     
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        checkLocationAuthorization()  // Check location authorization status when initialized
+        checkLocationAuthorization()
     }
     
     func checkLocationAuthorization() {
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            // Request permission if it's not determined yet
             locationManager.requestWhenInUseAuthorization()
         case .denied, .restricted:
             print("Location access denied")
         case .authorizedWhenInUse, .authorizedAlways:
-            // Permission already granted, no need to request again
             break
         @unknown default:
             break
@@ -29,16 +28,15 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func requestLocationPermission() {
-        // Request permission when needed
         locationManager.requestWhenInUseAuthorization()
     }
     
     func fetchLocation() {
-        // Fetch location once when called
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse || CLLocationManager.authorizationStatus() == .authorizedAlways {
-            locationManager.requestLocation() // Fetch location once
+            isLoading = true // Start loading
+            locationManager.requestLocation()
         } else {
-            requestLocationPermission() // Request permission if not granted
+            requestLocationPermission()
         }
     }
     
@@ -46,12 +44,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .authorizedWhenInUse, .authorizedAlways:
-            // Fetch location once authorization is granted
+            isLoading = true // Start loading when authorized
             locationManager.requestLocation()
         case .denied, .restricted:
             print("Location access denied")
+            isLoading = false // Stop loading if denied
         case .notDetermined:
-            // Do nothing, wait for user action
             break
         @unknown default:
             break
@@ -61,14 +59,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Handle location updates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.first else { return }
-        DispatchQueue.main.async { // Ensure UI updates on main thread
+        DispatchQueue.main.async {
             self.currentLocation = newLocation
-            print("New Location: \(newLocation.coordinate.latitude), \(newLocation.coordinate.longitude)") // For debugging
+            self.isLoading = false // Stop loading when location is fetched
+            print("New Location: \(newLocation.coordinate.latitude), \(newLocation.coordinate.longitude)")
         }
-        // No need to stop updates explicitly since requestLocation() only fetches once
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
+        DispatchQueue.main.async {
+            self.isLoading = false // Stop loading on error
+        }
     }
 }

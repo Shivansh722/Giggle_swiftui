@@ -8,18 +8,24 @@ struct eduView2: View {
     @State private var completionYear = Date()
     @State private var universityName = ""
     @State private var navigateToskillView = false
-    @State private var showAlert = false // Added for alert
+    @State private var showAlert = false
+    
+    // Add FocusState to manage keyboard focus
+    @FocusState private var focusedField: Field?
+    enum Field {
+        case degreeName, specialization, universityName
+    }
     
     var pursuingOptions = ["12th pass", "Diploma", "ITI", "Under Graduate", "Post Graduate"]
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Theme.backgroundColor
-                    .edgesIgnoringSafeArea(.all)
-                
+        ZStack {
+            Theme.backgroundColor
+                .edgesIgnoringSafeArea(.all)
+            
+            ScrollView {
                 VStack {
-                    // Header (unchanged)
+                    // Header
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             HStack {
@@ -32,25 +38,24 @@ struct eduView2: View {
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.onPrimaryColor)
                             }
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         }
                         Spacer()
                     }
-                    .padding(.top, geometry.size.height * 0.02)
+                    .padding(.top, 20) // Fixed padding
                     
                     Spacer()
                     
                     ProgressView(value: 60, total: 100)
                         .accentColor(Theme.primaryColor)
-                        .padding(.horizontal, geometry.size.width * 0.08)
-                        .padding(.top, geometry.size.height * -0.01)
+                        .padding(.horizontal, 30) // Fixed padding
+                        .padding(.top, -10) // Fixed negative padding
                     
                     VStack(alignment: .leading, spacing: 20) {
-                        // Rest of the form fields remain unchanged
                         Text("What are you currently pursuing?")
                             .font(.headline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         
                         Picker(selection: $selectedPursuing, label: Text(selectedPursuing)) {
                             ForEach(pursuingOptions, id: \.self) { option in
@@ -63,12 +68,12 @@ struct eduView2: View {
                         .background(Color.white)
                         .cornerRadius(6)
                         .shadow(color: Color.gray.opacity(0.3), radius: 4, x: 0, y: 2)
-                        .padding(.horizontal, geometry.size.width * 0.08)
+                        .padding(.horizontal, 30) // Fixed padding
                         
                         Text("Enter your degree name:")
                             .font(.headline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         
                         CustomTextField(
                             placeholder: "Degree Name",
@@ -76,12 +81,17 @@ struct eduView2: View {
                             text: $degreeName,
                             icon: "book"
                         )
-                        .padding(.horizontal, geometry.size.width * 0.03)
+                        .focused($focusedField, equals: .degreeName)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focusedField = .specialization
+                        }
+                        .padding(.horizontal, 10) // Fixed padding
                         
                         Text("Enter your specialization:")
                             .font(.headline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         
                         CustomTextField(
                             placeholder: "Specialization",
@@ -89,12 +99,17 @@ struct eduView2: View {
                             text: $specialization,
                             icon: "text.book.closed"
                         )
-                        .padding(.horizontal, geometry.size.width * 0.03)
+                        .focused($focusedField, equals: .specialization)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focusedField = .universityName
+                        }
+                        .padding(.horizontal, 10) // Fixed padding
                         
                         Text("Select your completion year:")
                             .font(.headline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         
                         DateViewPicker(
                             selectedDate: $completionYear,
@@ -102,12 +117,12 @@ struct eduView2: View {
                             BackgroundColor: Theme.onPrimaryColor,
                             textColor: Theme.onPrimaryColor
                         )
-                        .padding(.horizontal, geometry.size.width * 0.08)
+                        .padding(.horizontal, 30) // Fixed padding
                         
                         Text("Enter your university name:")
                             .font(.headline)
                             .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, geometry.size.width * 0.08)
+                            .padding(.leading, 30) // Fixed padding
                         
                         CustomTextField(
                             placeholder: "University Name",
@@ -115,7 +130,12 @@ struct eduView2: View {
                             text: $universityName,
                             icon: "building.columns"
                         )
-                        .padding(.horizontal, geometry.size.width * 0.03)
+                        .focused($focusedField, equals: .universityName)
+                        .submitLabel(.go)
+                        .onSubmit {
+                            focusedField = nil // Dismiss keyboard on "Go"
+                        }
+                        .padding(.horizontal, 10) // Fixed padding
                         
                         Spacer()
                         
@@ -123,34 +143,37 @@ struct eduView2: View {
                             EmptyView()
                         }
                         
-                        CustomButton(
-                            title: "NEXT",
-                            backgroundColor: Theme.primaryColor,
-                            action: {
-                                if validateFields() {
-                                    set_data()
-                                    navigateToskillView = true
-                                } else {
-                                    showAlert = true
-                                }
-                            },
-                            width: geometry.size.width * 0.8,
-                            height: 50
-                        )
+                        Button(action: {
+                            if validateFields() {
+                                set_data()
+                                navigateToskillView = true
+                            } else {
+                                showAlert = true
+                            }
+                        }) {
+                            Text("NEXT")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(width: 300, height: 50) // Approximate 80% of typical screen width
+                                .background(Theme.primaryColor)
+                                .cornerRadius(6)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center) // Center the button
                         .padding(.bottom, 20)
-                        .padding(.leading, geometry.size.width * -0.06)
-                        .padding(.horizontal, geometry.size.width * 0.08)
+                        .padding(.horizontal, 30) // Fixed padding
                     }
-                    .padding(.top, geometry.size.height * 0.02)
+                    .padding(.top, 20) // Fixed padding
                 }
-            }
-            .navigationBarBackButtonHidden(true)
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Missing Information"),
-                    message: Text("Please fill in all required fields before proceeding."),
-                    dismissButton: .default(Text("OK"))
-                )
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Missing Information"),
+                        message: Text("Please fill in all required fields before proceeding."),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                .onTapGesture {
+                    focusedField = nil // Dismiss keyboard on tap anywhere
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -160,7 +183,6 @@ struct eduView2: View {
     }
     
     private func validateFields() -> Bool {
-        // Check if any required field is empty
         return !degreeName.trimmingCharacters(in: .whitespaces).isEmpty &&
                !specialization.trimmingCharacters(in: .whitespaces).isEmpty &&
                !universityName.trimmingCharacters(in: .whitespaces).isEmpty

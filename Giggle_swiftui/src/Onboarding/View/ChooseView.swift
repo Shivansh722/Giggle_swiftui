@@ -24,59 +24,43 @@ struct ChooseView: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
                         .frame(width: 222)
-                        .padding(.bottom,56)
+                        .padding(.bottom, 56)
 
                     Button(action: {
                         selectedRole = .client
                         isGigProviderSelected = true
                         isGigSeekerSelected = false
+                        isSelected = true // Trigger navigation
                     }) {
                         Text("Gig Provider")
+                            .font(.headline)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
-                            .frame(alignment: .center)
+                            .background(isGigProviderSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64))
+                            .cornerRadius(16)
                     }
                     .frame(width: 323)
-                    .cornerRadius(16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .inset(by: 0.5)
-                            .stroke(isGigProviderSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64), lineWidth: 1)
-                    )
-                    .padding(.bottom,15)
+                    .padding(.bottom, 15)
 
                     Button(action: {
                         selectedRole = .user
                         isGigSeekerSelected = true
                         isGigProviderSelected = false
-
+                        isSelected = true // Trigger navigation
                     }) {
                         Text("Gig Seeker")
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .frame(alignment: .center)
-                    }
-                    .frame(width: 323)
-                    .cornerRadius(16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .inset(by: 0.5)
-                            .stroke(isGigSeekerSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64), lineWidth: 1)
-                    ).padding(.bottom,220)
-
-                    Button(action: {
-                        isSelected = true
-                    }) {
-                        Text("Next")
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .frame(alignment: .center)
+                            .font(.headline)
                             .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(isGigSeekerSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64))
+                            .cornerRadius(16)
                     }
                     .frame(width: 323)
-                    .background(Color(Theme.primaryColor))
-                    .cornerRadius(8)
-                    
+                    .padding(.bottom, 220)
+
+                    // Navigation Links
                     if selectedRole == .user {
                         NavigationLink(
                             destination: ClientOnboardingView(selectedRole: selectedRole),
@@ -84,8 +68,7 @@ struct ChooseView: View {
                         ) {
                             EmptyView()
                         }
-                    }
-                    else{
+                    } else {
                         NavigationLink(
                             destination: ClientOnboardingView(),
                             isActive: $isSelected
@@ -93,12 +76,10 @@ struct ChooseView: View {
                             EmptyView()
                         }
                     }
-                
-
-                    
                 }
             }
-        }.navigationBarHidden(true)
+        }
+        .navigationBarHidden(true)
     }
 }
 
