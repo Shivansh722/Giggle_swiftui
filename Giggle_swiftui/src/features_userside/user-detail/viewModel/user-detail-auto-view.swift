@@ -56,49 +56,51 @@ class UserDetailAutoView {
     public func generateTextForPrompt(promptText: String) async -> String {
         // Create a detailed prompt for resume information extraction
         let prompt = """
-            You are a professional resume analyzer. Given the following resume text, extract and organize the details into a JSON dictionary with the following structure:
-            
-            {
-                "Name": "Full name of the person",
-                "Contact": "phone number (or empty string if not available)",
-                "Email":"get the email"
-                "Summary": "Short career summary (or empty string if not available)",
-                "Skills": ["Skill1", "Skill2", "..."],
-                "Experience": [
+                    You are a professional resume analyzer. Given the following resume text, that has been extracted from a resume is given. Organize the details into a JSON dictionary with the following structure:
+                    
                     {
-                        "Position": "Job position",
-                        "Company": "Company name",
-                        "Dates": "Duration or dates",
-                        "Responsibilities": "Key responsibilities"
-                    },
-                    ...
-                ],
-                "Education": [
-                    {
-                        "Degree": "Degree name",
-                        "Institution": "Institution name",
-                        "Dates": "Duration or dates"
-                    },
-                    ...
-                ],
-                "Certifications": ["Certification1", "Certification2", "..."],
-                "Languages": ["Language1", "Language2", "..."],
-                "Projects": [
-                    {
-                        "Title": "Project title",
-                        "Description": "Project description"
-                    },
-                    ...
-                ],
-                "Awards": ["Award1", "Award2", "..."]
-            }
-            
-            Return only the JSON dictionary. Do not include any extra text outside or before the JSON structure.
-            Please do not include any backticks. just send the json.
+                        "Name": "Full name of the person",
+                        "Contact": "phone number (or empty string if not available)",
+                        "Email": "get the email",
+                        "Date of Birth": "Date of birth (or empty string if not available)",
+                        "Summary": "Short career summary (or empty string if not available)",
+                        "Skills": ["Skill1", "Skill2", "..."],
+                        "Experience": [
+                            {
+                                "Position": "Job position",
+                                "Company": "Company name",
+                                "Organisation": "Organisation name (or empty string if not available)",
+                                "Dates": "Duration or dates",
+                                "Responsibilities": "Key responsibilities"
+                            },
+                            ...
+                        ],
+                        "Education": [
+                            {
+                                "Degree": "Degree name (e.g., BTech, MSc, etc.)",
+                                "Institution": "Institution name",
+                                "Dates": "Duration or dates"
+                            },
+                            ...
+                        ],
+                        "Certifications": ["Certification1", "Certification2", "..."],
+                        "Languages": ["Language1", "Language2", "..."],
+                        "Projects": [
+                            {
+                                "Title": "Project title",
+                                "Description": "Project description"
+                            },
+                            ...
+                        ],
+                        "Awards": ["Award1", "Award2", "..."]
+                    }
+                    
+                    Return only the JSON dictionary. Do not include any extra text outside or before the JSON structure.
+                    Please do not include any backticks. Just send the JSON.
 
-            Resume text:
-            \(promptText)
-            """
+                    Resume text:
+                    \(promptText)
+                    """
         
         let apiKey = ProcessInfo.processInfo.environment["GEMINI_API_KEY"] ?? ""
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyDDTPOZonoyL72gpye_bczBg90XLdXlBUs")
