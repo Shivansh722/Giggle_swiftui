@@ -34,6 +34,7 @@ class JobPost: ObservableObject {
             for document in documentList.documents {
                 var data = document.data as [String: Any]
                 let jobTitle = String(describing: data["job_title"] ?? "")
+                data["job_title"] = jobTitle
                 data["$id"] = document.id
                 jobPosts.append(data)
                 

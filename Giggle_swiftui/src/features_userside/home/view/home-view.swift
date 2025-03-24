@@ -144,9 +144,10 @@ struct HomeView: View {
                     do {
                         let result = try await jobs.get_job_post()
                         jobresult = result
-                        filteredJobs = result  // Initialize filteredJobs here
-                        print("Fetched \(jobresult.count) jobs")
-                        print("Singleton jobs: \(jobTitleManager.jobPosts.count)")
+                        filteredJobs = result
+                        // Verify sync
+                        let singletonTitles = Set(jobTitleManager.jobPosts.map { $0.jobTitle })
+                        let jobresultTitles = Set(jobresult.compactMap { $0["job_title"] as? String })
                     } catch {
                         print("Failed to fetch job posts: \(error.localizedDescription)")
                     }
@@ -166,13 +167,7 @@ struct HomeView: View {
                         }
                         .padding(.leading, 16)
                         
-                        TextField("Search by job title...", text: $searchText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                            .frame(height: 65)
-                            .onChange(of: searchText) { newValue in
-                                filterJobs(searchText: newValue)
-                            }
+                        CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
                         
                         ScrollView {
                             if filteredJobs.isEmpty && !searchText.isEmpty {
@@ -184,6 +179,9 @@ struct HomeView: View {
                                     JobCardView(jobs: filteredJobs[index], flnID: flnID)
                                         .padding(.horizontal)
                                         .padding(.bottom, 10)
+                                        .onAppear {
+                                            print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
+                                        }
                                 }
                             }
                         }
@@ -225,28 +223,34 @@ struct HomeView: View {
     }
     
     func filterJobs(searchText: String) {
+        Task { @MainActor in
             if searchText.isEmpty {
                 filteredJobs = jobresult
-                print("Search cleared, showing all \(filteredJobs.count) jobs")
             } else {
-                // Filter based on job titles from singleton
+                // Filter titles from singleton
                 let filteredTitles = jobTitleManager.jobPosts.filter { job in
                     job.jobTitle.lowercased().contains(searchText.lowercased())
+                }
+                
+                // Ensure jobresult has the full data
+                if jobresult.isEmpty {
+                    do {
+                        jobresult = try await jobs.get_job_post()
+                    } catch {
+                        print("Error refetching jobs: \(error)")
+                        return
+                    }
                 }
                 
                 // Match filtered titles with jobresult dictionaries
                 filteredJobs = jobresult.filter { jobDict in
                     guard let jobTitle = jobDict["job_title"] as? String else { return false }
-                    return filteredTitles.contains { $0.jobTitle == jobTitle } // Remove lowrcased() here
+                    return filteredTitles.contains { $0.jobTitle == jobTitle }
                 }
                 
-                print("Search text: '\(searchText)'")
-                print("Available titles in singleton: \(jobTitleManager.jobPosts.map { $0.jobTitle })")
-                print("Titles in jobresult: \(jobresult.compactMap { $0["job_title"] as? String })")
-                print("Filtered titles: \(filteredTitles.map { $0.jobTitle })")
-                print("Filtered jobs count: \(filteredJobs.count)")
             }
         }
+    }
 }
 
 struct FLNGradeCardView: View {
