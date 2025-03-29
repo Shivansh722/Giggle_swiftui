@@ -60,6 +60,10 @@ class FLNInfo: ObservableObject {
             
             let updatedAt = document.updatedAt
             let grade = document.data["giggle_grade"]?.value as? String
+            FlnDataManager.shared.flnData.giggleGrade = (document.data["giggle_grade"]?.value as? String)!
+            FlnDataManager.shared.flnData.fluencyScore = (document.data["fluency_score"]?.value as? String)!
+            FlnDataManager.shared.flnData.literacyScore = Int((document.data["literacy_score"]?.value as? Int)!)
+            FlnDataManager.shared.flnData.numeracyScore = Int((document.data["numeracy_score"]?.value as? Int)!)
             print("Raw updatedAt value: \(updatedAt) grade \(grade ?? "null ")")
             // Create a more flexible date formatter
             let isoFormatter = DateFormatter()
