@@ -212,20 +212,6 @@ struct GigInfoView: View {
             }
             .background(Theme.backgroundColor.ignoresSafeArea()) // Extend background to safe areas
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        // Back action
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "ellipsis")
-                        .foregroundColor(.white)
-                }
-            }
             // Ensure navigation bar matches the theme
             .navigationBarBackground {
                 Theme.backgroundColor
