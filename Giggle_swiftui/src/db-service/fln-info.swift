@@ -50,7 +50,7 @@ class FLNInfo: ObservableObject {
             return nil
         }
     }
-    func getFlnUpdatedAt(flnId: String) async -> String? {
+    func getFlnUpdatedAt(flnId: String) async -> (String?,String?) {
         do {
             let document = try await database.getDocument(
                 databaseId: databaseID,
@@ -59,6 +59,7 @@ class FLNInfo: ObservableObject {
             )
             
             let updatedAt = document.updatedAt
+            let grade = document.data["grade"]?.value as? String
             print("Raw updatedAt value: \(updatedAt)") // Debug print to see the format
             
             // Create a more flexible date formatter
@@ -68,23 +69,23 @@ class FLNInfo: ObservableObject {
             if let date = isoFormatter.date(from: updatedAt) {
                 let outputFormatter = DateFormatter()
                 outputFormatter.dateFormat = "EEEE, dd MMM" // "Saturday, 26 Oct"
-                return outputFormatter.string(from: date)
+                return (outputFormatter.string(from: date), grade)
             } else {
                 print("Failed to parse date: \(updatedAt)")
-                return updatedAt // Fallback
+                return (updatedAt,grade) // Fallback
             }
             
         } catch {
             print("Error fetching FLN document: \(error.localizedDescription)")
-            return nil
+            return (nil,nil)
         }
     }
     
     // Example function combining both to get updatedAt from userID
-    func getUserFlnUpdatedAt() async -> String? {
+    func getUserFlnUpdatedAt() async -> (String?,String?){
         guard let flnId = await getFlnInfo() else {
             print("Could not get FLN ID")
-            return nil
+            return (nil,nil)
         }
         
         return await getFlnUpdatedAt(flnId: flnId)

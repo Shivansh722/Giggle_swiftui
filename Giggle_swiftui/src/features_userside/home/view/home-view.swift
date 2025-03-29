@@ -11,6 +11,7 @@ struct HomeView: View {
     @State private var updatedAt: String? = nil
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
+    @State private var GiggleGrade:String? = ""
     @State private var jobresult: [[String: Any]] = []
     @State private var searchText: String = ""
     @State private var filteredJobs: [[String: Any]] = []
@@ -109,7 +110,7 @@ struct HomeView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding(.top, 5)
                                 } else {
-                                    FLNGradeCardView(grade: "G+", lastUpdate: updatedAt!)
+                                    FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
                                         .padding(.bottom, 170)
                                 }
                             }
@@ -218,7 +219,7 @@ struct HomeView: View {
 
     func fetchFlnID() async {
         flnID = await flnInfo.getFlnInfo()
-        updatedAt = await flnInfo.getUserFlnUpdatedAt()
+        (updatedAt,GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
         isLoading = false
     }
     
@@ -239,7 +240,7 @@ struct HomeView: View {
 }
 
 struct FLNGradeCardView: View {
-    let grade: String
+    let grade: String?
     let lastUpdate: String
     @State private var navigate: Bool = false
     
@@ -252,7 +253,7 @@ struct FLNGradeCardView: View {
                 Text("Your FLN Grade:")
                     .font(.headline)
                     .foregroundColor(.white)
-                Text(grade)
+                Text(grade ?? "")
                     .font(.title2)
                     .bold()
                     .foregroundColor(Color.yellow)

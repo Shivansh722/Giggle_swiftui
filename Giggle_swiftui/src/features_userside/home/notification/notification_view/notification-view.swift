@@ -129,7 +129,7 @@ struct NotificationScreen: View {
                         avatarIcon: nil,
                         title: "New job has been posted of role\(job["job_title"]!) at \(job["companyName"]!)",
                         subtitle: "Location: \(job["location"]!)",
-                        timestamp: job["$createdAt"] as? String ?? getCurrentTimestamp(),
+                        timestamp: "\(job["$createdAt"]!)",
                         hasActions: true
                     )
                 }
