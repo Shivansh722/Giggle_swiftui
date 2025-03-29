@@ -59,9 +59,8 @@ class FLNInfo: ObservableObject {
             )
             
             let updatedAt = document.updatedAt
-            let grade = document.data["grade"]?.value as? String
-            print("Raw updatedAt value: \(updatedAt)") // Debug print to see the format
-            
+            let grade = document.data["giggle_grade"]?.value as? String
+            print("Raw updatedAt value: \(updatedAt) grade \(grade ?? "null ")")
             // Create a more flexible date formatter
             let isoFormatter = DateFormatter()
             isoFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Common Appwrite format
