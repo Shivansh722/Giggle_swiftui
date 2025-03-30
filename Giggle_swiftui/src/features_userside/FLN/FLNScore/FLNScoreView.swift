@@ -35,9 +35,6 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(.white)
-                                Text("Average User Score: \(fluencyScore)%")
-                                    .foregroundColor(.white)
-                                    .font(.subheadline)
                             }
                             Spacer()
                             Text("\(FlnDataManager.shared.flnData.fluencyScore)%")
@@ -52,17 +49,15 @@ struct FLNScoreView: View {
                                     .font(.title)
                                     .bold()
                                     .foregroundColor(Theme.tertiaryColor)
-                                
-                                let numeracyScores = FlnDataManager.shared.flnData.numeracyScore
-                                let literacyScores = FlnDataManager.shared.flnData.literacyScore
-                                let averageScore = (numeracyScores + literacyScores) / 2
-                                Text("Average User Score: \(averageScore)%")
-                                    .foregroundColor(Theme.tertiaryColor)
-                                    .font(.subheadline)
                             }
                             Spacer()
                             // Compute averageScore inline here
-                            Text("\(((FlnDataManager.shared.flnData.numeracyScore + FlnDataManager.shared.flnData.literacyScore) / 2))%")
+                            let numeracyScores = FlnDataManager.shared.flnData.numeracyScore
+                            let literacyScores = FlnDataManager.shared.flnData.literacyScore
+                            let totalPossibleScore = 10
+                            let averagePercentage: Int = (numeracyScores + literacyScores) * 100 / totalPossibleScore
+                            
+                            Text("\(averagePercentage)%")
                                 .font(.system(size: 50, weight: .bold))
                                 .foregroundColor(Theme.secondaryColor)
                         }
@@ -78,7 +73,7 @@ struct FLNScoreView: View {
                     .foregroundColor(Theme.tertiaryColor)
 
                 ZStack {
-                    Text("G+")
+                    Text(FlnDataManager.shared.flnData.giggleGrade)
                         .font(.system(size: 72))
                         .fontWeight(.semibold)
                         .foregroundColor(Theme.secondaryColor)

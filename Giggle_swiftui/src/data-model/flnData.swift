@@ -20,5 +20,5 @@ class FlnDataManager:ObservableObject {
     static let shared = FlnDataManager()
     private init() {}
     
-    @Published var flnData = FlnData(userId: "",flnId: UUID().uuidString, fluencyScore: "", numeracyScore: 0, literacyScore: 0, giggleGrade: "G+")
+    @Published var flnData = FlnData(userId: "",flnId: UUID().uuidString, fluencyScore: "", numeracyScore: 0, literacyScore: 0, giggleGrade: "")
 }

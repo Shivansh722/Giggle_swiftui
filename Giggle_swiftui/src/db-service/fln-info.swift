@@ -94,7 +94,27 @@ class FLNInfo: ObservableObject {
         return await getFlnUpdatedAt(flnId: flnId)
     }
 
-
+    func calculateGrade(literacyScore: Int, numeracyScore: Int, fluencyStringScore: String) -> String {
+        // Convert fluency string score to Int safely
+        guard let fluencyScore = Double(fluencyStringScore) else {
+            print("Error: Invalid fluency score format")
+            return "N" // Default grade if conversion fails
+        }
+        
+        let totalScore = (Double(literacyScore + numeracyScore) / 10.0) * 100
+        let cumulativeScore = (totalScore + Double(fluencyScore)) / 2.0
+        
+        switch cumulativeScore {
+        case 90...100:
+            return "G+"
+        case 70..<90:
+            return "G"
+        case 60..<70:
+            return "G-"
+        default:
+            return "N"
+        }
+    }
     
     func saveFlnInfo() async {
         let defaults = UserDefaults.standard
@@ -102,14 +122,23 @@ class FLNInfo: ObservableObject {
             print("Error: userID not found")
             return
         }
-
+        
+        print("fluency score   " + FlnDataManager.shared.flnData.fluencyScore)
+        let giggleGrade = calculateGrade(
+                literacyScore: FlnDataManager.shared.flnData.literacyScore,
+                numeracyScore: FlnDataManager.shared.flnData.numeracyScore,
+                fluencyStringScore: FlnDataManager.shared.flnData.fluencyScore
+            )
+            
+            FlnDataManager.shared.flnData.giggleGrade = giggleGrade
+        
         do {
             let data: [String: Any] = [
                 "user_id": userId,
                 "fluency_score": FlnDataManager.shared.flnData.fluencyScore,
                 "literacy_score": FlnDataManager.shared.flnData.literacyScore,
                 "numeracy_score": FlnDataManager.shared.flnData.numeracyScore,
-                "giggle_grade": FlnDataManager.shared.flnData.giggleGrade
+                "giggle_grade": giggleGrade
             ]
 
             let result = try await database.createDocument(
