@@ -110,6 +110,8 @@ class ResumeUploadManager: ObservableObject {
                     fileId: resume.id.uuidString,
                     file: inputResume
                 )
+                
+                extractTextFromPDF(resume: resume)
 
                 print("upload things", uploadedResume.id)
                 try await SaveUserInfo(appService: AppService()).updateUserInfoResume()
@@ -192,6 +194,7 @@ class ResumeUploadManager: ObservableObject {
 
         DispatchQueue.main.async { [self] in
             print("Extracted text for \(resume.fileName): \(fullText)")
+            FormManager.shared.formData.resume = fullText
             Task {
                 let generatedText = await userDetailAutoView.generateTextForPrompt(promptText: fullText)
                 userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)

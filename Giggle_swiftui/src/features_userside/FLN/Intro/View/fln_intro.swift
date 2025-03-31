@@ -64,6 +64,8 @@ struct FlnIntroView: View {
                 
                 Button(action: {
                     navigate = true
+                    
+                    // logic for fetch resume give to gemini and store the question in array
                 }) {
                     Text("CONTINUE")
                         .frame(maxWidth: .infinity)

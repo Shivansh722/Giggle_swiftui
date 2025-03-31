@@ -1,22 +1,66 @@
-//
-//  Testing.swift
-//  Giggle_swiftui
-//
-//  Created by admin49 on 01/03/25.
-//
-
 import SwiftUI
 
 struct Testing: View {
-    @StateObject var saveUserInfo = JobPost(appService: AppService())
+    @StateObject var testResumeGeneration = QuestionViewModel()
+    
     var body: some View {
-        Button(action:{
-            Task{
-                try await saveUserInfo.get_job_post()
+        VStack {
+            Button(action: {
+                Task {
+                    let resume = """
+                    Amritesh Kumar, Email: amriteshk778@gmail.com, Phone: 9158188174, GitHub: github.com/AMRITESH240304. 
+                    Education: B.Tech in CSE - Software Engineering, S.R.M Institute of Science and Technology (09/2022 – present), Chennai, India. 
+                    Skills: Development - FastAPI, Express.js, Node.js, MongoDB + VectorDB, LangChain, AWS Bedrock, CrewAI, SwiftUI, Next.js. 
+                    Programming Languages: Python, Swift, JavaScript, C++. 
+                    """
+                    
+                    await testResumeGeneration.getQuestion(resume)
+                }
+            }) {
+                Text("Generate Questions")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
-        }){
-            Text("click")
+            
+            if !testResumeGeneration.numeracyQuestions.isEmpty {
+                Text("Numeracy Questions")
+                    .font(.headline)
+                    .padding(.top)
+                
+                List(testResumeGeneration.numeracyQuestions) { question in
+                    VStack(alignment: .leading) {
+                        Text(question.question)
+                            .font(.subheadline)
+                            .bold()
+                        
+                        ForEach(question.options, id: \.self) { option in
+                            Text("- \(option)")
+                        }
+                    }
+                }
+            }
+            
+            if !testResumeGeneration.literacyQuestions.isEmpty {
+                Text("Literacy Questions")
+                    .font(.headline)
+                    .padding(.top)
+                
+                List(testResumeGeneration.literacyQuestions) { question in
+                    VStack(alignment: .leading) {
+                        Text(question.question)
+                            .font(.subheadline)
+                            .bold()
+                        
+                        ForEach(question.options, id: \.self) { option in
+                            Text("- \(option)")
+                        }
+                    }
+                }
+            }
         }
+        .padding()
     }
 }
 
