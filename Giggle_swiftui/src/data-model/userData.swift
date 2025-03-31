@@ -22,6 +22,7 @@ struct FormData {
     var completionYear: Date
     var resumeIds: [String] = []
     var Biography: String
+    var resume: String
 }
 
 class FormManager: ObservableObject {
@@ -31,5 +32,5 @@ class FormManager: ObservableObject {
     @Published var formData = FormData(
         userId: "", name: "", email: "", address: "", phone: "", DOB: "",
         gender: "", pursuing: "", degreeName: "", universityName: "",
-        specialization: "", completionYear: Date(), resumeIds: [],Biography: "")
+        specialization: "", completionYear: Date(), resumeIds: [],Biography: "",resume: "")
 }

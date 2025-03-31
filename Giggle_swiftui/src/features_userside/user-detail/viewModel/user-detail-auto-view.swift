@@ -100,7 +100,6 @@ class UserDetailAutoView {
             \(promptText)
             """
         
-        let apiKey = ProcessInfo.processInfo.environment["GEMINI_API_KEY"] ?? ""
         let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyDDTPOZonoyL72gpye_bczBg90XLdXlBUs")
         do {
             let response = try await model.generateContent(prompt)
@@ -149,3 +148,97 @@ class UserPreference {
     static let shared = UserPreference()
     var shouldLoadUserDetailsAutomatically: Bool = false
 }
+
+import Foundation
+
+class QuestionViewModel: ObservableObject {
+    @Published var numeracyQuestions: [Question] = []
+    @Published var literacyQuestions: [Question] = []
+
+    struct Question: Identifiable, Hashable, Codable {
+        let id = UUID()
+        let question: String
+        let options: [String]
+        let correctAnswer: String
+
+        enum CodingKeys: String, CodingKey {
+            case question, options
+            case correctAnswer = "correct_answer" // Match API response key
+        }
+    }
+
+    struct GeneratedQuestions: Codable {
+        let numeracy: [Question]
+        let literacy: [Question]
+    }
+
+    func getQuestion(_ resume: String) async {
+        let prompt = """
+        You are an expert in generating assessment questions based on a candidate's resume. Given the following resume, create two separate arrays of multiple-choice questions (MCQs):
+
+        1. **Numeracy (Math & Technical Questions)**:  
+           - Include questions based on the candidate's technical skills (e.g., programming languages, frameworks, databases, AI tools).  
+           - Also include general mathematics questions at a **10th-grade level**, covering topics like algebra, geometry, probability, and basic statistics. 
+                - give 5 question
+
+        2. **Literacy (Language-Specific Questions)**:  
+           - If the resume specifies a language proficiency (e.g., French, Spanish, Hindi), create questions related to that language’s grammar, vocabulary, and comprehension.  
+           - If no specific language is mentioned, generate standard English grammar and comprehension questions. 
+            - give 5 question
+
+        **Resume Text:**  
+        \(resume)
+
+        **Expected JSON Output Format:**  
+        {
+          "numeracy": [
+            {
+              "question": "Solve: If x + 5 = 12, what is the value of x?",
+              "options": ["5", "6", "7", "8"],
+              "correct_answer": "7"
+            },
+            {
+              "question": "Which framework is commonly used in FastAPI to define and validate request bodies?",
+              "options": ["Django", "Pydantic", "Flask", "SQLAlchemy"],
+              "correct_answer": "Pydantic"
+            }
+          ],
+          "literacy": [
+            {
+              "question": "Identify the correctly spelled word.",
+              "options": ["Recieve", "Recieve", "Receive", "Recive"],
+              "correct_answer": "Receive"
+            },
+            {
+              "question": "What is the Spanish translation for 'Hello'?",
+              "options": ["Hola", "Bonjour", "Ciao", "Hallo"],
+              "correct_answer": "Hola"
+            }
+          ]
+        }
+
+        Return only the JSON.  
+        Do not include any backticks—just send the JSON.
+        """
+
+
+        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyDDTPOZonoyL72gpye_bczBg90XLdXlBUs")
+
+        do {
+            let response = try await model.generateContent(prompt)
+            if let text = response.text, let jsonData = text.data(using: .utf8) {
+                let decodedResponse = try JSONDecoder().decode(GeneratedQuestions.self, from: jsonData)
+
+                // Update questions in the main thread
+                DispatchQueue.main.async {
+                    self.numeracyQuestions = decodedResponse.numeracy
+                    self.literacyQuestions = decodedResponse.literacy
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+}
+
+

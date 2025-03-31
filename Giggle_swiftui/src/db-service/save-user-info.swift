@@ -40,7 +40,8 @@ class SaveUserInfo:ObservableObject {
             "phone":formManager.formData.phone,
             "gender":formManager.formData.gender,
             "universityName":formManager.formData.universityName,
-            "resumeIds":formManager.formData.resumeIds
+            "resumeIds":formManager.formData.resumeIds,
+            "resume_text":formManager.formData.resume
         ]
         
         do {
@@ -228,7 +229,7 @@ class SaveUserInfo:ObservableObject {
         let storedUserId = userDefaults.string(forKey: "userID")
         do{
             print(FormManager.shared.formData.resumeIds)
-            let updatedIDS:[String:Any] = ["resumeIds":FormManager.shared.formData.resumeIds]
+            let updatedIDS:[String:Any] = ["resumeIds":FormManager.shared.formData.resumeIds,"resume_text":FormManager.shared.formData.resume]
             _ = try await database.updateDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId!,data: updatedIDS)
         }catch{
             print(error)
