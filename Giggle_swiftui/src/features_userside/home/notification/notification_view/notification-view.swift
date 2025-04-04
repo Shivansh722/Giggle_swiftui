@@ -79,14 +79,10 @@ struct NotificationScreen: View {
                                         
                                         Spacer()
                                         
-                                        VStack(alignment: .trailing) {
-                                            Text(notification.timestamp)
-                                                .foregroundColor(.gray)
-                                                .font(.system(size: 14))
-                                            Image(systemName: "ellipsis")
-                                                .foregroundColor(.gray)
-                                                .font(.system(size: 14))
-                                        }
+                                        Text(notification.timestamp)
+                                            .foregroundColor(.gray)
+                                            .font(.system(size: 14))
+                                        
                                     }
                                     
                                     if let subtitle = notification.subtitle {
@@ -124,16 +120,46 @@ struct NotificationScreen: View {
             .onAppear {
                 // Convert jobs to notifications
                 notifications = jobs.map { job in
+                    let timestamp = job["$createdAt"] as? String ?? ""
+                    let formattedTime = timeAgo(from: timestamp)
+                    
                     return Notification(
                         avatarInitials: "",
                         avatarIcon: nil,
-                        title: "New job has been posted of role\(job["job_title"]!) at \(job["companyName"]!)",
+                        title: "New job has been posted for role \(job["job_title"]!) at \(job["companyName"]!)",
                         subtitle: "Location: \(job["location"]!)",
-                        timestamp: "\(job["$createdAt"]!)",
+                        timestamp: formattedTime,
                         hasActions: true
                     )
                 }
             }
+        }
+    }
+    
+    private func timeAgo(from isoDateString: String) -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = formatter.date(from: isoDateString) else {
+            return "Just now"
+        }
+        
+        let now = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date, to: now)
+        
+        if let years = components.year, years > 0 {
+            return "\(years)y ago"
+        } else if let months = components.month, months > 0 {
+            return "\(months)mo ago"
+        } else if let days = components.day, days > 0 {
+            return "\(days)d ago"
+        } else if let hours = components.hour, hours > 0 {
+            return "\(hours)h ago"
+        } else if let minutes = components.minute, minutes > 0 {
+            return "\(minutes)m ago"
+        } else {
+            return "Just now"
         }
     }
     

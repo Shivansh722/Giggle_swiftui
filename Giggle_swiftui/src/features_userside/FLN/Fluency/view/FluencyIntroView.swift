@@ -99,6 +99,7 @@ struct FluencyIntroView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

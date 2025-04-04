@@ -92,7 +92,9 @@ struct WorkPitcher: View {
                         Text("Add Image")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.clear)
+                            .overlay(RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.white, lineWidth: 1))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
@@ -104,12 +106,12 @@ struct WorkPitcher: View {
                             navigationTrue = true
                         }
                     }) {
-                        Text("Upload All")
+                        Text("Upload")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(
                                 uploadManager.isProcessingUpload
-                                    ? Color.gray : Color.green
+                                ? Color.gray : Theme.primaryColor
                             )
                             .foregroundColor(.white)
                             .cornerRadius(8)

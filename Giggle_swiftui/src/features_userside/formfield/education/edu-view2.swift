@@ -46,7 +46,7 @@ struct eduView2: View {
                     
                     Spacer()
                     
-                    ProgressView(value: 60, total: 100)
+                    ProgressView(value: 70, total: 100)
                         .accentColor(Theme.primaryColor)
                         .padding(.horizontal, 30) // Fixed padding
                         .padding(.top, -10) // Fixed negative padding

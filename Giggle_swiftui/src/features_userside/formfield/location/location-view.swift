@@ -44,7 +44,7 @@ struct LocationView: View {
                 }
                 .padding(.top, 20)
 
-                ProgressView(value: 20, total: 100)
+                ProgressView(value: 40, total: 100)
                     .accentColor(Theme.primaryColor)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 20)

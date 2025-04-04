@@ -70,11 +70,13 @@ struct HomeView: View {
                         Spacer()
 
                         ZStack {
-                            Image("desk")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: geometry.size.width, height: geometry.size.height / 2)
-                                .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
+                            if isLoading || flnID == nil {
+                                Image("desk")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geometry.size.width, height: geometry.size.height / 2)
+                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
+                            }
                             
                             VStack {
                                 if isLoading {
@@ -98,10 +100,10 @@ struct HomeView: View {
                                             title: "NEXT",
                                             backgroundColor: Theme.primaryColor,
                                             action: { navigateToLiteracy = true },
-                                            width: geometry.size.width * 0.5,
-                                            height: 50
+                                            width: 200,
+                                            height: 50,
+                                            cornerRadius: 6
                                         )
-                                        .padding(.leading, 65)
                                         NavigationLink(destination: FlnIntroView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }

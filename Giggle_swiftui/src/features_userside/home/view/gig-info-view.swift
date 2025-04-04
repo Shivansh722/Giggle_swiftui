@@ -40,175 +40,178 @@ struct GigInfoView: View {
     
     var body: some View {
         NavigationView { // Use NavigationView for older SwiftUI versions
-            ScrollView {
-                VStack(spacing: 0) {
-                    // Header with Logo and Job Title
-                    VStack {
-                        if let base64 = base64Image,
-                            let data = Data(base64Encoded: base64),
-                            let uiImage = UIImage(data: data)
-                        {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.black)
-                        } else {
-                            Image("mcD")  // Fallback image
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.black)
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // Header with Logo and Job Title
+                        VStack {
+                            if let base64 = base64Image,
+                               let data = Data(base64Encoded: base64),
+                               let uiImage = UIImage(data: data)
+                            {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.black)
+                            } else {
+                                Image("mcD")  // Fallback image
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.black)
+                            }
+                            Text("\(jobs["job_title"]!)")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                            HStack {
+                                Text("Google")
+                                    .foregroundColor(.gray)
+                                Text("•")
+                                    .foregroundColor(.gray)
+                                Text("California")
+                                    .foregroundColor(.gray)
+                                Text("•")
+                                    .foregroundColor(.gray)
+                                Text("1 day ago")
+                                    .foregroundColor(.gray)
+                            }
+                            .font(.caption)
                         }
-                        Text("\(jobs["job_title"]!)")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                        HStack {
-                            Text("Google")
-                                .foregroundColor(.gray)
-                            Text("•")
-                                .foregroundColor(.gray)
-                            Text("California")
-                                .foregroundColor(.gray)
-                            Text("•")
-                                .foregroundColor(.gray)
-                            Text("1 day ago")
-                                .foregroundColor(.gray)
+                        .padding()
+                        
+                        // Job Description Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Job Description")
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                            Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatum rem aperiam, eaque ipsa quae ab illo inventore explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
+                                .foregroundColor(.white)
+                                .font(.system(size: 12, weight: .regular, design: .default))
+                                .multilineTextAlignment(.leading)
+                                .padding(.leading)
+                                .padding(.trailing)
                         }
-                        .font(.caption)
-                    }
-                    .padding()
-                    
-                    // Job Description Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Job Description")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                        Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatum rem aperiam, eaque ipsa quae ab illo inventore explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
+                        .padding()
+                        
+                        // Requirements Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Requirements")
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("• Sed ut perspiciatis unde omnis iste natus error")
+                                Text("• Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur adipiscing velit.")
+                                Text("• Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
+                                Text("• Ut enim ad minim veniam, quis nostrud exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodo consequat.")
+                            }
                             .foregroundColor(.white)
                             .font(.system(size: 12, weight: .regular, design: .default))
                             .multilineTextAlignment(.leading)
                             .padding(.leading)
                             .padding(.trailing)
-                    }
-                    .padding()
-                    
-                    // Requirements Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Requirements")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("• Sed ut perspiciatis unde omnis iste natus error")
-                            Text("• Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur adipiscing velit.")
-                            Text("• Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
-                            Text("• Ut enim ad minim veniam, quis nostrud exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodo consequat.")
                         }
                         .foregroundColor(.white)
-                        .font(.system(size: 12, weight: .regular, design: .default))
-                        .multilineTextAlignment(.leading)
-                        .padding(.leading)
-                        .padding(.trailing)
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                    
-                    // Location Section with MapKit
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Location")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                        Text("\(jobs["location"]!)")
+                        .padding()
+                        
+                        // Location Section with MapKit
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Location")
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                            Text("\(jobs["location"]!)")
+                                .foregroundColor(.white)
+                                .font(.system(size: 12, weight: .regular, design: .default))
+                            MapView(location: "Overlook Avenue, Belleville, NJ, USA")
+                                .frame(height: 150)
+                                .cornerRadius(10)
+                        }
+                        .padding()
+                        
+                        // Informations Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Informations")
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                            HStack {
+                                Text("Position")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("Senior Designer")
+                                    .foregroundColor(.white)
+                            }
+                            HStack {
+                                Text("Qualification")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("Bachelor's Degree")
+                                    .foregroundColor(.white)
+                            }
+                            HStack {
+                                Text("Experience")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("3 Years")
+                                    .foregroundColor(.white)
+                            }
+                            HStack {
+                                Text("Job Type")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("Full-Time")
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .padding()
+                        
+                        // Facilities and Others Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Facilities and Others")
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                            VStack(alignment: .leading, spacing: 4) { // Ensure leading alignment
+                                Text("• Medical")
+                                Text("• Dental")
+                                Text("• Technical Certification")
+                                Text("• Meal Allowance")
+                                Text("• Transport Allowance")
+                                Text("• Regular Hours")
+                                Text("• Work on Fridays")
+                            }
                             .foregroundColor(.white)
                             .font(.system(size: 12, weight: .regular, design: .default))
-                        MapView(location: "Overlook Avenue, Belleville, NJ, USA")
-                            .frame(height: 150)
-                            .cornerRadius(10)
-                    }
-                    .padding()
-                    
-                    // Informations Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Informations")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                        HStack {
-                            Text("Position")
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("Senior Designer")
-                                .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading) // Force leading alignment
+                            .padding(.leading, 4)
+                            .padding(.trailing, 16)
                         }
-                        HStack {
-                            Text("Qualification")
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("Bachelor's Degree")
-                                .foregroundColor(.white)
-                        }
-                        HStack {
-                            Text("Experience")
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("3 Years")
-                                .foregroundColor(.white)
-                        }
-                        HStack {
-                            Text("Job Type")
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("Full-Time")
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .padding()
-                    
-                    // Facilities and Others Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Facilities and Others")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                        VStack(alignment: .leading, spacing: 4) { // Ensure leading alignment
-                            Text("• Medical")
-                            Text("• Dental")
-                            Text("• Technical Certification")
-                            Text("• Meal Allowance")
-                            Text("• Transport Allowance")
-                            Text("• Regular Hours")
-                            Text("• Work on Fridays")
-                        }
-                        .foregroundColor(.white)
-                        .font(.system(size: 12, weight: .regular, design: .default))
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading) // Force leading alignment
-                        .padding(.leading, 4)
-                        .padding(.trailing, 16)
-                    }
-                    .padding()
-                    
-                    // Apply Now Button
-                    HStack(alignment: .center) {
+                        .padding()
+                        
                         Spacer()
+                    }
+                }
+                VStack {
+                    Divider()
+                        .background(Color.white.opacity(0.3))
+
+                    HStack {
                         CustomButton(
                             title: isApplied ? "APPLIED" : "APPLY NOW",
                             backgroundColor: isApplied ? Color.gray : Theme.primaryColor,
                             action: {
-                                // Trigger the alert
-                                Task{
+                                Task {
                                     try await JobPost(appService: AppService()).applyJob(jobId)
                                 }
                                 isApplied = true
                                 showAppliedAlert = true
-                                // Later, you can add backend logic here, e.g.:
-                                // applyToGig(userId: "user123", gigId: "gig456")
                             },
                             width: 283,
-                            height: 50
+                            height: 50,
+                            cornerRadius: 6
                         )
                         .disabled(isApplied)
-                        Spacer()
                     }
                     .padding()
-                    .padding(.bottom, 20)
                 }
+                .background(Theme.backgroundColor)
             }
             .background(Theme.backgroundColor.ignoresSafeArea()) // Extend background to safe areas
             .navigationBarTitleDisplayMode(.inline)
@@ -228,13 +231,13 @@ struct GigInfoView: View {
                 Task {
                     do {
                         let applied = try await checkApplied.jobAppliedCheck(jobId)
-                            isApplied = applied
-                        } catch {
-                            print("Error checking application status: \(error)")
-                            isApplied = false
-                        }
+                        isApplied = applied
+                    } catch {
+                        print("Error checking application status: \(error)")
+                        isApplied = false
                     }
                 }
+            }
         }
     }
 }

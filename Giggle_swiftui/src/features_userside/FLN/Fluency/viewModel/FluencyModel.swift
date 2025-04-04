@@ -16,7 +16,7 @@ func classifySound(completion: @escaping (Double) -> Void) {
         audioFileAnalyzer = try SNAudioFileAnalyzer(url: audioFileURL)
 
         let request = try SNClassifySoundRequest(
-            mlModel: FSoundClassifier().model)
+            mlModel: MySoundClassifiersets().model)
 
         try audioFileAnalyzer?.add(request, withObserver: observer)
 
@@ -78,11 +78,15 @@ class ResultsObserver: NSObject, SNResultsObserving {
     }
 
     func requestDidComplete(_ request: SNRequest) {
-        let lowAverage = lowCount > 0 ? lowSum / Double(lowCount) : 0.0
-        let intermediateAverage = intermediateCount > 0 ? intermediateSum / Double(intermediateCount) : 0.0
-        let highAverage = highCount > 0 ? highSum / Double(highCount) : 0.0
+        let lowAverage = lowCount > 0 ? (Double(lowSum) / Double(lowCount)) : 0.0
+        let intermediateAverage = intermediateCount > 0 ? (Double(intermediateSum) / Double(intermediateCount)) : 0.0
+        let highAverage = highCount > 0 ? (Double(highSum) / Double(highCount)) : 0.0
 
-        let finalResult = (lowAverage + intermediateAverage + highAverage) / 3.0
+        let validCategories = (lowCount > 0 ? 1 : 0) + (intermediateCount > 0 ? 1 : 0) + (highCount > 0 ? 1 : 0)
+
+        let finalResult = validCategories > 0 ? (lowAverage + intermediateAverage + highAverage) / Double(validCategories) : 0.0
+
+
 
 //        print("Low Average: \(lowAverage)%")
 //        print("Intermediate Average: \(intermediateAverage)%")

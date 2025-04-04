@@ -9,114 +9,117 @@ struct skillView: View {
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Theme.backgroundColor
-                    .edgesIgnoringSafeArea(.all)
-                
-                ScrollView {
-                    VStack {
-                        // Header
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("Your")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Theme.primaryColor)
-                                    Text("Skills")
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Theme.onPrimaryColor)
-                                }
-                                .padding(.leading, geometry.size.width * 0.08)
-                            }
-                            Spacer()
-                        }
-                        .padding(.top, geometry.size.height * 0.02)
-                        
-                        ProgressView(value: 40, total: 100)
-                            .accentColor(Theme.primaryColor)
-                            .padding(.horizontal, geometry.size.width * 0.08)
-                            .padding(.top, geometry.size.height * 0.02)
-                        
-                        // Animation
-                        WebSkillHomeView(
-                            url: Bundle.main.url(forResource: "jobs-list", withExtension: "gif")
-                                ?? URL(fileURLWithPath: NSTemporaryDirectory())
-                        )
-                        .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.3)
-                        .padding(.top, 20)
-                        
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text("What skills do you have?")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .padding(.leading, geometry.size.width * 0.08)
-                            
-                            Text("Get noticed for right jobs by adding your skills.")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .padding(.leading, geometry.size.width * 0.08)
-                            
-                            ChipContainerView(viewModel: viewModel)
-                                .frame(minHeight: 100)
-                                .padding(.horizontal, geometry.size.width * 0.08)
-                                .padding(.bottom, 20) // Added padding below chips
-                            
-                            // Custom Skill Input
+        ZStack {
+            Theme.backgroundColor
+                .edgesIgnoringSafeArea(.all)
+            
+            ScrollView {
+                VStack {
+                    // Header
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
                             HStack {
-                                CustomTextField(
-                                    placeholder: "Add a skill",
-                                    isSecure: false,
-                                    text: $skillName,
-                                    icon: "star.fill"
-                                )
-                                
-                                Button(action: {
-                                    addCustomSkill()
-                                }) {
-                                    Image(systemName: "plus.circle.fill")
-                                        .foregroundColor(Theme.primaryColor)
-                                        .font(.system(size: 24))
-                                }
-                                .disabled(skillName.trimmingCharacters(in: .whitespaces).isEmpty)
+                                Text("Your")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.primaryColor)
+                                Text("Skills")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
                             }
-                            .padding(.horizontal, geometry.size.width * 0.08)
-                            .padding(.top, 20)
-                            
-                            NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
-                                EmptyView()
-                            }
-                            
-                            CustomButton(
-                                title: "NEXT",
-                                backgroundColor: Theme.primaryColor,
-                                action: {
-                                    Task {
-                                        let result = await saveUserInfo.saveInfo()
-                                        if result {
-                                            userDetailAutoView.deleteAllUserDefaults()
-                                            let userDefault = UserDefaults.standard
-                                            userDefault.set(FormManager.shared.formData.userId, forKey: "userID")
-                                            userDefault.set("completed user", forKey: "status")
-                                            let status = UserDefaults.standard.string(forKey: "status")
-                                            print(status!)
-                                            navigateToHome = true
-                                        } else {
-                                            print("Failed to save user info")
-                                        }
-                                    }
-                                },
-                                width: geometry.size.width * 0.8,
-                                height: 50
-                            )
-                            .padding(.top, 20)    // Added padding above button
-                            .padding(.bottom, 40) // Increased bottom padding
+                            .padding(.leading, 30)
                         }
+                        Spacer()
                     }
+                    .padding(.top, 20)
+                    
+                    ProgressView(value: 100, total: 100)
+                        .accentColor(Theme.primaryColor)
+                        .padding(.horizontal, 30)
+                        .padding(.top, 20)
+                    
+                    // Animation
+                    WebSkillHomeView(
+                        url: Bundle.main.url(forResource: "jobs-list", withExtension: "gif")
+                            ?? URL(fileURLWithPath: NSTemporaryDirectory())
+                    )
+                    .frame(width: 200, height: 200)
+                    .padding(.top, 20)
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("What skills do you have?")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.onPrimaryColor)
+                            .padding(.leading, 30)
+                        
+                        Text("Get noticed for right jobs by adding your skills.")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color.gray)
+                            .padding(.leading, 30)
+                        
+                        ChipContainerView(viewModel: viewModel)
+                            .frame(minHeight: 100)
+                            .padding(.horizontal, 30)
+                            .padding(.bottom, 20)
+                            .padding(.top, 25)
+                        
+                        // Custom Skill Input
+                        HStack {
+                            CustomTextField(
+                                placeholder: "Add a skill",
+                                isSecure: false,
+                                text: $skillName,
+                                icon: "star.fill"
+                            )
+                            
+                            Button(action: {
+                                addCustomSkill()
+                            }) {
+                                Image(systemName: "plus.circle.fill")
+                                    .foregroundColor(Theme.primaryColor)
+                                    .font(.system(size: 24))
+                            }
+                            .disabled(skillName.trimmingCharacters(in: .whitespaces).isEmpty)
+                        }
+                        .padding(.horizontal, 30)
+                        .padding(.top, 45)
+                        Spacer()
+                        
+                        NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
+                            EmptyView()
+                        }
+                        
+                        CustomButton(
+                            title: "NEXT",
+                            backgroundColor: Theme.primaryColor,
+                            action: {
+                                Task {
+                                    let result = await saveUserInfo.saveInfo()
+                                    if result {
+                                        userDetailAutoView.deleteAllUserDefaults()
+                                        let userDefault = UserDefaults.standard
+                                        userDefault.set(FormManager.shared.formData.userId, forKey: "userID")
+                                        userDefault.set("completed user", forKey: "status")
+                                        let status = UserDefaults.standard.string(forKey: "status")
+                                        print(status!)
+                                        navigateToHome = true
+                                    } else {
+                                        print("Failed to save user info")
+                                    }
+                                }
+                            },
+                            width: 320,
+                            height: 50,
+                            cornerRadius: 6
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 20)
+                        .padding(.bottom, 40)
+                    }
+                    .padding(.top, 20)
                 }
             }
         }

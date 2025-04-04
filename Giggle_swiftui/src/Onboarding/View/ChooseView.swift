@@ -19,12 +19,13 @@ struct ChooseView: View {
                     .clipped()
 
                 VStack {
-                    Text("Are you looking for gigs or\nproviding one?")
+                    Text("Are you looking for gigs or providing one?")
                         .font(Font.custom("SF Pro", size: 16).weight(.bold))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
-                        .frame(width: 222)
                         .padding(.bottom, 56)
+                        .lineLimit(2)
+                        //text is not coming in one line
 
                     Button(action: {
                         selectedRole = .client

@@ -20,13 +20,50 @@ struct ResumeUpload: View {
             Theme.backgroundColor
                 .edgesIgnoringSafeArea(.all)
 
-            VStack {
-                Text("Upload Resume")
-                    .font(.title)
-                    .bold()
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 20)
+            VStack(alignment: .leading) {
+                HStack {
+                    HStack() {
+                        Text("Upload")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.primaryColor)
+                        Text("Resume")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.onPrimaryColor)
+                    }
+                    .padding(.leading, 24)
+                    .padding(.top, 6)
+                    Spacer()
+                    Button(action: {
+                        navigate = true
+                    }) {
+                        Text("Skip")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Theme.primaryColor)
+                            .cornerRadius(8)
+                    }
+                    .padding(.trailing, 24)
+                    .padding(.top, 6)
+                }
+
+                // Info Container
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(Theme.secondaryColor)
+                        .font(.system(size: 20))
+                    Text("We’ll extract your name, education, experience and other details from your resume to pre-fill your profile.")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 8)
+                .cornerRadius(8)
+                .padding(.bottom, 12)
 
                 List {
                     if !uploadManager.selectedResumes.isEmpty {
@@ -64,8 +101,8 @@ struct ResumeUpload: View {
                                     Text("\(resume.fileSize / 1024) KB")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
+                                    }
                                 }
-                            }
                             .listRowBackground(Theme.backgroundColor)
                         }
                     }
@@ -76,7 +113,7 @@ struct ResumeUpload: View {
                 .scrollContentBackground(.hidden)
                 .background(Theme.backgroundColor)
                 .cornerRadius(12)
-                .padding()
+                .padding([.leading, .trailing, .bottom])
 
                 NavigationLink(
                     destination: UserInfoView(),
@@ -92,7 +129,9 @@ struct ResumeUpload: View {
                         Text("Add Resume")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.clear)
+                            .overlay(RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.white, lineWidth: 1))
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
@@ -110,7 +149,7 @@ struct ResumeUpload: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(uploadManager.selectedResumes.isEmpty ? Color.gray : Color.green)
+                    .background(uploadManager.selectedResumes.isEmpty ? Color.gray : Theme.primaryColor)
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .disabled(uploadManager.isProcessingUpload || uploadManager.selectedResumes.isEmpty)

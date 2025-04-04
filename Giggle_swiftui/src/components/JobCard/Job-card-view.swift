@@ -60,7 +60,7 @@ struct JobCardView: View {
                     }
 
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text("\(jobs["salary"]!)")
+                        Text("$\(jobs["salary"]!)")
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(.white)
                         Text("/Mo")
