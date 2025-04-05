@@ -70,6 +70,13 @@ class JobPost: ObservableObject {
                 "job_trait": JobFormManager.shared.formData.jobTrait,
                 "client_id": storedUserId!,
                 "companyName": JobFormManager.shared.formData.companyName,
+                "jobDescription":JobFormManager.shared.formData.jobDescription,
+                "position":JobFormManager.shared.formData.position,
+                "qualification":JobFormManager.shared.formData.qualification,
+                "experience":JobFormManager.shared.formData.experience,
+                "specialisation":JobFormManager.shared.formData.specialisation,
+                "requirements":JobFormManager.shared.formData.requirements,
+                "facilities":JobFormManager.shared.formData.facilities
             ]
             
             let result = try await database.createDocument(

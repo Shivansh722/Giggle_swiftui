@@ -15,13 +15,20 @@ struct GetJobPost:Identifiable, Codable {
     var location: String
     var salary: String
     var companyName: String
+    var jobDescription: String
+    var position: String
+    var qualification: String
+    var experience: String
+    var specialisation: String
+    var facilities: [String]
+    var requirements: [String]
 }
 
 class JobFormManager: ObservableObject {
     static let shared = JobFormManager()
     private init() {}
     
-    @Published var formData = GetJobPost(id: UUID(), jobTitle: "", jobTrait: "", jobType: "", location: "", salary: "", companyName: "")
+    @Published var formData = GetJobPost(id: UUID(), jobTitle: "", jobTrait: "", jobType: "", location: "", salary: "", companyName: "", jobDescription: "", position: "", qualification: "", experience: "", specialisation: "", facilities: [""], requirements: [""])
 }
 
 class JobTitleManager: ObservableObject {

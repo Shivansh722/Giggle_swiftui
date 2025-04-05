@@ -164,6 +164,7 @@ struct GigDetailsScreen: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal,20)
                         
                         CustomTextField(placeholder: "Company Name", isSecure: false, text: $companyName, icon: "building.2.fill")
                         CustomTextField(placeholder: "Job Role", isSecure: false, text: $jobRole, icon: "briefcase.fill")
@@ -177,7 +178,7 @@ struct GigDetailsScreen: View {
                             .datePickerStyle(.compact)
                             .colorInvert()
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 60)
                     
                     // Job Details Section
                     VStack(spacing: 15) {
@@ -186,6 +187,7 @@ struct GigDetailsScreen: View {
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal,55)
                         
                         VStack(alignment: .leading) {
                             Text("Job Description (max 60 words)")
@@ -208,18 +210,19 @@ struct GigDetailsScreen: View {
                                 }
                         }
                         
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Text("Requirements")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                                .padding(.horizontal, -4)
+                                .padding(.horizontal, 20)
                             BulletPointInput(items: $requirements, placeholder: "Add requirement")
-                        }
+                            CustomTextField(placeholder: "Position", isSecure: false, text: $position, icon: "person.fill")
+                            CustomTextField(placeholder: "Qualification", isSecure: false, text: $qualification, icon: "graduationcap.fill")
+                            CustomTextField(placeholder: "Experience", isSecure: false, text: $experience, icon: "clock.arrow.circlepath")
+                        }.padding(.horizontal, 60)
                         
-                        CustomTextField(placeholder: "Position", isSecure: false, text: $position, icon: "person.fill")
-                        CustomTextField(placeholder: "Qualification", isSecure: false, text: $qualification, icon: "graduationcap.fill")
-                        CustomTextField(placeholder: "Experience", isSecure: false, text: $experience, icon: "clock.arrow.circlepath")
+                        
                         
                         HStack(alignment: .center, spacing: 10) {
                             Text("Job Type")
@@ -227,7 +230,6 @@ struct GigDetailsScreen: View {
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                             
-                            Spacer()
                             
                             Picker("Job Type", selection: $jobType) {
                                 ForEach(jobTypeOptions, id: \.self) { option in
@@ -241,15 +243,15 @@ struct GigDetailsScreen: View {
                             .cornerRadius(8)
                         }
                         
-                        CustomTextField(placeholder: "Specialization", isSecure: false, text: $specialization, icon: "star.fill")
-                        
                         VStack(alignment: .leading) {
+                            CustomTextField(placeholder: "Specialization", isSecure: false, text: $specialization, icon: "star.fill")
                             Text("Facilities")
                                 .font(.headline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                             BulletPointInput(items: $facilities, placeholder: "Add facility")
                         }
+                        .padding(.horizontal,60)
                     }
                     .padding(.horizontal, 20)
                     
@@ -296,6 +298,12 @@ struct GigDetailsScreen: View {
                                 JobFormManager.shared.formData.jobType = isRemote ? "Remote" : "On-site"
                                 JobFormManager.shared.formData.jobTitle = jobRole // Note: Overwriting jobTitle here
                                 JobFormManager.shared.formData.jobTrait = specialization
+                                JobFormManager.shared.formData.jobDescription = jobDescription
+                                JobFormManager.shared.formData.qualification = qualification
+                                JobFormManager.shared.formData.experience = experience
+                                JobFormManager.shared.formData.facilities = facilities
+                                JobFormManager.shared.formData.requirements = requirements
+                                
                                 
                                 // Post job asynchronously
                                 Task {
@@ -318,8 +326,6 @@ struct GigDetailsScreen: View {
                         .disabled(companyName.isEmpty || jobRole.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
                     }
                     .padding(.horizontal, 20)
-                    .padding(.vertical, 20)
-                    .padding(.bottom, 38)
                 }
             }
         }
