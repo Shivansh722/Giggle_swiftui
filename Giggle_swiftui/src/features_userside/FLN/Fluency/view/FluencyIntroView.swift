@@ -77,7 +77,10 @@ struct FluencyIntroView: View {
                 Spacer()
                 
                 Button(action: {
-                    navigate = true
+                    Task{
+                        navigate = true
+                    }
+                    
                 }) {
                     Text("CONTINUE")
                         .frame(maxWidth: .infinity)

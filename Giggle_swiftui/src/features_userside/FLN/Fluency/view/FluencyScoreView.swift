@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct FluencyScoreView: View {
-    @State private var categories: [Category] = [
-        Category(name: "Fluency & Coherence", percentage: 0.51, color: .green, content: ""),
-        Category(name: "Grammar & Structure", percentage: 0.72, color: .blue, content: ""),
-        Category(name: "User Vocabulary", percentage: 0.87, color: .pink, content: ""),
-        Category(name: "User Pronunciation", percentage: 0.89, color: .yellow, content: "")
+    var categories: [Category] = [
+        Category(name: "Fluency & Coherence", percentage: FlnDataManager.shared.flnData.CoherencePer, color: .green, content: FlnDataManager.shared.flnData.coherenceCOntent),
+        Category(name: "Grammar & Structure", percentage: FlnDataManager.shared.flnData.GrammarPer, color: .blue, content: FlnDataManager.shared.flnData.grammarContent),
+        Category(name: "User Vocabulary", percentage: FlnDataManager.shared.flnData.VocabularyPer, color: .pink, content: FlnDataManager.shared.flnData.vocabularyContent),
+        Category(name: "User Pronunciation", percentage: FlnDataManager.shared.flnData.PronunciationPer, color: .yellow, content: FlnDataManager.shared.flnData.pronunciationContent)
     ]
     
     @State private var navigateToNext = false
@@ -114,7 +114,7 @@ struct FluencyScoreView: View {
                             .padding(.horizontal)
                             .padding(.bottom, 4)
                     }
-                    Spacer().frame(width: 200)
+                    Spacer().frame(height: 70)
                 }
             }
             
@@ -123,18 +123,18 @@ struct FluencyScoreView: View {
                 Spacer()
                 
                 HStack(spacing: 20) {
-                    Button(action: {
-                        // Retest action
-                        navigateToFluency = true
-                    }) {
-                        Text("RETEST")
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Theme.primaryColor)
-                            .cornerRadius(6)
-                    }
+//                    Button(action: {
+//                        // Retest action
+//                        navigateToFluency = true
+//                    }) {
+//                        Text("RETEST")
+//                            .fontWeight(.bold)
+//                            .foregroundColor(.white)
+//                            .frame(maxWidth: .infinity)
+//                            .padding()
+//                            .background(Theme.primaryColor)
+//                            .cornerRadius(6)
+//                    }
                     
                     Button(action: {
                         navigateToNext = true

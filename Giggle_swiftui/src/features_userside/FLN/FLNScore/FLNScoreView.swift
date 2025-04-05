@@ -111,7 +111,7 @@ struct FLNScoreView: View {
                             )
                     }
                     
-                    NavigationLink(destination: FlnIntroView(), isActive: $naviagtetoLiteracy) {
+                    NavigationLink(destination: FluencyIntroView(), isActive: $naviagtetoLiteracy) {
                         EmptyView()
                     }
 

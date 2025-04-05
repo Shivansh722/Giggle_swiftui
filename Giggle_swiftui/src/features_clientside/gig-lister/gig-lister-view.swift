@@ -299,7 +299,9 @@ struct GigDetailsScreen: View {
                                 JobFormManager.shared.formData.jobTitle = jobRole // Note: Overwriting jobTitle here
                                 JobFormManager.shared.formData.jobTrait = specialization
                                 JobFormManager.shared.formData.jobDescription = jobDescription
+                                JobFormManager.shared.formData.position = position
                                 JobFormManager.shared.formData.qualification = qualification
+                                JobFormManager.shared.formData.specialisation = specialization
                                 JobFormManager.shared.formData.experience = experience
                                 JobFormManager.shared.formData.facilities = facilities
                                 JobFormManager.shared.formData.requirements = requirements
