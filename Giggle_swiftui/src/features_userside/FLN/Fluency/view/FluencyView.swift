@@ -67,24 +67,24 @@ struct FluencyView: View {
 
                 Spacer()
 
-                if let score = classificationScore {
-                    Text(
-                        "Classification Score: \(String(format: "%.2f", score))%"
-                    )
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundColor(Theme.tertiaryColor)
-                    .padding(.top, 8)
-                }
+//                if let score = classificationScore {
+//                    Text(
+//                        "Classification Score: \(String(format: "%.2f", score))%"
+//                    )
+//                    .font(.system(size: 18, weight: .medium))
+//                    .foregroundColor(Theme.tertiaryColor)
+//                    .padding(.top, 8)
+//                }
 
                 Spacer()
 
                 Button(action: {
                     if let score = classificationScore {
-                        FlnDataManager.shared.flnData.fluencyScore = String(
-                            format: "%.2f", score)
+//                        FlnDataManager.shared.flnData.fluencyScore = String(
+//                            format: "%.2f", score)
                         DispatchQueue.main.async{
                             Task{
-                                await SaveFLNdetails.saveFlnInfo()
+                                try await FluencyResult().getFluencyResult()
                                 navigateToHome = true
                             }
                         }

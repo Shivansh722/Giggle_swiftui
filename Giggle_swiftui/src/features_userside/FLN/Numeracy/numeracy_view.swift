@@ -111,6 +111,9 @@ struct NumeracyView: View {
                             DispatchQueue.main.async {
                                 FlnDataManager.shared.flnData.numeracyScore = score
                             }
+                            Task{
+                                await FLNInfo(appService: AppService()).saveFlnInfo()
+                            }
                             navigate = true
                         }
                     }) {

@@ -80,10 +80,10 @@ struct GigInfoView: View {
                         
                         // Job Description Section
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("\(jobs["jobDescription"]!)")
+                            Text("jobDescription")
                                 .font(.system(size: 20, weight: .bold, design: .default))
                                 .foregroundColor(.white)
-                            Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatum rem aperiam, eaque ipsa quae ab illo inventore explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
+                            Text("\(jobs["jobDescription"]!)")
                                 .foregroundColor(.white)
                                 .font(.system(size: 12, weight: .regular, design: .default))
                                 .multilineTextAlignment(.leading)
@@ -94,21 +94,21 @@ struct GigInfoView: View {
                         
                         // Requirements Section
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Requirements")
-                                .font(.system(size: 20, weight: .bold, design: .default))
-                                .foregroundColor(.white)
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("• Sed ut perspiciatis unde omnis iste natus error")
-                                Text("• Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur adipiscing velit.")
-                                Text("• Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
-                                Text("• Ut enim ad minim veniam, quis nostrud exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodo consequat.")
-                            }
-                            .foregroundColor(.white)
-                            .font(.system(size: 12, weight: .regular, design: .default))
-                            .multilineTextAlignment(.leading)
-                            .padding(.leading)
-                            .padding(.trailing)
-                        }
+                                                    Text("Requirements")
+                                                        .font(.system(size: 20, weight: .bold, design: .default))
+                                                        .foregroundColor(.white)
+                                                    
+                                                    VStack(alignment: .leading, spacing: 10) {
+                                                        ForEach(getRequirements(), id: \.self) { requirement in
+                                                            Text("• \(requirement)")
+                                                                .foregroundColor(.white)
+                                                                .font(.system(size: 12, weight: .regular, design: .default))
+                                                                .multilineTextAlignment(.leading)
+                                                        }
+                                                    }
+                                                    .padding(.leading)
+                                                    .padding(.trailing)
+                                                }
                         .foregroundColor(.white)
                         .padding()
                         
@@ -139,24 +139,24 @@ struct GigInfoView: View {
                                     .foregroundColor(.white)
                             }
                             HStack {
-                                Text("\(jobs["qualification"]!)")
+                                Text("Qualification")
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text("\(jobs["experience"]!)")
+                                Text("\(jobs["qualification"]!)")
                                     .foregroundColor(.white)
                             }
                             HStack {
                                 Text("Experience")
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text("3 Years")
+                                Text("\(jobs["experience"]!)")
                                     .foregroundColor(.white)
                             }
                             HStack {
                                 Text("Job Type")
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text("Full-Time")
+                                Text("\(jobs["job_type"]!)")
                                     .foregroundColor(.white)
                             }
                         }
@@ -240,6 +240,40 @@ struct GigInfoView: View {
             }
         }
     }
+    private func getRequirements() -> [String] {
+            guard let requirementsData = jobs["requirements"] else {
+                return ["No requirements available"]
+            }
+            
+            // Try direct string array first
+            if let requirements = requirementsData as? [String] {
+                let cleaned = requirements.map { $0.replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "") }
+                print("Cleaned direct array: \(cleaned)")
+                return cleaned
+            }
+            
+            // Handle the AnyCodable-like wrapper case
+            if let wrappedValue = String(describing: requirementsData)
+                .replacingOccurrences(of: "Optional(AnyCodable(", with: "")
+                .replacingOccurrences(of: "))", with: "")
+                .trimmingCharacters(in: CharacterSet(charactersIn: "[]")) as? String {
+                
+                // Split the string into array, handling newlines and quotes
+                let items = wrappedValue
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .map { $0.replacingOccurrences(of: "\"", with: "") }
+                    .map { $0.replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "") }
+                
+                print("Cleaned parsed items: \(items)")
+                return items.isEmpty ? ["No requirements available"] : items
+            }
+            
+            // Fallback to string conversion of entire object
+            let fallback = String(describing: requirementsData).replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "")
+            print("Cleaned fallback: \(fallback)")
+            return [fallback]
+        }
 }
 
 // Extension to customize the navigation bar background (for older SwiftUI versions)
