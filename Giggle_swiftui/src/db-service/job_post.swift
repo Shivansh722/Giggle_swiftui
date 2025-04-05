@@ -144,36 +144,44 @@ class JobPost: ObservableObject {
     }
     
     func fetchImage(_ jobId: String) async throws -> String {
-        let result = try await database.getDocument(
-            databaseId: databaseID,
-            collectionId: posted_job,
-            documentId: jobId
-        )
-        
-        print(result.data["client_id"]?.value as? String ?? "undefined")
-        
-        let getClientImageId = try await database.getDocument(
-            databaseId: databaseID,
-            collectionId: ClientCollection,
-            documentId: result.data["client_id"]?.value as? String ?? "undefined"
-        )
-        
-        print(getClientImageId.data["photos"])
-        
-        guard let photos = getClientImageId.data["photos"]?.value as? [String],
-              let photoId = photos.first else {
-            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No photos found"])
+        print("inside fetchImage")
+        do{
+            let result = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: posted_job,
+                documentId: jobId
+            )
+            
+            print(result.data["client_id"]?.value as? String ?? "undefined")
+            
+            let getClientImageId = try await database.getDocument(
+                databaseId: databaseID,
+                collectionId: ClientCollection,
+                documentId: result.data["client_id"]?.value as? String ?? "undefined"
+            )
+            
+            print(getClientImageId.data["photos"])
+            
+            guard let photos = getClientImageId.data["photos"]?.value as? [String],
+                  let photoId = photos.first else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No photos found"])
+            }
+            print("Photo ID: \(photoId)")
+            let storage = Storage(client)
+            let imageData = try await storage.getFileView(
+                bucketId: BucketId,
+                fileId: photoId
+            )
+            
+            var byteBuffer = imageData
+            let data = byteBuffer.readData(length: byteBuffer.readableBytes)
+            
+            return String((data?.base64EncodedString())!)
+        }catch{
+            print("Error in fetchImage: \(error.localizedDescription)")
+                    throw error
+            
         }
-        print("Photo ID: \(photoId)")
-        let storage = Storage(client)
-        let imageData = try await storage.getFilePreview(
-            bucketId: BucketId,
-            fileId: photoId
-        )
         
-        var byteBuffer = imageData
-        let data = byteBuffer.readData(length: byteBuffer.readableBytes)
-        
-        return String((data?.base64EncodedString())!)
     }
 }

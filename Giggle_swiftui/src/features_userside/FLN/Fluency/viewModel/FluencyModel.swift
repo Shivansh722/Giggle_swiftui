@@ -78,13 +78,7 @@ class ResultsObserver: NSObject, SNResultsObserving {
     }
 
     func requestDidComplete(_ request: SNRequest) {
-        let lowAverage = lowCount > 0 ? (Double(lowSum) / Double(lowCount)) : 0.0
-        let intermediateAverage = intermediateCount > 0 ? (Double(intermediateSum) / Double(intermediateCount)) : 0.0
-        let highAverage = highCount > 0 ? (Double(highSum) / Double(highCount)) : 0.0
-
-        let validCategories = (lowCount > 0 ? 1 : 0) + (intermediateCount > 0 ? 1 : 0) + (highCount > 0 ? 1 : 0)
-
-        let finalResult = validCategories > 0 ? (lowAverage + intermediateAverage + highAverage) / Double(validCategories) : 0.0
+        let finalResult = ((lowSum * 0.2) + (intermediateSum * 0.4) + (highSum * 0.6))/10
 
 
 

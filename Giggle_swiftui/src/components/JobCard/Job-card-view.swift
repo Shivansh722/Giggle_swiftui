@@ -115,14 +115,16 @@ struct JobCardView: View {
                 }
             }
             .onAppear {
-                Task {
-                    do {
-                        let base64 = try await fetchImage.fetchImage("\(jobs["$id"]!)")
-                        self.base64Image = base64
-                        self.isLoadingImage = false
-                    } catch {
-                        self.imageError = error.localizedDescription
-                        self.isLoadingImage = false
+                DispatchQueue.main.async{
+                    Task {
+                        do {
+                            let base64 = try await fetchImage.fetchImage("\(jobs["$id"]!)")
+                            self.base64Image = base64
+                            self.isLoadingImage = false
+                        } catch {
+                            self.imageError = error.localizedDescription
+                            self.isLoadingImage = false
+                        }
                     }
                 }
             }

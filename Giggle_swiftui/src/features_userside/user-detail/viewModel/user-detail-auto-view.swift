@@ -149,7 +149,6 @@ class UserPreference {
     var shouldLoadUserDetailsAutomatically: Bool = false
 }
 
-import Foundation
 
 class QuestionViewModel: ObservableObject {
     @Published var numeracyQuestions: [Question] = []
@@ -171,6 +170,42 @@ class QuestionViewModel: ObservableObject {
         let numeracy: [Question]
         let literacy: [Question]
     }
+    
+    private let defaultNumeracyQuestions: [Question] = [
+        Question(question: "What is 15% of 200?",
+                options: ["20", "30", "25", "35"],
+                correctAnswer: "30"),
+        Question(question: "If 2x + 3 = 7, what is x?",
+                options: ["1", "2", "3", "4"],
+                correctAnswer: "2"),
+        Question(question: "What is the area of a rectangle with length 5 and width 3?",
+                options: ["15", "16", "8", "10"],
+                correctAnswer: "15"),
+        Question(question: "If a die is rolled, what’s the probability of getting a 6?",
+                options: ["1/3", "1/4", "1/6", "1/2"],
+                correctAnswer: "1/6"),
+        Question(question: "What is 3² + 4²?",
+                options: ["20", "25", "15", "10"],
+                correctAnswer: "25")
+    ]
+
+    private let defaultLiteracyQuestions: [Question] = [
+        Question(question: "Which word is a synonym for 'happy'?",
+                options: ["Sad", "Joyful", "Angry", "Tired"],
+                correctAnswer: "Joyful"),
+        Question(question: "What is the plural of 'child'?",
+                options: ["Childs", "Children", "Childes", "Child"],
+                correctAnswer: "Children"),
+        Question(question: "Which sentence is grammatically correct?",
+                options: ["She run fast", "She runs fast", "She running fast", "She runned fast"],
+                correctAnswer: "She runs fast"),
+        Question(question: "What is the opposite of 'big'?",
+                options: ["Large", "Huge", "Small", "Tall"],
+                correctAnswer: "Small"),
+        Question(question: "Which word is spelled correctly?",
+                options: ["Recieve", "Receive", "Recive", "Receeve"],
+                correctAnswer: "Receive")
+    ]
 
     func getQuestion(_ resume: String) async {
         let prompt = """
@@ -196,11 +231,6 @@ class QuestionViewModel: ObservableObject {
               "question": "Solve: If x + 5 = 12, what is the value of x?",
               "options": ["5", "6", "7", "8"],
               "correct_answer": "7"
-            },
-            {
-              "question": "Which framework is commonly used in FastAPI to define and validate request bodies?",
-              "options": ["Django", "Pydantic", "Flask", "SQLAlchemy"],
-              "correct_answer": "Pydantic"
             }
           ],
           "literacy": [
@@ -208,17 +238,12 @@ class QuestionViewModel: ObservableObject {
               "question": "Identify the correctly spelled word.",
               "options": ["Recieve", "Recieve", "Receive", "Recive"],
               "correct_answer": "Receive"
-            },
-            {
-              "question": "What is the Spanish translation for 'Hello'?",
-              "options": ["Hola", "Bonjour", "Ciao", "Hallo"],
-              "correct_answer": "Hola"
+
             }
           ]
         }
 
         Return only the JSON.  
-        Do not include any backticks—just send the JSON.
         """
 
 
@@ -228,15 +253,25 @@ class QuestionViewModel: ObservableObject {
             let response = try await model.generateContent(prompt)
             if let text = response.text, let jsonData = text.data(using: .utf8) {
                 let decodedResponse = try JSONDecoder().decode(GeneratedQuestions.self, from: jsonData)
-
+                
                 // Update questions in the main thread
                 DispatchQueue.main.async {
                     self.numeracyQuestions = decodedResponse.numeracy
                     self.literacyQuestions = decodedResponse.literacy
                 }
+            } else {
+                    // Fallback to default questions if response is invalid
+                DispatchQueue.main.async {
+                    self.numeracyQuestions = self.defaultNumeracyQuestions
+                    self.literacyQuestions = self.defaultLiteracyQuestions
+                }
             }
         } catch {
             print("Error: \(error)")
+            DispatchQueue.main.async {
+                self.numeracyQuestions = self.defaultNumeracyQuestions
+                self.literacyQuestions = self.defaultLiteracyQuestions
+            }
         }
     }
 }
