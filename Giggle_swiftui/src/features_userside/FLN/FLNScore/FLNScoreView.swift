@@ -135,6 +135,7 @@ struct FLNScoreView: View {
                 reverse()
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     func reverse() {

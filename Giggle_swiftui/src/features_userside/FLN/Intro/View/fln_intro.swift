@@ -87,6 +87,7 @@ struct FlnIntroView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

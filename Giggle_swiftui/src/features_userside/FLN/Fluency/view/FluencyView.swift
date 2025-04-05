@@ -100,7 +100,7 @@ struct FluencyView: View {
                 }
 
                 NavigationLink(
-                    destination: FLNScoreView(), isActive: $navigateToHome
+                    destination: FlnIntroView(), isActive: $navigateToHome
                 ) {
                     EmptyView()
                 }

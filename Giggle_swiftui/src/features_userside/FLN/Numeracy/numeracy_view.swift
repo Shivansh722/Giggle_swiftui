@@ -123,7 +123,7 @@ struct NumeracyView: View {
                     }
                     .disabled(selectedOption == nil)
                     .background(
-                        NavigationLink("", destination: FluencyIntroView(), isActive: $navigate)
+                        NavigationLink("", destination: FluencyScoreView(), isActive: $navigate)
                             .hidden()
                     )
                 }

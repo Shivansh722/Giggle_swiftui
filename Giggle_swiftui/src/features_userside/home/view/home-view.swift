@@ -104,7 +104,7 @@ struct HomeView: View {
                                             height: 50,
                                             cornerRadius: 6
                                         )
-                                        NavigationLink(destination: FlnIntroView(), isActive: $navigateToLiteracy) {
+                                        NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }
                                         Spacer()
