@@ -80,7 +80,7 @@ struct GigInfoView: View {
                         
                         // Job Description Section
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Job Description")
+                            Text("\(jobs["jobDescription"]!)")
                                 .font(.system(size: 20, weight: .bold, design: .default))
                                 .foregroundColor(.white)
                             Text("Sed ut perspiciatis unde omnis iste natus error sit voluptatum rem aperiam, eaque ipsa quae ab illo inventore explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.")
@@ -135,14 +135,14 @@ struct GigInfoView: View {
                                 Text("Position")
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text("Senior Designer")
+                                Text("\(jobs["position"]!)")
                                     .foregroundColor(.white)
                             }
                             HStack {
-                                Text("Qualification")
+                                Text("\(jobs["qualification"]!)")
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text("Bachelor's Degree")
+                                Text("\(jobs["experience"]!)")
                                     .foregroundColor(.white)
                             }
                             HStack {
