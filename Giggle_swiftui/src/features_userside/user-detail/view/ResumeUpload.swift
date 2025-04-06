@@ -36,6 +36,15 @@ struct ResumeUpload: View {
                     .padding(.top, 6)
                     Spacer()
                     Button(action: {
+                        Task{
+                            let resume = """
+                            Amritesh Kumar, Email: amriteshk778@gmail.com, Phone: 9158188174, GitHub: github.com/AMRITESH240304. 
+                            Education: B.Tech in CSE - Software Engineering, S.R.M Institute of Science and Technology (09/2022 – present), Chennai, India. 
+                            Skills: Development - FastAPI, Express.js, Node.js, MongoDB + VectorDB, LangChain, AWS Bedrock, CrewAI, SwiftUI, Next.js. 
+                            Programming Languages: Python, Swift, JavaScript, C++. 
+                            """
+                            FormManager.shared.formData.resume = resume
+                        }
                         navigate = true
                     }) {
                         Text("Skip")

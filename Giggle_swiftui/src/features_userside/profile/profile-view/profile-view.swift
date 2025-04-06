@@ -286,7 +286,7 @@ struct ProfileScreen: View {
                     .padding()
                 }
                 
-                NavigationLink(destination: LoginSimpleView(), isActive: $navigate) {
+                NavigationLink(destination: RegisterView(), isActive: $navigate) {
                                            EmptyView()
                                        }
             }

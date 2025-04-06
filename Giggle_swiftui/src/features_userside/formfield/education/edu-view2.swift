@@ -106,11 +106,6 @@ struct eduView2: View {
                         }
                         .padding(.horizontal, 10) // Fixed padding
                         
-                        Text("Select your completion year:")
-                            .font(.headline)
-                            .foregroundColor(Theme.onPrimaryColor)
-                            .padding(.leading, 30) // Fixed padding
-                        
                         DateViewPicker(
                             selectedDate: $completionYear,
                             title: "Completion Year",
@@ -137,7 +132,6 @@ struct eduView2: View {
                         }
                         .padding(.horizontal, 10) // Fixed padding
                         
-                        Spacer()
                         
                         NavigationLink(destination: skillView(), isActive: $navigateToskillView) {
                             EmptyView()
@@ -160,6 +154,7 @@ struct eduView2: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .center) // Center the button
                         .padding(.bottom, 20)
+                        .padding(.top,20)
                         .padding(.horizontal, 30) // Fixed padding
                     }
                     .padding(.top, 20) // Fixed padding

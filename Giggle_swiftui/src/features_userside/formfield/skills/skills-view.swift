@@ -37,7 +37,6 @@ struct skillView: View {
                     ProgressView(value: 100, total: 100)
                         .accentColor(Theme.primaryColor)
                         .padding(.horizontal, 30)
-                        .padding(.top, 20)
                     
                     // Animation
                     WebSkillHomeView(

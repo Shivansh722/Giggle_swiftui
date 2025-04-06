@@ -107,7 +107,7 @@ struct RegisterView: View {
                                         await registerUser()
                                         if viewModel.isLoggedIn {
                                             navigateToUserDetail = true
-                                            viewModel.isLoggedIn = false
+                                            
                                         } else {
                                             print("Registration failed: isLoggedIn = false") // Debug
                                         }
