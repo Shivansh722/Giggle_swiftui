@@ -183,21 +183,18 @@ struct GigInfoView: View {
                             Text("Facilities and Others")
                                 .font(.system(size: 16, weight: .bold, design: .default))
                                 .foregroundColor(.white)
-                            VStack(alignment: .leading, spacing: 4) { // Ensure leading alignment
-                                Text("• Medical")
-                                Text("• Dental")
-                                Text("• Technical Certification")
-                                Text("• Meal Allowance")
-                                Text("• Transport Allowance")
-                                Text("• Regular Hours")
-                                Text("• Work on Fridays")
+                                .frame(maxWidth:.infinity,alignment: .leading)
+                            VStack(alignment: .leading, spacing: 10) {
+                                ForEach(getFacilities(), id: \.self) { requirement in
+                                    Text("• \(requirement)")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12, weight: .regular, design: .default))
+                                        .multilineTextAlignment(.leading)
+                                }
                             }
-                            .foregroundColor(.white)
-                            .font(.system(size: 12, weight: .regular, design: .default))
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading) // Force leading alignment
                             .padding(.leading, 4)
-                            .padding(.trailing, 16)
+                            .padding(.trailing)
+                            .foregroundColor(.white)
                         }
                         .padding()
                         
@@ -258,6 +255,40 @@ struct GigInfoView: View {
     }
     private func getRequirements() -> [String] {
             guard let requirementsData = jobs["requirements"] else {
+                return ["No requirements available"]
+            }
+            
+            // Try direct string array first
+            if let requirements = requirementsData as? [String] {
+                let cleaned = requirements.map { $0.replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "") }
+                print("Cleaned direct array: \(cleaned)")
+                return cleaned
+            }
+            
+            // Handle the AnyCodable-like wrapper case
+            if let wrappedValue = String(describing: requirementsData)
+                .replacingOccurrences(of: "Optional(AnyCodable(", with: "")
+                .replacingOccurrences(of: "))", with: "")
+                .trimmingCharacters(in: CharacterSet(charactersIn: "[]")) as? String {
+                
+                // Split the string into array, handling newlines and quotes
+                let items = wrappedValue
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .map { $0.replacingOccurrences(of: "\"", with: "") }
+                    .map { $0.replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "") }
+                
+                print("Cleaned parsed items: \(items)")
+                return items.isEmpty ? ["No requirements available"] : items
+            }
+            
+            // Fallback to string conversion of entire object
+            let fallback = String(describing: requirementsData).replacingOccurrences(of: "\\n", with: "").replacingOccurrences(of: "\n", with: "")
+            print("Cleaned fallback: \(fallback)")
+            return [fallback]
+        }
+    private func getFacilities() -> [String] {
+            guard let requirementsData = jobs["facilities"] else {
                 return ["No requirements available"]
             }
             
