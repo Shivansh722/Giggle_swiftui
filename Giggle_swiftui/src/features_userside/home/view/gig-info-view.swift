@@ -51,27 +51,29 @@ struct GigInfoView: View {
                             {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .frame(width: 24, height: 24)
+                                    .frame(width: 84, height: 84)
+                                    .clipShape(Circle())
                                     .foregroundColor(.black)
                             } else {
-                                Image("mcD")  // Fallback image
+                                Image(systemName: "person.crop.circle")  // Fallback image
                                     .resizable()
-                                    .frame(width: 24, height: 24)
+                                    .frame(width: 84, height: 84)
                                     .foregroundColor(.black)
                             }
                             Text("\(jobs["job_title"]!)")
-                                .font(.title2)
+                                .font(.system(size: 16))
+                                .fontWeight(.bold)
                                 .foregroundColor(.white)
                             HStack {
-                                Text("Google")
+                                Text("\(jobs["companyName"]!)")
                                     .foregroundColor(.gray)
                                 Text("•")
                                     .foregroundColor(.gray)
-                                Text("California")
+                                Text("\(jobs["location"]!)")
                                     .foregroundColor(.gray)
                                 Text("•")
                                     .foregroundColor(.gray)
-                                Text("1 day ago")
+                                Text("2 days ago")
                                     .foregroundColor(.gray)
                             }
                             .font(.caption)
@@ -80,42 +82,48 @@ struct GigInfoView: View {
                         
                         // Job Description Section
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("jobDescription")
-                                .font(.system(size: 20, weight: .bold, design: .default))
-                                .foregroundColor(.white)
+                            HStack{
+                                Text("Job Description")
+                                    .font(.system(size: 16, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
                             Text("\(jobs["jobDescription"]!)")
                                 .foregroundColor(.white)
                                 .font(.system(size: 12, weight: .regular, design: .default))
                                 .multilineTextAlignment(.leading)
-                                .padding(.leading)
+                                .padding(.leading, 4)
                                 .padding(.trailing)
                         }
                         .padding()
                         
                         // Requirements Section
                         VStack(alignment: .leading, spacing: 10) {
-                                                    Text("Requirements")
-                                                        .font(.system(size: 20, weight: .bold, design: .default))
-                                                        .foregroundColor(.white)
-                                                    
-                                                    VStack(alignment: .leading, spacing: 10) {
-                                                        ForEach(getRequirements(), id: \.self) { requirement in
-                                                            Text("• \(requirement)")
-                                                                .foregroundColor(.white)
-                                                                .font(.system(size: 12, weight: .regular, design: .default))
-                                                                .multilineTextAlignment(.leading)
-                                                        }
-                                                    }
-                                                    .padding(.leading)
-                                                    .padding(.trailing)
-                                                }
+                            HStack{
+                                Text("Requirements")
+                                    .font(.system(size: 16, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 10) {
+                                ForEach(getRequirements(), id: \.self) { requirement in
+                                    Text("• \(requirement)")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12, weight: .regular, design: .default))
+                                        .multilineTextAlignment(.leading)
+                                }
+                            }
+                            .padding(.leading, 4)
+                            .padding(.trailing)
+                        }
                         .foregroundColor(.white)
                         .padding()
                         
                         // Location Section with MapKit
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Location")
-                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .font(.system(size: 16, weight: .bold, design: .default))
                                 .foregroundColor(.white)
                             Text("\(jobs["location"]!)")
                                 .foregroundColor(.white)
@@ -128,36 +136,44 @@ struct GigInfoView: View {
                         
                         // Informations Section
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Informations")
-                                .font(.system(size: 20, weight: .bold, design: .default))
+                            Text("Information")
+                                .font(.system(size: 16, weight: .bold, design: .default))
                                 .foregroundColor(.white)
                             HStack {
                                 Text("Position")
                                     .foregroundColor(.gray)
+                                    .font(Font.system(size: 12, weight: .bold, design: .default))
                                 Spacer()
                                 Text("\(jobs["position"]!)")
                                     .foregroundColor(.white)
+                                    .font(Font.system(size: 12, weight: .regular, design: .default))
                             }
                             HStack {
                                 Text("Qualification")
                                     .foregroundColor(.gray)
+                                    .font(Font.system(size: 12, weight: .bold, design: .default))
                                 Spacer()
                                 Text("\(jobs["qualification"]!)")
                                     .foregroundColor(.white)
+                                    .font(Font.system(size: 12, weight: .regular, design: .default))
                             }
                             HStack {
                                 Text("Experience")
                                     .foregroundColor(.gray)
+                                    .font(Font.system(size: 12, weight: .bold, design: .default))
                                 Spacer()
                                 Text("\(jobs["experience"]!)")
                                     .foregroundColor(.white)
+                                    .font(Font.system(size: 12, weight: .regular, design: .default))
                             }
                             HStack {
                                 Text("Job Type")
                                     .foregroundColor(.gray)
+                                    .font(Font.system(size: 12, weight: .bold, design: .default))
                                 Spacer()
                                 Text("\(jobs["job_type"]!)")
                                     .foregroundColor(.white)
+                                    .font(Font.system(size: 12, weight: .regular, design: .default))
                             }
                         }
                         .padding()
@@ -165,7 +181,7 @@ struct GigInfoView: View {
                         // Facilities and Others Section
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Facilities and Others")
-                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .font(.system(size: 16, weight: .bold, design: .default))
                                 .foregroundColor(.white)
                             VStack(alignment: .leading, spacing: 4) { // Ensure leading alignment
                                 Text("• Medical")

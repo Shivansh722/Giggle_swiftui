@@ -140,6 +140,12 @@ struct GigDetailsScreen: View {
     
     private let jobTypeOptions = ["Full-time", "Part-time", "Contract", "Temporary", "Internship"]
     
+    private var isFormInvalid: Bool {
+        companyName.isEmpty || jobRole.isEmpty || hoursPerWeek.isEmpty || location.isEmpty ||
+        jobDescription.isEmpty || position.isEmpty || qualification.isEmpty ||
+        experience.isEmpty || specialization.isEmpty
+    }
+    
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
@@ -161,7 +167,7 @@ struct GigDetailsScreen: View {
                     VStack(spacing: 15) {
                         Text("Basic Information")
                             .font(.headline)
-                            .fontWeight(.semibold)
+                            .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal,20)
@@ -171,32 +177,28 @@ struct GigDetailsScreen: View {
                         CustomTextField(placeholder: "Salary (Per Month)", isSecure: false, text: $hoursPerWeek, icon: "dollarsign.circle.fill")
                         CustomTextField(placeholder: "Location", isSecure: false, text: $location, icon: "map.fill")
                         Toggle("Remote Work", isOn: $isRemote)
-                            .padding(.horizontal)
+                            .padding(.horizontal, 23)
                             .foregroundColor(.white)
                         DatePicker("Posted Date", selection: $postedDate, displayedComponents: .date)
-                            .padding(.horizontal)
+                            .padding(.horizontal, 23)
                             .datePickerStyle(.compact)
                             .colorInvert()
                     }
-                    .padding(.horizontal, 60)
                     
                     // Job Details Section
                     VStack(spacing: 15) {
-                        Text("Job Details")
+                        Text("Job Description (max 60 words)")
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal,55)
+                            .padding(.horizontal, 20)
                         
                         VStack(alignment: .leading) {
-                            Text("Job Description (max 60 words)")
-                                .foregroundColor(.white)
                             TextEditor(text: $jobDescription)
                                 .foregroundColor(.white)
                                 .frame(height: 100)
-                                .frame(maxWidth: 350)
-                                .colorMultiply(.gray.opacity(0.2))
+                                .frame(maxWidth: 370)
                                 .cornerRadius(8)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
@@ -211,66 +213,75 @@ struct GigDetailsScreen: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Requirements")
+                            Text("Basic Requirements")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 20)
-                            BulletPointInput(items: $requirements, placeholder: "Add requirement")
                             CustomTextField(placeholder: "Position", isSecure: false, text: $position, icon: "person.fill")
                             CustomTextField(placeholder: "Qualification", isSecure: false, text: $qualification, icon: "graduationcap.fill")
                             CustomTextField(placeholder: "Experience", isSecure: false, text: $experience, icon: "clock.arrow.circlepath")
-                        }.padding(.horizontal, 60)
-                        
-                        
-                        
-                        HStack(alignment: .center, spacing: 10) {
-                            Text("Job Type")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                            
-                            
-                            Picker("Job Type", selection: $jobType) {
-                                ForEach(jobTypeOptions, id: \.self) { option in
-                                    Text(option)
+                            CustomTextField(placeholder: "Specialization", isSecure: false, text: $specialization, icon: "star.fill")
+
+                            HStack(alignment: .center, spacing: 10) {
+                                Text("Job Type")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                                
+                                
+                                Picker("Job Type", selection: $jobType) {
+                                    ForEach(jobTypeOptions, id: \.self) { option in
+                                        Text(option)
+                                    }
                                 }
+                                .pickerStyle(MenuPickerStyle())
+                                .accentColor(.white)
+                                .padding(8)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(8)
                             }
-                            .pickerStyle(MenuPickerStyle())
-                            .accentColor(.white)
-                            .padding(8)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                            VStack {
+                                Text("Other Requirements")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.white)
+                                BulletPointInput(items: $requirements, placeholder: "Add requirement")
+                            }
+                            .padding(.horizontal, 20)
                         }
                         
+                        
+                        
                         VStack(alignment: .leading) {
-                            CustomTextField(placeholder: "Specialization", isSecure: false, text: $specialization, icon: "star.fill")
                             Text("Facilities")
                                 .font(.headline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                             BulletPointInput(items: $facilities, placeholder: "Add facility")
                         }
-                        .padding(.horizontal,60)
+                        .padding(.horizontal, 20)
                     }
-                    .padding(.horizontal, 20)
                     
                     // Buttons
                     HStack(spacing: 10) {
                         CustomButton(
                             title: "Cancel",
-                            backgroundColor: Theme.primaryColor,
+                            backgroundColor: .clear,
                             action: { dismiss() },
-                            width: nil,
+                            width: 150,
                             height: 60,
                             cornerRadius: 10,
-                            hasStroke: false
+                            hasStroke: true
                         )
-                        .frame(maxWidth: .infinity)
                         
                         CustomButton(
                             title: "Save Gig",
-                            backgroundColor: .clear,
+                            backgroundColor: isFormInvalid ? Color.gray : Theme.primaryColor,
                             action: {
                                 let newGig = Gig(
                                     companyName: companyName,
@@ -319,15 +330,13 @@ struct GigDetailsScreen: View {
                                 
                                 dismiss()
                             },
-                            width: nil,
+                            width: 150,
                             height: 60,
                             cornerRadius: 10,
-                            hasStroke: true
+                            hasStroke: false
                         )
-                        .frame(maxWidth: .infinity)
-                        .disabled(companyName.isEmpty || jobRole.isEmpty || hoursPerWeek.isEmpty || location.isEmpty)
+                        .disabled(isFormInvalid)
                     }
-                    .padding(.horizontal, 20)
                 }
             }
         }

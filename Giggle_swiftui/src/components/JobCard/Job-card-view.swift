@@ -19,9 +19,6 @@ struct JobCardView: View {
                         // Logo and Text
                         HStack(spacing: 12) {
                             ZStack {
-                                Circle()
-                                    .fill(Color.purple.opacity(0.2))
-                                    .frame(width: 48, height: 48)
 
                                 if isLoadingImage {
                                     ProgressView()
@@ -32,12 +29,15 @@ struct JobCardView: View {
                                 {
                                     Image(uiImage: uiImage)
                                         .resizable()
-                                        .frame(width: 24, height: 24)
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
                                         .foregroundColor(.black)
+                                        .scaledToFill()
                                 } else {
-                                    Image("mcD")  // Fallback image
+                                    Image(systemName: "person.crop.circle")  // Fallback image
                                         .resizable()
-                                        .frame(width: 24, height: 24)
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
                                         .foregroundColor(.black)
                                 }
                             }

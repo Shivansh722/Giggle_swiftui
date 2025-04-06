@@ -49,8 +49,7 @@ struct edit_profile_view: View {
                                         .clipShape(Circle())
                                         .shadow(radius: 5)
                                 } else {
-                                    Image("face-id")  // Default image
-                                        .resizable()
+                                    Image(systemName: "person.crop.circle")
                                         .scaledToFill()
                                         .frame(width: 110, height: 110)
                                         .clipShape(Circle())
@@ -170,10 +169,6 @@ struct edit_profile_view: View {
                                     .padding(.top, 8)
                                     
                                     VStack(alignment: .leading, spacing: 8) {
-                                        Text("Select Start and End Dates")
-                                            .font(.title3)
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(Theme.onPrimaryColor)
                                         
                                         // Start Date Picker
                                         VStack(alignment: .leading, spacing: 4) {
@@ -233,29 +228,29 @@ struct edit_profile_view: View {
                                     }
                                     .padding(.horizontal)
                                     
-                                    Button("Save Experience") {
-                                        let startDate = "\(months[startMonth]) \(startYear)"
-                                        let endDate = "\(months[endMonth]) \(endYear)"
-                                        let experience = Experience(
-                                            position: position,
-                                            companyName: companyName,
-                                            location: companyBranch,
-                                            startDate: startDate,
-                                            endDate: endDate
-                                        )
-                                        ExperienceStore.shared.addExperience(experience)
-                                        
-                                        // Reset fields after saving
-                                        companyName = ""
-                                        position = ""
-                                        companyBranch = ""
-                                        startMonth = 0
-                                        endMonth = 0
-                                        startYear = Calendar.current.component(.year, from: Date())
-                                        endYear = startYear
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+//                                    Button("Save Experience") {
+//                                        let startDate = "\(months[startMonth]) \(startYear)"
+//                                        let endDate = "\(months[endMonth]) \(endYear)"
+//                                        let experience = Experience(
+//                                            position: position,
+//                                            companyName: companyName,
+//                                            location: companyBranch,
+//                                            startDate: startDate,
+//                                            endDate: endDate
+//                                        )
+//                                        ExperienceStore.shared.addExperience(experience)
+//                                        
+//                                        // Reset fields after saving
+//                                        companyName = ""
+//                                        position = ""
+//                                        companyBranch = ""
+//                                        startMonth = 0
+//                                        endMonth = 0
+//                                        startYear = Calendar.current.component(.year, from: Date())
+//                                        endYear = startYear
+//                        }
+//                        .padding(.horizontal)
+//                        .padding(.top, 8)
                         CustomButton(
                             title: "SAVE",
                             backgroundColor: Theme.primaryColor,
@@ -264,6 +259,25 @@ struct edit_profile_view: View {
                                     await nameChanges()
                                     await bioChanges()
                                 }
+                                let startDate = "\(months[startMonth]) \(startYear)"
+                                let endDate = "\(months[endMonth]) \(endYear)"
+                                let experience = Experience(
+                                    position: position,
+                                    companyName: companyName,
+                                    location: companyBranch,
+                                    startDate: startDate,
+                                    endDate: endDate
+                                )
+                                ExperienceStore.shared.addExperience(experience)
+                                
+                                // Reset fields after saving
+                                companyName = ""
+                                position = ""
+                                companyBranch = ""
+                                startMonth = 0
+                                endMonth = 0
+                                startYear = Calendar.current.component(.year, from: Date())
+                                endYear = startYear
                             },
                             width: geometry.size.width * 0.8,
                             height: 50,

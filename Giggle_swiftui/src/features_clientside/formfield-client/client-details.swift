@@ -147,7 +147,7 @@ struct ClientInfoView: View {
                             Text("Work Trait")
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
-                            Picker("Work Trait", selection: $selectedWorkTrait) {
+                            Picker("Work Type", selection: $selectedWorkTrait) {
                                 ForEach(workTraits, id: \.self) { trait in
                                     Text(trait)
                                 }
@@ -169,7 +169,7 @@ struct ClientInfoView: View {
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
+                                .background(Theme.primaryColor)
                                 .cornerRadius(10)
                         }
                         .padding(.horizontal, 20)

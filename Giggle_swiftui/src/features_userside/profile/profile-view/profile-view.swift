@@ -85,7 +85,7 @@ struct ProfileScreen: View {
                                         .clipShape(Circle())
                                         .shadow(radius: 5)
                                 } else {
-                                    Image("face-id")
+                                    Image(systemName: "person.crop.circle")
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: 110, height: 110)
@@ -107,18 +107,20 @@ struct ProfileScreen: View {
                         HStack(spacing: geometry.size.width / 6) {
                             StatView(title: jobApplied, subtitle: "Applied")
                             StatView(title: GiggleGrade, subtitle: "Giggle Grade")
-                            StatView(title: endorsed, subtitle: "Endorses")
                         }
                         .padding()
-                        .padding(.top, 16)
+                        .padding(.top, 4)
                         .background(Theme.backgroundColor)
 
                         // Biography Section
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Biography")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .foregroundColor(Theme.onPrimaryColor)
+                            HStack {
+                                Text("Biography")
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                Spacer()
+                            }
 
                             Text(
                                 bioGraphy
@@ -188,7 +190,6 @@ struct ProfileScreen: View {
                         .padding()
                         .background(Color(hex: "343434").opacity(0.6))
                         .cornerRadius(10)
-                        .padding(.horizontal)
                         .padding(.top, 8)
 
                         // Experience Section
@@ -243,7 +244,6 @@ struct ProfileScreen: View {
                             .background(Color(hex: "343434").opacity(0.6))
                             .cornerRadius(10)
                         }
-                        .padding(.horizontal)
                         .padding(.top, 8)
 
                         // Portfolio Section
