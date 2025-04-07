@@ -134,11 +134,13 @@ struct GigDetailsScreen: View {
     @State private var experience = ""
     @State private var jobType = "Full-time"
     @State private var specialization = ""
+    @State private var grade: String = "G+"
     @State private var facilities: [String] = []
     
     @Environment(\.dismiss) var dismiss
     
     private let jobTypeOptions = ["Full-time", "Part-time", "Contract", "Temporary", "Internship"]
+    private let gigleGradeOptions = ["G+", "G-", "G", "N"]
     
     private var isFormInvalid: Bool {
         companyName.isEmpty || jobRole.isEmpty || hoursPerWeek.isEmpty || location.isEmpty ||
@@ -196,7 +198,7 @@ struct GigDetailsScreen: View {
                         
                         VStack(alignment: .leading) {
                             TextEditor(text: $jobDescription)
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                                 .frame(height: 100)
                                 .frame(maxWidth: 370)
                                 .cornerRadius(8)
@@ -234,6 +236,27 @@ struct GigDetailsScreen: View {
                                 
                                 Picker("Job Type", selection: $jobType) {
                                     ForEach(jobTypeOptions, id: \.self) { option in
+                                        Text(option)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .accentColor(.white)
+                                .padding(8)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(8)
+                            }
+                            .padding(.horizontal, 20)
+                            HStack(alignment: .center, spacing: 10) {
+                                Text("Required Giggle Grade")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                
+                                Spacer()
+                                
+                                
+                                Picker("Required Gigle Grade", selection:  $grade) {
+                                    ForEach(gigleGradeOptions, id: \.self) { option in
                                         Text(option)
                                     }
                                 }
@@ -316,7 +339,7 @@ struct GigDetailsScreen: View {
                                 JobFormManager.shared.formData.experience = experience
                                 JobFormManager.shared.formData.facilities = facilities
                                 JobFormManager.shared.formData.requirements = requirements
-                                
+                                JobFormManager.shared.formData.giggleGrade = grade
                                 
                                 // Post job asynchronously
                                 Task {

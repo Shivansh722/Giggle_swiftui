@@ -83,6 +83,21 @@ struct GigInfoView: View {
                         // Job Description Section
                         VStack(alignment: .leading, spacing: 10) {
                             HStack{
+                                Text("Required Giggle Grade")
+                                    .font(.system(size: 16, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            Text("\(jobs["giggle_grade"]!)")
+                                .foregroundColor(.white)
+                                .font(.system(size: 12, weight: .regular, design: .default))
+                                .multilineTextAlignment(.leading)
+                                .padding(.leading, 4)
+                                .padding(.trailing)
+                        }
+                        .padding()
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack{
                                 Text("Job Description")
                                     .font(.system(size: 16, weight: .bold, design: .default))
                                     .foregroundColor(.white)

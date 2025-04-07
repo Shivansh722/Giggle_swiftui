@@ -191,4 +191,42 @@ class JobPost: ObservableObject {
         }
         
     }
+    
+//    func fetchUserPostedJobs() async throws{
+//        let userDefaults = UserDefaults.standard
+//        let storedUserId = userDefaults.string(forKey: "userID")
+//        do {
+//            let documentList = try await database.listDocuments(
+//                databaseId: databaseID,
+//                collectionId: posted_job
+//            )
+//            
+//            var jobPosts: [[String: Any]] = []
+//            var jobPosts2: [GetJobPostTest] = []
+//            
+//            for document in documentList.documents {
+//                var data = document.data as [String: Any]
+//                let jobTitle = String(describing: data["job_title"] ?? "")
+//                data["job_title"] = jobTitle
+//                data["$id"] = document.id
+//                jobPosts.append(data)
+//                
+//                let jobTitle2 = GetJobPostTest(jobTitle: jobTitle, companyName: "")
+//                jobPosts2.append(jobTitle2)
+//            }
+//            
+//            // Store globally - ensure this runs on main thread
+//            await MainActor.run {
+//                JobTitleManager.shared.jobPosts = jobPosts2
+//            }
+//            
+//            print("Job Posts2: \(jobPosts2)")
+//            print("Job Posts: \(jobPosts)")
+//            return jobPosts
+//            
+//        } catch {
+//            print("Error fetching documents: \(error)")
+//            throw error
+//        }
+//    }
 }
