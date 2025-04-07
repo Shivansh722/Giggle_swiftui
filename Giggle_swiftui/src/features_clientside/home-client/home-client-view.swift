@@ -81,7 +81,7 @@ struct HomeClientView: View {
                     VStack(spacing: 10) {
                         // Display newly added gigs
                         ForEach(gigManager.gigs) { gig in
-                            JobCardView(jobs: [
+                            JobCardView2(jobs: [
                                 "$id": gig.id.uuidString,
                                 "job_title": gig.jobRole,
                                 "companyName": gig.companyName,

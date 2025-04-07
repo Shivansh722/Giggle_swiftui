@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct JobCardView: View {
+struct JobCardView2: View {
     let jobs: [String: Any]
     let flnID: String?
     @StateObject var fetchImage = JobPost(appService: AppService())
@@ -9,9 +9,6 @@ struct JobCardView: View {
     @State private var imageError: String?
 
     var body: some View {
-        NavigationLink(
-            destination: GigInfoView(fln: flnID ?? nil,jobId: "\(jobs["$id"]!)", jobs: jobs,base64Image:base64Image)
-        ) {
             VStack {
                 // Card View
                 VStack(spacing: 16) {
@@ -128,12 +125,11 @@ struct JobCardView: View {
                     }
                 }
             }
-        }
         .buttonStyle(PlainButtonStyle())
     }
 }
 
-struct JobDetailView: View {
+struct JobDetailViewClient: View {
     let jobId: String
     let jobs: [String: Any]
 

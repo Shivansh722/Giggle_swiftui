@@ -97,7 +97,7 @@ struct FluencyScoreView: View {
                                         .foregroundColor(.white.opacity(0.7))
                                         .font(.subheadline)
                                     Spacer()
-                                    Text("\(Int(category.percentage * 100))%")
+                                    Text("\(Int(category.percentage))%")
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                 }
