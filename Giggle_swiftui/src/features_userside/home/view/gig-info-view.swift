@@ -32,10 +32,12 @@ struct MapView: UIViewRepresentable {
 struct GigInfoView: View {
     // State to control the alert
     @State private var showAppliedAlert = false
+    let fln:String?
     let jobId: String
     let jobs:[String: Any]
     var base64Image: String?
     @State var isApplied: Bool = false
+    @State var flnapply:Bool = true
     @StateObject var checkApplied = SaveUserInfo(appService: AppService())
     
     var body: some View {
@@ -221,21 +223,41 @@ struct GigInfoView: View {
                         .background(Color.white.opacity(0.3))
 
                     HStack {
-                        CustomButton(
-                            title: isApplied ? "APPLIED" : "APPLY NOW",
-                            backgroundColor: isApplied ? Color.gray : Theme.primaryColor,
-                            action: {
-                                Task {
-                                    try await JobPost(appService: AppService()).applyJob(jobId)
-                                }
-                                isApplied = true
-                                showAppliedAlert = true
-                            },
-                            width: 283,
-                            height: 50,
-                            cornerRadius: 6
-                        )
-                        .disabled(isApplied)
+                        if fln == nil{
+                            CustomButton(
+                                title: "Please give FLN to Apply",
+                                backgroundColor: Color.gray,
+                                action: {
+                                    Task {
+                                        try await JobPost(appService: AppService()).applyJob(jobId)
+                                    }
+                                    isApplied = true
+                                    showAppliedAlert = true
+                                },
+                                width: 283,
+                                height: 50,
+                                cornerRadius: 6
+                            )
+                            .disabled(flnapply)
+                        }
+                        else{
+                            CustomButton(
+                                title: isApplied ? "APPLIED" : "APPLY NOW",
+                                backgroundColor: isApplied ? Color.gray : Theme.primaryColor,
+                                action: {
+                                    Task {
+                                        try await JobPost(appService: AppService()).applyJob(jobId)
+                                    }
+                                    isApplied = true
+                                    showAppliedAlert = true
+                                },
+                                width: 283,
+                                height: 50,
+                                cornerRadius: 6
+                            )
+                            .disabled(isApplied)
+                        }
+                        
                     }
                     .padding()
                 }
