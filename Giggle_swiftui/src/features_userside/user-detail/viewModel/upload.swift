@@ -83,7 +83,7 @@ class ResumeUploadManager: ObservableObject {
 
             DispatchQueue.main.async {
                 self.selectedResumes.removeAll()
-                self.isProcessingUpload = false
+                
             }
         }
     }
@@ -200,6 +200,7 @@ class ResumeUploadManager: ObservableObject {
                 userDetailAutoView.storeResumeToUserDefaults(jsonString: generatedText)
                 DispatchQueue.main.async {
                     UserPreference.shared.shouldLoadUserDetailsAutomatically = true
+                    self.isProcessingUpload = false
                     self.navigationTrigger = true
                 }
             }

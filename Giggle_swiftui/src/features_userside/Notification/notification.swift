@@ -35,7 +35,7 @@ struct NotificationScreen: View {
                             .fontWeight(.bold)
                             .foregroundColor(Theme.primaryColor)
                         
-                        Text("Notifications")
+                        Text("Notifications🔔")
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(Theme.onPrimaryColor)

@@ -28,22 +28,22 @@ struct ClientOnboardingView: View {
                 
                 VStack(spacing: 20) {
                     FeatureItem(
-                        icon: "local",
+                        emoji: "📍",
                         text: selectedRole == .user ? "Find gigs easily near you" : "Find employees near you",
                         delay: 0.3
                     )
                     FeatureItem(
-                        icon: "Pass Fail",
+                        emoji: "📘",
                         text: selectedRole == .user ? "Prove your skills through FLN assessment" : "Giggle graded employees",
                         delay: 0.4
                     )
                     FeatureItem(
-                        icon: "Marked assignment papers",
+                        emoji: "💯",
                         text: selectedRole == .user ? "Get a Giggle grading and stand out from others" : "Find the best fit for the Gig",
                         delay: 0.5
                     )
                     FeatureItem(
-                        icon: "Request Money",
+                        emoji: "💵",
                         text: selectedRole == .user ? "Earn a respectable income" : "Reach out and get set",
                         delay: 0.6
                     )
@@ -97,14 +97,12 @@ struct ClientOnboardingView: View {
 }
 
 struct FeatureOnboardItem: View {
-    let icon: String
+    let emoji: String
     let text: String
     
     var body: some View {
         HStack {
-            Image(icon)
-                .resizable()
-                .frame(width: 24, height: 24)
+            Text(emoji)
             Text(text)
                 .foregroundColor(.white)
             Spacer()
