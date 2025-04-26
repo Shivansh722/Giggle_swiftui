@@ -22,22 +22,34 @@ class ChooseViewModel:ObservableObject{
 struct FeatureItem: View {
     let icon: String
     let text: String
-
+    let delay: Double
+    @State private var isVisible = false
+    
     var body: some View {
-        HStack(spacing:40) {
+        HStack(spacing: 40) {
             Image(icon)
                 .resizable()
                 .font(.title2)
                 .foregroundColor(.red)
-                .frame(width: 28,height: 36)
+                .frame(width: 28, height: 36)
+                .opacity(isVisible ? 1 : 0)
+                .offset(x: isVisible ? 0 : -20)
+                .animation(.easeOut(duration: 0.5).delay(delay), value: isVisible)
+            
             Text(text)
                 .foregroundColor(.white)
                 .bold()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+                .opacity(isVisible ? 1 : 0)
+                .offset(x: isVisible ? 0 : 20)
+                .animation(.easeOut(duration: 0.5).delay(delay + 0.1), value: isVisible)
         }
-        .padding([.leading,.trailing],60)
-        
+        .padding([.leading, .trailing], 60)
+        .onAppear {
+            withAnimation {
+                isVisible = true
+            }
+        }
     }
 }
 

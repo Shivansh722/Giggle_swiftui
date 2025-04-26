@@ -10,6 +10,7 @@ import SwiftUI
 struct ClientOnboardingView: View {
     var selectedRole: ChooseViewModel.Role?
     @State private var navigate: Bool = false
+    @State private var isAnimating = false
     
     var body: some View {
         ZStack {
@@ -21,25 +22,34 @@ struct ClientOnboardingView: View {
                     .frame(width: 200, height: 120)
                     .padding(.top, 60)
                     .padding(.bottom, 80)
+                    .opacity(isAnimating ? 1 : 0)
+                    .offset(y: isAnimating ? 0 : -20)
+                    .animation(.easeOut(duration: 0.8).delay(0.2), value: isAnimating)
                 
                 VStack(spacing: 20) {
                     FeatureItem(
                         icon: "local",
-                        text: selectedRole == .user ? "Find gigs easily near you" : "Find employees near you"
+                        text: selectedRole == .user ? "Find gigs easily near you" : "Find employees near you",
+                        delay: 0.3
                     )
                     FeatureItem(
                         icon: "Pass Fail",
-                        text: selectedRole == .user ? "Prove your skills through FLN assessment" : "Giggle graded employees"
+                        text: selectedRole == .user ? "Prove your skills through FLN assessment" : "Giggle graded employees",
+                        delay: 0.4
                     )
                     FeatureItem(
                         icon: "Marked assignment papers",
-                        text: selectedRole == .user ? "Get a Giggle grading and stand out from others" : "Find the best fit for the Gig"
+                        text: selectedRole == .user ? "Get a Giggle grading and stand out from others" : "Find the best fit for the Gig",
+                        delay: 0.5
                     )
                     FeatureItem(
                         icon: "Request Money",
-                        text: selectedRole == .user ? "Earn a respectable income" : "Reach out and get set"
+                        text: selectedRole == .user ? "Earn a respectable income" : "Reach out and get set",
+                        delay: 0.6
                     )
                 }
+                .opacity(isAnimating ? 1 : 0)
+                .offset(y: isAnimating ? 0 : 20)
                 
                 Spacer()
                 
@@ -56,6 +66,9 @@ struct ClientOnboardingView: View {
                 .background(Color(Theme.primaryColor))
                 .cornerRadius(8)
                 .padding()
+                .opacity(isAnimating ? 1 : 0)
+                .offset(y: isAnimating ? 0 : 20)
+                .animation(.easeOut(duration: 0.8).delay(0.7), value: isAnimating)
                 
                 if selectedRole == .user {
                     NavigationLink(
@@ -74,8 +87,12 @@ struct ClientOnboardingView: View {
                 }
             }
         }
-        .tint(Theme.primaryColor) // Customize back button color (iOS 16+)
-        // .accentColor(Theme.primaryColor) // Use this for iOS 15 and earlier
+        .tint(Theme.primaryColor)
+        .onAppear {
+            withAnimation {
+                isAnimating = true
+            }
+        }
     }
 }
 

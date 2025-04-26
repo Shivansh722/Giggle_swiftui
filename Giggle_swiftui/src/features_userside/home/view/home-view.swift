@@ -116,6 +116,7 @@ struct HomeView: View {
                                             height: 50,
                                             cornerRadius: 6
                                         )
+
                                         NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
                                             EmptyView()
                                         }
