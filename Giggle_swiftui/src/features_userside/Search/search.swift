@@ -1,10 +1,3 @@
-//
-//  search.swift
-//  Giggle_swiftui
-//
-//  Created by user@91 on 26/04/25.
-//
-
 // SearchScreen.swift
 import SwiftUI
 
@@ -19,17 +12,33 @@ struct SearchScreen: View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
             VStack(spacing: 20) {
-                ZStack(alignment: .leading) {
-                    Text("Search Gigs")
+                // Header with two-color text in a single row
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Search")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(Theme.primaryColor)
+                    
+                    Text("Gigs")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(Theme.onPrimaryColor)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer()
                 }
-                .padding(.leading, 16)
+                .padding(.top, 8)
+                .padding(.horizontal, 16)
                 
-                CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
+                // Search field
+                CustomTextField(
+                    placeholder: "Search by job title...",
+                    isSecure: false,
+                    text: $searchText,
+                    icon: "magnifyingglass"
+                )
+                .padding(.horizontal, 16)
                 
+                // Results
                 ScrollView {
                     if filteredJobs.isEmpty && !searchText.isEmpty {
                         Text("No jobs found matching '\(searchText)'")
@@ -38,7 +47,7 @@ struct SearchScreen: View {
                     } else {
                         ForEach(filteredJobs.indices, id: \.self) { index in
                             JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                .padding(.horizontal)
+                                .padding(.horizontal, 16)
                                 .padding(.bottom, 10)
                                 .onAppear {
                                     print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
@@ -47,6 +56,7 @@ struct SearchScreen: View {
                     }
                 }
             }
+            .padding(.top, 20)
         }
         .onAppear {
             filteredJobs = jobresult
