@@ -41,11 +41,15 @@ struct LiteracyView: View {
                 if !viewModel.literacyQuestions.isEmpty {
                     let currentQuestion = viewModel.literacyQuestions[currentQuestionIndex]
                     
-                    Text(currentQuestion.question)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
+                    HStack{
+                        Text(currentQuestion.question)
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                        Spacer()
+                    }
+                    .padding(.horizontal)
                     
                     // Options List
                     VStack {

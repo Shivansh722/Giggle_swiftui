@@ -32,6 +32,7 @@ struct OnboardingView: View {
                         text: "Show off your skills",
                         delay: 0.3
                     )
+
                     FeatureItem(
                         emoji: "💵",
                         text: "Earn money and have experience",
@@ -41,6 +42,15 @@ struct OnboardingView: View {
                         emoji: "🤹‍♂️",
                         text: "Join community of go-getters",
                         delay: 0.3
+
+                    Feature1OnboardItem(
+                        icon: "Request Money",
+                        text: "Earn money while building real-world experience"
+                    )
+                    Feature1OnboardItem(
+                        icon: "Marked assignment papers",
+                        text: "Join a community of go-getters like you"
+
                     )
                 }
                 

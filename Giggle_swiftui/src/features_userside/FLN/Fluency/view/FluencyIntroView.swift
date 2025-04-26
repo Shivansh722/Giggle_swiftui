@@ -46,7 +46,7 @@ struct FluencyIntroView: View {
                         .font(.title)
                         .bold()
                         .foregroundColor(Theme.tertiaryColor)
-                        .padding(.top, 40)
+                        .padding(.top, 20)
                     Spacer()
                 }
                 .padding(.leading, 20)
