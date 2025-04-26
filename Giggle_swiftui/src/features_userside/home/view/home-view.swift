@@ -11,7 +11,7 @@ struct HomeView: View {
     @State private var updatedAt: String? = nil
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
-    @State private var GiggleGrade:String? = ""
+    @State private var GiggleGrade: String? = ""
     @State private var jobresult: [[String: Any]] = []
     @State private var searchText: String = ""
     @State private var filteredJobs: [[String: Any]] = []
@@ -33,7 +33,7 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
-            GeometryReader { geometry in
+            
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                     VStack {
@@ -68,75 +68,74 @@ struct HomeView: View {
                             }
                         }
                         Spacer()
-
-                        ZStack {
-                            if isLoading || flnID == nil {
-                                Image("desk")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width, height: geometry.size.height / 2)
-                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
+                        
+                        ScrollView{
+                            ZStack {
+                                if isLoading || flnID == nil {
+                                    Image("desk")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(maxWidth: .infinity, maxHeight: 300)
+                                }
+                                
+                                VStack {
+                                    if isLoading {
+                                        ProgressView()
+                                            .onAppear {
+                                                Task {
+                                                    await fetchFlnID()
+                                                }
+                                            }
+                                    } else if flnID == nil {
+                                        VStack(spacing: 16) {
+                                            Text("Take FLN")
+                                                .font(.headline)
+                                                .foregroundColor(Theme.secondaryColor)
+                                            Text("To start applying for gigs you need to take the FLN test first.")
+                                                .font(.system(size: 16))
+                                                .foregroundColor(Theme.tertiaryColor)
+                                                .multilineTextAlignment(.center)
+                                                .padding(.horizontal, 24)
+                                            CustomButton(
+                                                title: "NEXT",
+                                                backgroundColor: Theme.primaryColor,
+                                                action: { navigateToLiteracy = true },
+                                                width: 200,
+                                                height: 50,
+                                                cornerRadius: 6
+                                            )
+                                            NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
+                                                EmptyView()
+                                            }
+                                            Spacer()
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.top, 5)
+                                    } else {
+                                        FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
+                                        
+                                    }
+                                }
+                                
                             }
                             
-                            VStack {
-                                if isLoading {
-                                    ProgressView()
-                                        .onAppear {
-                                            Task {
-                                                await fetchFlnID()
-                                            }
-                                        }
-                                } else if flnID == nil {
-                                    VStack(spacing: 16) {
-                                        Text("Take FLN")
-                                            .font(.headline)
-                                            .foregroundColor(Theme.secondaryColor)
-                                        Text("To start applying for gigs you need to take the FLN test first.")
-                                            .font(.system(size: 16))
-                                            .foregroundColor(Theme.tertiaryColor)
-                                            .multilineTextAlignment(.center)
-                                            .padding(.horizontal, 24)
-                                        CustomButton(
-                                            title: "NEXT",
-                                            backgroundColor: Theme.primaryColor,
-                                            action: { navigateToLiteracy = true },
-                                            width: 200,
-                                            height: 50,
-                                            cornerRadius: 6
-                                        )
-                                        NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
-                                            EmptyView()
-                                        }
-                                        Spacer()
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.top, 5)
-                                } else {
-                                    FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
-                                        .padding(.bottom, 170)
-                                }
-                            }
-                        }
-
-                        VStack {
+                            
                             Text("Recommendations")
                                 .font(.system(size: 24))
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.onPrimaryColor)
-                                .padding(.horizontal, geometry.size.width * -0.45)
-                                .padding(.top, 40)
-                            ScrollView {
-                                ForEach(jobresult.indices, id: \.self) { index in
-                                    JobCardView(jobs: jobresult[index], flnID: flnID)
-                                }
-                            }.padding(.top, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal)
+                            
+                            ForEach(jobresult.indices, id: \.self) { index in
+                                JobCardView(jobs: jobresult[index], flnID: flnID)
+                            }
                         }
-                        .padding(.top, flnID != nil ? 20 : 40)
-                        .padding(.top, geometry.size.height * -0.3)
+                        
+                        
                     }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
-            }
+            
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
@@ -154,39 +153,36 @@ struct HomeView: View {
                 }
             }
             
-            GeometryReader { geometry in
-                ZStack {
-                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack(spacing: 20) {
-                        ZStack(alignment: .leading) {
-                            Text("Search Gigs")
-                                .font(.title)
-                                .fontWeight(.bold)
+            ZStack {
+                Theme.backgroundColor.edgesIgnoringSafeArea(.all)
+                VStack(spacing: 20) {
+                    ZStack(alignment: .leading) {
+                        Text("Search Gigs")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.onPrimaryColor)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(.leading, 16)
+                    
+                    CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
+                    
+                    ScrollView {
+                        if filteredJobs.isEmpty && !searchText.isEmpty {
+                            Text("No jobs found matching '\(searchText)'")
                                 .foregroundColor(Theme.onPrimaryColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding(.leading, 16)
-                        
-                        CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
-                        
-                        ScrollView {
-                            if filteredJobs.isEmpty && !searchText.isEmpty {
-                                Text("No jobs found matching '\(searchText)'")
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding()
-                            } else {
-                                ForEach(filteredJobs.indices, id: \.self) { index in
-                                    JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                        .padding(.horizontal)
-                                        .padding(.bottom, 10)
-                                        .onAppear {
-                                            print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
-                                        }
-                                }
+                                .padding()
+                        } else {
+                            ForEach(filteredJobs.indices, id: \.self) { index in
+                                JobCardView(jobs: filteredJobs[index], flnID: flnID)
+                                    .padding(.horizontal)
+                                    .padding(.bottom, 10)
+                                    .onAppear {
+                                        print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
+                                    }
                             }
                         }
                     }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
             }
             .tabItem {
@@ -201,10 +197,8 @@ struct HomeView: View {
                 filterJobs(searchText: newValue) // Trigger filtering on search text change
             }
             
-            GeometryReader { geometry in
-                ZStack {
-                    NotificationScreen(jobs:jobresult)
-                }
+            ZStack {
+                NotificationScreen(jobs: jobresult)
             }
             .tabItem {
                 Image(systemName: "bell.fill")
@@ -221,7 +215,7 @@ struct HomeView: View {
 
     func fetchFlnID() async {
         flnID = await flnInfo.getFlnInfo()
-        (updatedAt,GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
+        (updatedAt, GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
         isLoading = false
     }
     
@@ -287,7 +281,7 @@ struct FLNGradeCardView: View {
             }
             .padding()
         }
-        .frame(width: .infinity, height: 150)
+        .frame(maxWidth: .infinity, maxHeight: 160)
         .padding(.horizontal)
     }
 }
