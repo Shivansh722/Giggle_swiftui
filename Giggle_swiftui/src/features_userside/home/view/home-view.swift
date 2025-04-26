@@ -39,7 +39,7 @@ struct HomeView: View {
                     VStack {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Hi")
+                                Text("Hi🙋‍♂️")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.primaryColor)
@@ -68,71 +68,70 @@ struct HomeView: View {
                             }
                         }
                         Spacer()
-
-                        ZStack {
-                            if isLoading || flnID == nil {
-                                Image("desk")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width, height: geometry.size.height / 2)
-                                    .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
+                        ScrollView{
+                            ZStack {
+                                if isLoading || flnID == nil {
+                                    Image("desk")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: geometry.size.width, height: geometry.size.height / 2)
+                                        .position(x: geometry.size.width / 2, y: geometry.size.height / 8)
+                                }
+                                
+                                VStack {
+                                    if isLoading {
+                                        ProgressView()
+                                            .onAppear {
+                                                Task {
+                                                    await fetchFlnID()
+                                                }
+                                            }
+                                    } else if flnID == nil {
+                                        VStack(spacing: 16) {
+                                            Text("Take FLN")
+                                                .font(.headline)
+                                                .foregroundColor(Theme.secondaryColor)
+                                            Text("To start applying for gigs you need to take the FLN test first.")
+                                                .font(.system(size: 16))
+                                                .foregroundColor(Theme.tertiaryColor)
+                                                .multilineTextAlignment(.center)
+                                                .padding(.horizontal, 24)
+                                            CustomButton(
+                                                title: "NEXT",
+                                                backgroundColor: Theme.primaryColor,
+                                                action: { navigateToLiteracy = true },
+                                                width: 200,
+                                                height: 50,
+                                                cornerRadius: 6
+                                            )
+                                            NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
+                                                EmptyView()
+                                            }
+                                            Spacer()
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.top, 5)
+                                    } else {
+                                        FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
+                                            .padding(.bottom, 170)
+                                    }
+                                }
                             }
                             
                             VStack {
-                                if isLoading {
-                                    ProgressView()
-                                        .onAppear {
-                                            Task {
-                                                await fetchFlnID()
-                                            }
-                                        }
-                                } else if flnID == nil {
-                                    VStack(spacing: 16) {
-                                        Text("Take FLN")
-                                            .font(.headline)
-                                            .foregroundColor(Theme.secondaryColor)
-                                        Text("To start applying for gigs you need to take the FLN test first.")
-                                            .font(.system(size: 16))
-                                            .foregroundColor(Theme.tertiaryColor)
-                                            .multilineTextAlignment(.center)
-                                            .padding(.horizontal, 24)
-                                        CustomButton(
-                                            title: "NEXT",
-                                            backgroundColor: Theme.primaryColor,
-                                            action: { navigateToLiteracy = true },
-                                            width: 200,
-                                            height: 50,
-                                            cornerRadius: 6
-                                        )
-                                        NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
-                                            EmptyView()
-                                        }
-                                        Spacer()
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.top, 5)
-                                } else {
-                                    FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
-                                        .padding(.bottom, 170)
-                                }
-                            }
-                        }
-
-                        VStack {
-                            Text("Recommendations")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .padding(.horizontal, geometry.size.width * -0.45)
-                                .padding(.top, 40)
-                            ScrollView {
+                                Text("Recommendations")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .padding(.horizontal, geometry.size.width * -0.45)
+                                    .padding(.top, 40)
                                 ForEach(jobresult.indices, id: \.self) { index in
                                     JobCardView(jobs: jobresult[index], flnID: flnID)
-                                }
-                            }.padding(.top, 20)
+                                }.padding(.top, 20)
+                            }
+                            .padding(.top, flnID != nil ? 20 : 40)
+                            .padding(.top, geometry.size.height * -0.3)
                         }
-                        .padding(.top, flnID != nil ? 20 : 40)
-                        .padding(.top, geometry.size.height * -0.3)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 }
