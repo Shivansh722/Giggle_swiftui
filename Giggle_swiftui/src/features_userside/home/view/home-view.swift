@@ -1,3 +1,4 @@
+// HomeView.swift (updated)
 import SwiftUI
 
 struct HomeView: View {
@@ -11,10 +12,9 @@ struct HomeView: View {
     @State private var updatedAt: String? = nil
     @State private var isLoading = true
     @State private var navigateToLiteracy = false
-    @State private var GiggleGrade:String? = ""
+    @State private var GiggleGrade: String? = ""
     @State private var jobresult: [[String: Any]] = []
-    @State private var searchText: String = ""
-    @State private var filteredJobs: [[String: Any]] = []
+    @State private var contentOpacity: Double = 0  // For fade-in animation
 
     init() {
         let appearance = UITabBarAppearance()
@@ -33,6 +33,21 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
+            // Home Tab
+            ZStack {
+                Theme.backgroundColor.edgesIgnoringSafeArea(.all)
+                VStack {
+                    // Header with fade-in animation
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Hi")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.primaryColor)
+                            Text(formManager.formData.name)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
             GeometryReader { geometry in
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
@@ -67,7 +82,53 @@ struct HomeView: View {
                                 }
                             }
                         }
+                        .padding()
+                        .opacity(contentOpacity)
+                        .animation(.easeIn(duration: 0.5), value: contentOpacity)
+                        
                         Spacer()
+                        
+                        NavigationLink(destination: ProfileScreen()) {
+                            if let profileImage = GlobalData.shared.profileImage {
+                                Image(uiImage: profileImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                                    .padding()
+                                    .opacity(contentOpacity)
+                                    .animation(.easeIn(duration: 0.5).delay(0.1), value: contentOpacity)
+                            } else {
+                                Image(systemName: "person.crop.circle")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(Color.gray)
+                                    .padding()
+                                    .opacity(contentOpacity)
+                                    .animation(.easeIn(duration: 0.5).delay(0.1), value: contentOpacity)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    ScrollView {
+                        ZStack {
+                            if isLoading || flnID == nil {
+                                Image("desk")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity, maxHeight: 300)
+                                    .opacity(contentOpacity)
+                                    .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
+                            }
+                            
+                            VStack {
+                                if isLoading {
+                                    ProgressView()
+                                        .onAppear {
+                                            Task {
+                                                await fetchFlnID()
                         ScrollView{
                             ZStack {
                                 if isLoading || flnID == nil {
@@ -115,6 +176,32 @@ struct HomeView: View {
                                         FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
                                             .padding(.bottom, 170)
                                     }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 5)
+                                } else {
+                                    FLNGradeCardView(grade: GiggleGrade, lastUpdate: updatedAt!)
+                                }
+                            }
+                        }
+                        
+                        Text("Recommendations")
+                            .font(.system(size: 24))
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.onPrimaryColor)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                            .opacity(contentOpacity)
+                            .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
+                        
+                        // Job cards with gentle transitions
+                        ForEach(jobresult.indices, id: \.self) { index in
+                            JobCardView(jobs: jobresult[index], flnID: flnID)
+                                .transition(.asymmetric(
+                                    insertion: .move(edge: .leading).combined(with: .opacity),
+                                    removal: .move(edge: .trailing).combined(with: .opacity)
+                                ))
+                                .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
                                 }
                             }
                             
@@ -133,7 +220,6 @@ struct HomeView: View {
                             .padding(.top, geometry.size.height * -0.3)
                         }
                     }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
             }
             .tabItem {
@@ -141,74 +227,35 @@ struct HomeView: View {
                 Text("Home")
             }
             .onAppear {
+                withAnimation {
+                    contentOpacity = 1
+                }
                 Task {
                     await fetchUser()
                     do {
                         let result = try await jobs.get_job_post()
-                        jobresult = result
-                        filteredJobs = result
+                        withAnimation(.easeInOut) {
+                            jobresult = result
+                        }
                     } catch {
                         print("Failed to fetch job posts: \(error.localizedDescription)")
                     }
                 }
             }
             
-            GeometryReader { geometry in
-                ZStack {
-                    Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack(spacing: 20) {
-                        ZStack(alignment: .leading) {
-                            Text("Search Gigs")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding(.leading, 16)
-                        
-                        CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
-                        
-                        ScrollView {
-                            if filteredJobs.isEmpty && !searchText.isEmpty {
-                                Text("No jobs found matching '\(searchText)'")
-                                    .foregroundColor(Theme.onPrimaryColor)
-                                    .padding()
-                            } else {
-                                ForEach(filteredJobs.indices, id: \.self) { index in
-                                    JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                        .padding(.horizontal)
-                                        .padding(.bottom, 10)
-                                        .onAppear {
-                                            print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
-                                        }
-                                }
-                            }
-                        }
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+            // Search Tab
+            SearchScreen(jobresult: jobresult, flnID: flnID)
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
                 }
-            }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                Text("Search")
-            }
-            .onAppear {
-                filteredJobs = jobresult // Initialize with all jobs
-                print("Search tab appeared - jobs: \(filteredJobs.count)")
-            }
-            .onChange(of: searchText) { newValue in
-                filterJobs(searchText: newValue) // Trigger filtering on search text change
-            }
             
-            GeometryReader { geometry in
-                ZStack {
-                    NotificationScreen(jobs:jobresult)
+            // Notifications Tab
+            NotificationScreen(jobs: jobresult)
+                .tabItem {
+                    Image(systemName: "bell.fill")
+                    Text("Notifications")
                 }
-            }
-            .tabItem {
-                Image(systemName: "bell.fill")
-                Text("Notifications")
-            }
         }
         .navigationBarBackButtonHidden(true)
         .accentColor(Theme.primaryColor)
@@ -220,26 +267,10 @@ struct HomeView: View {
 
     func fetchFlnID() async {
         flnID = await flnInfo.getFlnInfo()
-        (updatedAt,GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
+        (updatedAt, GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
         isLoading = false
     }
-    
-    func filterJobs(searchText: String) {
-        Task { @MainActor in
-            if searchText.isEmpty {
-                filteredJobs = jobresult
-            } else {
-                // Filter directly from jobresult
-                filteredJobs = jobresult.filter { jobDict in
-                    guard let jobTitle = jobDict["job_title"] as? String else { return false }
-                    return jobTitle.lowercased().contains(searchText.lowercased())
-                }
-            }
-            print("Filtered jobs count: \(filteredJobs.count) for search: '\(searchText)'")
-        }
-    }
 }
-
 struct FLNGradeCardView: View {
     let grade: String?
     let lastUpdate: String
@@ -286,7 +317,7 @@ struct FLNGradeCardView: View {
             }
             .padding()
         }
-        .frame(width: .infinity, height: 150)
+        .frame(maxWidth: .infinity, maxHeight: 160)
         .padding(.horizontal)
     }
 }
