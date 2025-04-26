@@ -79,7 +79,7 @@ struct FluencyScoreView: View {
                                 diameter: 105
                             )
                             
-                            Text("71%") // Center percentage
+                            Text("\(FlnDataManager.shared.flnData.fluencyScore)%") // Center percentage
                                 .font(.system(size: 24))
                                 .foregroundColor(.gray)
                                 .bold()
@@ -200,11 +200,11 @@ struct StackedRing: View {
                 .foregroundColor(color)
             
             Circle()
-                .trim(from: 0.0, to: min(percentage, 1.0))
+                .trim(from: 0.0, to: min(percentage/100, 1.0))
                 .stroke(style: StrokeStyle(lineWidth: ringWidth, lineCap: .round))
                 .foregroundColor(color)
                 .rotationEffect(Angle(degrees: -90))
-                .animation(.easeInOut, value: percentage)
+                .animation(.easeInOut, value: percentage/100)
         }
         .frame(width: diameter, height: diameter)
     }
@@ -216,17 +216,18 @@ struct ContainerView: View {
     let content: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .center, spacing: 10) {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.top, 10)
+                .multilineTextAlignment(.center)
             
             Text(content)
                 .font(.body)
                 .foregroundColor(.white)
                 .padding(.horizontal)
                 .padding(.bottom, 10)
+                .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
         .padding()
