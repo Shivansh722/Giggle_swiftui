@@ -1,3 +1,4 @@
+// HomeView.swift (updated)
 import SwiftUI
 
 struct HomeView: View {
@@ -13,8 +14,6 @@ struct HomeView: View {
     @State private var navigateToLiteracy = false
     @State private var GiggleGrade: String? = ""
     @State private var jobresult: [[String: Any]] = []
-    @State private var searchText: String = ""
-    @State private var filteredJobs: [[String: Any]] = []
     @State private var contentOpacity: Double = 0  // For fade-in animation
 
     init() {
@@ -34,6 +33,7 @@ struct HomeView: View {
     
     var body: some View {
         TabView {
+            // Home Tab
             ZStack {
                 Theme.backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack {
@@ -165,7 +165,6 @@ struct HomeView: View {
                         let result = try await jobs.get_job_post()
                         withAnimation(.easeInOut) {
                             jobresult = result
-                            filteredJobs = result
                         }
                     } catch {
                         print("Failed to fetch job posts: \(error.localizedDescription)")
@@ -173,64 +172,24 @@ struct HomeView: View {
                 }
             }
             
-            // Rest of your tabs remain unchanged...
-            ZStack {
-                Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                VStack(spacing: 20) {
-                    ZStack(alignment: .leading) {
-                        Text("Search Gigs")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Theme.onPrimaryColor)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.leading, 16)
-                    
-                    CustomTextField(placeholder: "Search by job title...", isSecure: false, text: $searchText, icon: "magnifyingglass")
-                    
-                    ScrollView {
-                        if filteredJobs.isEmpty && !searchText.isEmpty {
-                            Text("No jobs found matching '\(searchText)'")
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .padding()
-                        } else {
-                            ForEach(filteredJobs.indices, id: \.self) { index in
-                                JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                    .padding(.horizontal)
-                                    .padding(.bottom, 10)
-                                    .onAppear {
-                                        print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")
-                                    }
-                            }
-                        }
-                    }
+            // Search Tab
+            SearchScreen(jobresult: jobresult, flnID: flnID)
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
                 }
-            }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                Text("Search")
-            }
-            .onAppear {
-                filteredJobs = jobresult
-                print("Search tab appeared - jobs: \(filteredJobs.count)")
-            }
-            .onChange(of: searchText) { newValue in
-                filterJobs(searchText: newValue)
-            }
             
-            ZStack {
-                NotificationScreen(jobs: jobresult)
-            }
-            .tabItem {
-                Image(systemName: "bell.fill")
-                Text("Notifications")
-            }
+            // Notifications Tab
+            NotificationScreen(jobs: jobresult)
+                .tabItem {
+                    Image(systemName: "bell.fill")
+                    Text("Notifications")
+                }
         }
         .navigationBarBackButtonHidden(true)
         .accentColor(Theme.primaryColor)
     }
 
-    // Rest of your methods remain unchanged...
     func fetchUser() async {
         await saveUserInfo.fetchUser(userId: formManager.formData.userId)
     }
@@ -240,22 +199,7 @@ struct HomeView: View {
         (updatedAt, GiggleGrade) = await flnInfo.getUserFlnUpdatedAt()
         isLoading = false
     }
-    
-    func filterJobs(searchText: String) {
-        Task { @MainActor in
-            if searchText.isEmpty {
-                filteredJobs = jobresult
-            } else {
-                filteredJobs = jobresult.filter { jobDict in
-                    guard let jobTitle = jobDict["job_title"] as? String else { return false }
-                    return jobTitle.lowercased().contains(searchText.lowercased())
-                }
-            }
-            print("Filtered jobs count: \(filteredJobs.count) for search: '\(searchText)'")
-        }
-    }
 }
-
 struct FLNGradeCardView: View {
     let grade: String?
     let lastUpdate: String
