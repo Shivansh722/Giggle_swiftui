@@ -40,7 +40,7 @@ struct HomeView: View {
                     // Header with fade-in animation
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Hi")
+                            Text("Hi🙋‍♂️")
                                 .font(.title)
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.primaryColor)
