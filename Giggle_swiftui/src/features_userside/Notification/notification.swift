@@ -29,14 +29,21 @@ struct NotificationScreen: View {
                 
                 VStack {
                     // Header
-                    HStack {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Giggle")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Theme.primaryColor)
+                        
                         Text("Notifications")
                             .font(.title)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
+                        
+                        Spacer()
                     }
                     .padding(.horizontal)
-                    .padding(.top, 10)
+                    .padding(.top, 24)
                     
                     // Notifications List
                     List {
@@ -44,29 +51,29 @@ struct NotificationScreen: View {
                             HStack(alignment: .top, spacing: 12) {
                                 // Avatar
                                 ZStack(alignment: .topLeading) {
-                                    Circle()
-                                        .frame(width: 40, height: 40)
-                                        .foregroundColor(.gray.opacity(0.3))
-                                        .overlay(
-                                            Group {
-                                                if let initials = notification.avatarInitials {
-                                                    Text(initials)
-                                                        .font(.system(size: 16))
-                                                        .fontWeight(.bold)
-                                                        .foregroundColor(.white)
-                                                } else if let icon = notification.avatarIcon {
-                                                    Image(systemName: icon)
-                                                        .foregroundColor(.white)
-                                                        .font(.system(size: 20))
-                                                }
-                                            }
-                                        )
+//                                    Circle()
+//                                        .frame(width: 40, height: 40)
+//                                        .foregroundColor(.gray.opacity(0.3))
+//                                        .overlay(
+//                                            Group {
+//                                                if let initials = notification.avatarInitials {
+//                                                    Text(initials)
+//                                                        .font(.system(size: 16))
+//                                                        .fontWeight(.bold)
+//                                                        .foregroundColor(.white)
+//                                                } else if let icon = notification.avatarIcon {
+//                                                    Image(systemName: icon)
+//                                                        .foregroundColor(.white)
+//                                                        .font(.system(size: 20))
+//                                                }
+//                                            }
+//                                        )
                                     
-                                    if notification.hasActions {
-                                        Circle()
-                                            .frame(width: 12, height: 12)
-                                            .foregroundColor(Theme.primaryColor)
-                                    }
+//                                    if notification.hasActions {
+//                                        Circle()
+//                                            .frame(width: 12, height: 12)
+//                                            .foregroundColor(Theme.primaryColor)
+//                                    }
                                 }
                                 
                                 // Notification content
@@ -169,3 +176,4 @@ struct NotificationScreen: View {
         return formatter.string(from: Date())
     }
 }
+

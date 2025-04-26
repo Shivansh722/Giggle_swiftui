@@ -20,9 +20,9 @@ struct ChooseView: View {
 
                 VStack {
                     Text("Are you looking for gigs or providing one?")
-                        .font(Font.custom("SF Pro", size: 16).weight(.bold))
+                        .font(Font.custom("SF Pro", size: 18).weight(.bold))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .padding(.bottom, 56)
                         .lineLimit(2)
                         //text is not coming in one line
