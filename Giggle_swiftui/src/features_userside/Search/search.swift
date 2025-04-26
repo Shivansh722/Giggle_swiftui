@@ -19,7 +19,7 @@ struct SearchScreen: View {
                         .fontWeight(.bold)
                         .foregroundColor(Theme.primaryColor)
                     
-                    Text("Gigs")
+                    Text("Gigs🔎")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(Theme.onPrimaryColor)
