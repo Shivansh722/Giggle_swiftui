@@ -31,11 +31,11 @@ struct OnboardingView: View {
                         text: "Show off your skills and get noticed by big brands"
                     )
                     Feature1OnboardItem(
-                        icon: "Marked assignment papers",
+                        icon: "Request Money",
                         text: "Earn money while building real-world experience"
                     )
                     Feature1OnboardItem(
-                        icon: "Request Money",
+                        icon: "Marked assignment papers",
                         text: "Join a community of go-getters like you"
                     )
                 }

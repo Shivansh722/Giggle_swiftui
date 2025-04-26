@@ -41,11 +41,14 @@ struct NumeracyView: View {
                 if !viewModel.numeracyQuestions.isEmpty {
                     let currentQuestion = viewModel.numeracyQuestions[currentQuestionIndex]
                     
-                    Text(currentQuestion.question)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
+                    HStack{
+                        Text(currentQuestion.question)
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                        Spacer()
+                    }
                     
                     // Options List
                     VStack {
