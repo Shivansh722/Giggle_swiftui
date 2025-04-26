@@ -36,7 +36,7 @@ struct SearchScreen: View {
                     text: $searchText,
                     icon: "magnifyingglass"
                 )
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 6)
                 
                 // Results
                 ScrollView {
@@ -47,7 +47,7 @@ struct SearchScreen: View {
                     } else {
                         ForEach(filteredJobs.indices, id: \.self) { index in
                             JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 6)
                                 .padding(.bottom, 10)
                                 .onAppear {
                                     print("Rendering job: \(filteredJobs[index]["job_title"] ?? "unknown")")

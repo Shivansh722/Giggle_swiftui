@@ -20,18 +20,14 @@ class ChooseViewModel:ObservableObject{
 
 
 struct FeatureItem: View {
-    let icon: String
+    let emoji: String
     let text: String
     let delay: Double
     @State private var isVisible = false
     
     var body: some View {
         HStack(spacing: 40) {
-            Image(icon)
-                .resizable()
-                .font(.title2)
-                .foregroundColor(.red)
-                .frame(width: 28, height: 36)
+            Text(emoji)
                 .opacity(isVisible ? 1 : 0)
                 .offset(x: isVisible ? 0 : -20)
                 .animation(.easeOut(duration: 0.5).delay(delay), value: isVisible)

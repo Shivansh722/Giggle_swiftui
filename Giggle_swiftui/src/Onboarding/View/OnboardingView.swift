@@ -22,21 +22,25 @@ struct OnboardingView: View {
                     .padding(.bottom, 80)
                 
                 VStack(spacing: 20) {
-                    Feature1OnboardItem(
-                        icon: "local", // Ensure these icons exist in your assets
-                        text: "Kickstart your career with gigs at top retail stores"
+                    FeatureItem(
+                        emoji: "📍",// Ensure these icons exist in your assets
+                        text: "Kickstart your career",
+                        delay: 0.3
                     )
-                    Feature1OnboardItem(
-                        icon: "Pass Fail",
-                        text: "Show off your skills and get noticed by big brands"
+                    FeatureItem(
+                        emoji: "🥷🏻",
+                        text: "Show off your skills",
+                        delay: 0.3
                     )
-                    Feature1OnboardItem(
-                        icon: "Marked assignment papers",
-                        text: "Earn money while building real-world experience"
+                    FeatureItem(
+                        emoji: "💵",
+                        text: "Earn money and have experience",
+                        delay: 0.3
                     )
-                    Feature1OnboardItem(
-                        icon: "Request Money",
-                        text: "Join a community of go-getters like you"
+                    FeatureItem(
+                        emoji: "🤹‍♂️",
+                        text: "Join community of go-getters",
+                        delay: 0.3
                     )
                 }
                 
@@ -71,16 +75,13 @@ struct OnboardingView: View {
 }
 
 struct Feature1OnboardItem: View {  // Renamed to match your naming convention
-    let icon: String
+    let emoji: String
     let text: String
+    
     
     var body: some View {
         HStack {
-            Image(icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .padding(.trailing)
+            Text(emoji)
             Text(text)
                 .foregroundColor(.white)
             Spacer()
