@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ClientOnboardingView: View {
     var selectedRole: ChooseViewModel.Role?
+    @Environment(\.dismiss) var dismiss
     @State private var navigate: Bool = false
     @State private var isAnimating = false
     
@@ -17,6 +18,18 @@ struct ClientOnboardingView: View {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
 
             VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                            .imageScale(.large)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
                 Image("logo")
                     .resizable()
                     .frame(width: 200, height: 120)
@@ -86,6 +99,7 @@ struct ClientOnboardingView: View {
                     }
                 }
             }
+            .navigationBarBackButtonHidden(true)
         }
         .tint(Theme.primaryColor)
         .onAppear {

@@ -80,12 +80,12 @@ struct HomeView: View {
                     Spacer()
                     
                     ScrollView {
-                        ZStack {
+                        ZStack() {
                             if isLoading || flnID == nil {
                                 Image("desk")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxWidth: .infinity, maxHeight: 300)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .opacity(contentOpacity)
                                     .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
                             }

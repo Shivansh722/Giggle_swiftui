@@ -189,9 +189,10 @@ struct RegisterView: View {
             let hasNumber = password.rangeOfCharacter(from: .decimalDigits) != nil
             let symbolSet = CharacterSet(charactersIn: "!@#$%^&*()_+-=[]{}|;:,.<>?~`")
             let hasSymbol = password.rangeOfCharacter(from: symbolSet) != nil
+            let passsize = password.count >= 8
             
-            if !(hasUppercase && hasLowercase && hasNumber && hasSymbol) {
-                passwordError = "Password must include uppercase, lowercase, number, and symbol"
+            if !(hasUppercase && hasLowercase && hasNumber && hasSymbol && passsize) {
+                passwordError = "Password must include uppercase, lowercase, number, and symbol and must have 8 characters or more"
             } else {
                 passwordError = nil
             }

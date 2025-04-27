@@ -34,6 +34,7 @@ struct WebFluencyView: UIViewRepresentable {
 
 struct FluencyIntroView: View {
     var selectedRole: ChooseViewModel.Role?
+    @Environment(\.dismiss) var dismiss
     @State private var navigate: Bool = false
     
     var body: some View {
@@ -41,6 +42,18 @@ struct FluencyIntroView: View {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
             
             VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                            .imageScale(.large)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
                 HStack {
                     Text("Fluency")
                         .font(.title)
@@ -102,6 +115,7 @@ struct FluencyIntroView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

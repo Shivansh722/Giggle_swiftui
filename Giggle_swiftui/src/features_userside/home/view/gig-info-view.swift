@@ -83,7 +83,6 @@ struct GigInfoView: View {
                                 
                                 Spacer()
                             }
-                            .padding(.horizontal)
                             if let base64 = base64Image,
                                let data = Data(base64Encoded: base64),
                                let uiImage = UIImage(data: data)
