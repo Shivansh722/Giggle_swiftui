@@ -2,6 +2,7 @@ import SwiftUI
 import PhotosUI
 
 struct ClientInfoView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var name: String = ""
     @State private var dateOfBirth: Date = Date()
     @State private var selectedGender: String = "Male"
@@ -102,21 +103,6 @@ struct ClientInfoView: View {
                                 .padding(.bottom, geometry.size.height * 0.015)
                                 .padding(.horizontal, -geometry.size.width * 0.05)
                             
-                            DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: geometry.size.width * 0.03)
-                                .padding(.bottom, geometry.size.height * 0.015)
-                            
-                            // Gender Field
-                            Text("Gender")
-                                .font(.system(size: geometry.size.width * 0.04, weight: .bold))
-                                .foregroundColor(Theme.onPrimaryColor)
-                            Picker("Gender", selection: $selectedGender) {
-                                ForEach(genders, id: \.self) { gender in
-                                    Text(gender)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                            .padding(.bottom, 10)
-                            
                             // Phone Number Field
                             Text("Phone Number")
                                 .font(.system(size: geometry.size.width * 0.04, weight: .bold))
@@ -142,6 +128,28 @@ struct ClientInfoView: View {
                                 }
                                 .padding(.bottom, geometry.size.height * 0.015)
                                 .padding(.horizontal, -geometry.size.width * 0.05)
+                            
+                            HStack{
+                                DateViewPicker(selectedDate: $dateOfBirth, title: "Date of Birth", BackgroundColor: Color.white, textColor: Theme.onPrimaryColor, padding: geometry.size.width * 0.03)
+                                    .padding(.bottom, geometry.size.height * 0.015)
+                                
+                                
+                                VStack{
+                                    // Gender Field
+                                    Text("Gender")
+                                        .font(.system(size: geometry.size.width * 0.04, weight: .bold))
+                                        .foregroundColor(Theme.onPrimaryColor)
+                                    Picker("Gender", selection: $selectedGender) {
+                                        ForEach(genders, id: \.self) { gender in
+                                            Text(gender)
+                                        }
+                                    }
+                                    .pickerStyle(MenuPickerStyle())
+                                    .padding(.bottom, 10)
+                                    .frame(height: 74)
+                                }
+                                .padding(.leading, 80)
+                            }
                             
                             // Work Trait Field
                             Text("Work Trait")

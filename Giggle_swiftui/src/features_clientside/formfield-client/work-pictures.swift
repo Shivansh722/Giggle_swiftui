@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 import PhotosUI
 
 struct WorkPitcher: View {
+    @Environment(\.dismiss) var dismiss
     @StateObject private var uploadManager = ResumeUploadManager(
         apiEndpoint: "https://cloud.appwrite.io/v1",
         projectIdentifier: "67da77af003e5e94f856",
@@ -20,12 +21,25 @@ struct WorkPitcher: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                            .imageScale(.large)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
                 Text("Upload Your Company Logo")
                     .font(.title)
                     .bold()
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 20)
+                    .padding(.top, 10)
 
                 List {
                     if !uploadManager.selectedResumes.isEmpty {
