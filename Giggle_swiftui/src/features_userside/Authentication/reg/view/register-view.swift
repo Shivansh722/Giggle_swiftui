@@ -102,25 +102,26 @@ struct RegisterView: View {
                             title: "SIGN UP",
                             backgroundColor: Theme.primaryColor,
                             action: {
-                                if isFormValid {
+                                // Force validation checks
+                                validateEmail(email)
+                                validatePassword(password)
+                                
+                                if password != confirmPassword {
+                                    showPasswordMismatchAlert = true
+                                } else if isFormValid {
                                     Task {
                                         await registerUser()
                                         if viewModel.isLoggedIn {
                                             navigateToUserDetail = true
-                                            
-                                        } else {
-                                            print("Registration failed: isLoggedIn = false") // Debug
                                         }
                                     }
-                                } else if password != confirmPassword {
-                                    showPasswordMismatchAlert = true
                                 }
                             },
                             width: geometry.size.width * 0.8,
                             height: 50,
                             cornerRadius: 6
                         )
-                        .disabled(!isFormValid)
+                        .allowsHitTesting(true)
                         .padding(.top, 16)
                         .padding(.bottom, 50)
 
@@ -201,6 +202,7 @@ struct RegisterView: View {
         print("Starting registration with email: \(email), password: \(password)") // Debug
         await viewModel.createUser(email: email, password: password)
         print("Registration complete, isLoggedIn: \(viewModel.isLoggedIn)") // Debug
+        passwordError = viewModel.alertMessage
     }
 }
 
