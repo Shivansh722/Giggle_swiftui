@@ -100,8 +100,10 @@ struct LoginSimpleView: View {
                                                 UserDefaults.standard.set("completed user", forKey: "status")
                                                 destinationView = AnyView(HomeView())
                                             } else {
-                                                UserDefaults.standard.set("completed client", forKey: "status")
                                                 let clientExists = try await ClientHandlerUserInfo(appService: AppService()).checkForCleintExixtence()
+                                                if clientExists {
+                                                    UserDefaults.standard.set("completed client", forKey: "status")
+                                                }
                                                 destinationView = clientExists ? AnyView(HomeClientView()) : AnyView(ChooseView())
                                             }
                                             navigateToNextScreen = true
