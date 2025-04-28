@@ -25,6 +25,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		190D7B062DBFF1C500181991 /* Borel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Borel;
+			sourceTree = "<group>";
+		};
 		19E9A9932CD20FA5009F768B /* Giggle_swiftui */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Giggle_swiftui;
@@ -49,6 +54,7 @@
 		19E9A9882CD20FA5009F768B = {
 			isa = PBXGroup;
 			children = (
+				190D7B062DBFF1C500181991 /* Borel */,
 				357088C32D8DFB0700CDED8F /* block 2.gif */,
 				357088C12D8DFAD600CDED8F /* jobs-list.gif */,
 				357088BF2D8DFA6100CDED8F /* empty-jobs.gif */,
@@ -82,6 +88,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				190D7B062DBFF1C500181991 /* Borel */,
 				19E9A9932CD20FA5009F768B /* Giggle_swiftui */,
 			);
 			name = Giggle_swiftui;
