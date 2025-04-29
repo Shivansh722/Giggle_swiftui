@@ -15,6 +15,7 @@ class ClientHandlerUserInfo: ObservableObject {
     let appService: AppService
     let databaseID:String = "67da78cd00052312da62"
     let collectionID:String = "67da7b8e001f23053dd5"
+    let postedJobId:String = "67da7b190038325b3b99"
     
     init(appService: AppService) {
         self.client = appService.client
@@ -76,25 +77,32 @@ class ClientHandlerUserInfo: ObservableObject {
             return false
         }
     }
+    
+    func fetchClientJob() async throws -> [[String: Any]] {
+        do {
+            let userDefaults = UserDefaults.standard
+            guard let storedUserId = userDefaults.string(forKey: "userID") else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User ID not found in UserDefaults"])
+            }
+            
+            let documents = try await database.listDocuments(
+                databaseId: databaseID,
+                collectionId: postedJobId,
+                queries: [Query.equal("client_id", value: storedUserId)]
+            )
+            var jobData: [[String: Any]] = []
+            
+            for document in documents.documents {
+                var data = document.data as [String: Any]
+                let jobTitle = String(describing: data["job_title"] ?? "")
+                data["job_title"] = jobTitle
+                data["$id"] = document.id
+                jobData.append(data)
+            }
+            return jobData
+        } catch {
+            print("Error fetching client job: \(error)")
+            return []
+        }
+    }
 }
-
-// make view
-
-//struct ClientUserInfoView: View {
-//    @State private var name: String = "john doe"
-//    @State private var DOB: String = "24/03/04"
-//    @State private var gender: String = "male"
-//    @State private var phone: String = "9898498944"
-//    @State private var employerDetail: String = "me hu yaha"
-//    @State private var storeName: String = "kachua"
-//    @State private var location: String = "meraghar"
-//    var body: some View {
-//        Button(action:{}) {
-//            
-//        }
-//    }
-//}
-//
-//#Preview {
-//    ClientUserInfoView()
-//}

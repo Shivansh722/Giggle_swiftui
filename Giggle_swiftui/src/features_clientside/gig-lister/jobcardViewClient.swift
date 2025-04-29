@@ -3,7 +3,6 @@ import SwiftUI
 struct JobCardView2: View {
     let jobs: [String: Any]
     let flnID: String?
-    @StateObject var fetchImage = JobPost(appService: AppService())
     @State private var base64Image: String?
     @State private var isLoadingImage = false
     @State private var imageError: String?
@@ -99,32 +98,21 @@ struct JobCardView2: View {
                 )
                 .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
                 .padding(.horizontal, 16)
-
-                if flnID == nil {
-                    Image(systemName: "lock.fill")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(.red)
-                        .padding(8)
-                        .background(Color.white.opacity(0.8))
-                        .clipShape(Circle())
-                        .offset(x: 0, y: -10)
-                }
             }
-            .onAppear {
-                DispatchQueue.main.async{
-                    Task {
-                        do {
-                            let base64 = try await fetchImage.fetchImage("\(jobs["$id"]!)")
-                            self.base64Image = base64
-                            self.isLoadingImage = false
-                        } catch {
-                            self.imageError = error.localizedDescription
-                            self.isLoadingImage = false
-                        }
-                    }
-                }
-            }
+//            .onAppear {
+////                DispatchQueue.main.async{
+////                    Task {
+////                        do {
+////                            let base64 = try await fetchImage.fetchImage("\(jobs["$id"]!)")
+////                            self.base64Image = base64
+////                            self.isLoadingImage = false
+////                        } catch {
+////                            self.imageError = error.localizedDescription
+////                            self.isLoadingImage = false
+////                        }
+////                    }
+////                }
+//            }
         .buttonStyle(PlainButtonStyle())
     }
 }
