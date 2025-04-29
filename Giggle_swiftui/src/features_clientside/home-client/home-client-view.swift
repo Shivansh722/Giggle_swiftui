@@ -34,6 +34,9 @@ struct HomeClientView: View {
     @StateObject private var appService = AppService() // Instantiate AppService
     @State private var showGigLister = false
     @State private var navigateToLogin = false // State for navigation after logout
+    @StateObject var getClientJob = ClientHandlerUserInfo(appService: AppService())
+    @State private var jobresult: [[String: Any]] = []
+    @State private var flnID: String? = nil
     
     var body: some View {
         ZStack {
@@ -78,8 +81,22 @@ struct HomeClientView: View {
                 }
                 
                 ScrollView {
+                    VStack{
+                        if jobresult.isEmpty{
+                            EmptyView()
+                        }
+                        else{
+                            ForEach(jobresult.indices, id: \.self) { index in
+                                JobCardView2(jobs: jobresult[index], flnID: flnID)
+                                    .transition(.asymmetric(
+                                        insertion: .move(edge: .leading).combined(with: .opacity),
+                                        removal: .move(edge: .trailing).combined(with: .opacity)
+                                    ))
+                                    .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                            }
+                        }
+                    }
                     VStack(spacing: 10) {
-                        // Display newly added gigs
                         ForEach(gigManager.gigs) { gig in
                             JobCardView2(jobs: [
                                 "$id": gig.id.uuidString,
@@ -98,7 +115,7 @@ struct HomeClientView: View {
             }
             
             // Show empty state if no gigs
-            if gigManager.gigs.isEmpty {
+            if gigManager.gigs.isEmpty && jobresult.isEmpty {
                 VStack {
                     WebClientHomeView(url: Bundle.main.url(forResource: "empty-jobs", withExtension: "gif") ?? URL.desktopDirectory)
                     .frame(width: 300, height: 300)
@@ -138,6 +155,16 @@ struct HomeClientView: View {
                 isActive: $navigateToLogin
             ) {
                 EmptyView()
+            }
+        }
+        .onAppear(){
+            Task{
+                do{
+                    let result = try await getClientJob.fetchClientJob()
+                    jobresult = result
+                }catch{
+                    print(error)
+                }
             }
         }
         .sheet(isPresented: $showGigLister) {

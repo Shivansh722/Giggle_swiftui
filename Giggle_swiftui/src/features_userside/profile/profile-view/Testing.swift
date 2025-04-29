@@ -3,6 +3,7 @@ import SwiftUI
 struct Testing: View {
     @StateObject var testResumeGeneration = QuestionViewModel()
     @StateObject var vari = JobPost(appService: AppService())
+    @StateObject var getClientJob = ClientHandlerUserInfo(appService: AppService())
     @StateObject var fluency = FluencyResult()
     
     var body: some View {
@@ -18,7 +19,8 @@ struct Testing: View {
 //                    
 //                    await testResumeGeneration.getQuestion(resume)
 //                    let result = try await vari.fetchImage("67dd9eb830cf9e102941")
-                 try await fluency.getFluencyResult()
+//                 try await fluency.getFluencyResult()
+                    try await getClientJob.fetchClientJob()
                 }
             }) {
                 Text("Generate Questions")
