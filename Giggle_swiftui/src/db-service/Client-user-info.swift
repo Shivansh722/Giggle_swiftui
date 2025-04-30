@@ -105,4 +105,34 @@ class ClientHandlerUserInfo: ObservableObject {
             return []
         }
     }
+    
+    func deleteClientJob(_ getId:Any) async throws {
+        do{
+            print(getId)
+            let userDefaults = UserDefaults.standard
+            guard let storedUserId = userDefaults.string(forKey: "userID") else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User ID not found in UserDefaults"])
+            }
+            let result = try await database.deleteDocument(databaseId: databaseID, collectionId: postedJobId, documentId: getId as! String)
+
+            let clientDoc = try await database.getDocument(databaseId: databaseID, collectionId: collectionID, documentId: storedUserId)
+            
+            var jobPostIds = clientDoc.data["job_post_id"] as? [String] ?? []
+            
+            jobPostIds.removeAll { $0 == getId as? String }
+            
+            let updatedDoc = try await database.updateDocument(
+                databaseId: databaseID,
+                collectionId: collectionID,
+                documentId: storedUserId,
+                data: ["job_post_id": jobPostIds]
+            )
+            
+            print("Updated client doc: \(updatedDoc)")
+            
+        }
+        catch{
+            print(error)
+        }
+    }
 }
