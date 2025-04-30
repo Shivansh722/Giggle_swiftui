@@ -1,17 +1,5 @@
 import SwiftUI
 import WebKit
-
-// Define a Job struct (unchanged)
-struct Job: Identifiable {
-    let id: String
-    let title: String
-    let location: String
-    let salary: String
-    let companyName: String
-    let jobTrait: String
-    let jobType: String
-}
-
 struct WebClientHomeView: UIViewRepresentable {
     let url: URL
     
@@ -28,160 +16,164 @@ struct WebClientHomeView: UIViewRepresentable {
     }
 }
 
-// HomeClientView
 struct HomeClientView: View {
-    @ObservedObject var gigManager = GigManager.shared // Shared Gig Manager
-    @StateObject private var appService = AppService() // Instantiate AppService
+    @ObservedObject var gigManager = GigManager.shared
+    @StateObject private var appService = AppService()
     @State private var showGigLister = false
-    @State private var navigateToLogin = false // State for navigation after logout
+    @State private var navigateToLogin = false
     @StateObject var getClientJob = ClientHandlerUserInfo(appService: AppService())
     @State private var jobresult: [[String: Any]] = []
     @State private var flnID: String? = nil
     
+    private var headerView: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Hey")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(Theme.primaryColor)
+            }
+            .padding()
+            
+            Spacer()
+            
+            Button(action: logout) {
+                Text("Logout")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 16)
+                    .background(Theme.primaryColor)
+                    .cornerRadius(8)
+            }
+            .padding(.trailing)
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack {
+           WebClientHomeView(url: Bundle.main.url(forResource: "empty-jobs", withExtension: "gif") ?? URL.desktopDirectory)
+            .frame(width: 300, height: 300)
+            
+            Text("Post your Gigs here!")
+                .font(.system(size: 23))
+                .fontWeight(.bold)
+                .foregroundColor(Theme.onPrimaryColor)
+        }
+        .position(
+            x: UIScreen.main.bounds.width / 2,
+            y: UIScreen.main.bounds.height / 2 - 50
+        )
+        .padding(.bottom, 50)
+    }
+    
+    private var floatingActionButton: some View {
+        VStack {
+            Spacer()
+            Button(action: { showGigLister = true }) {
+                Image(systemName: "plus")
+                    .font(.system(size: 30))
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Theme.primaryColor)
+                    .clipShape(Circle())
+                    .shadow(radius: 5)
+            }
+            .padding(.bottom, 20)
+        }
+    }
+    
+    private var jobCardsView: some View {
+        ForEach(jobresult.indices, id: \.self) { index in
+            JobCardView2(
+                jobs: jobresult[index],
+                flnID: flnID,
+                onDelete: { jobresult.remove(at: index) }
+            )
+            .transition(.asymmetric(
+                insertion: .move(edge: .leading).combined(with: .opacity),
+                removal: .move(edge: .trailing).combined(with: .opacity)
+            )
+            .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05)))
+        }
+    }
+    
+    private var gigCardsView: some View {
+        ForEach(gigManager.gigs) { gig in
+            JobCardView2(
+                jobs: [
+                    "$id": gig.id.uuidString,
+                    "job_title": gig.jobRole,
+                    "companyName": gig.companyName,
+                    "location": gig.location,
+                    "salary": gig.hoursPerWeek,
+                    "job_trait": gig.specialization,
+                    "job_type": gig.isRemote ? "Remote" : "On-Site"
+                ],
+                flnID: "asdf",
+                onDelete: {}
+            )
+        }
+    }
+
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
             
             VStack {
-                // Custom Header with Logout Button
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Hey")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Theme.primaryColor)
-//                        Text("Shivansh")
-//                            .font(.title)
-//                            .fontWeight(.bold)
-//                            .foregroundColor(Theme.onPrimaryColor)
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        Task {
-                            let userDefault = UserDefaults.standard
-                            userDefault.set("", forKey: "status")
-                            let status = UserDefaults.standard.string(forKey: "status")
-                            print(status!)
-                            RegisterViewModel(service: AppService()).isLoading = false
-                            navigateToLogin = true
-                        }
-                    }) {
-                        Text("Logout")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 16)
-                            .background(Theme.primaryColor)
-                            .cornerRadius(8)
-                    }
-                    .padding(.trailing)
-                }
+                headerView
                 
                 ScrollView {
-                    VStack{
-                        if jobresult.isEmpty{
+                    VStack {
+                        if jobresult.isEmpty {
                             EmptyView()
+                        } else {
+                            jobCardsView
                         }
-                        else{
-                            ForEach(jobresult.indices, id: \.self) { index in
-                                JobCardView2(jobs: jobresult[index], flnID: flnID)
-                                    .transition(.asymmetric(
-                                        insertion: .move(edge: .leading).combined(with: .opacity),
-                                        removal: .move(edge: .trailing).combined(with: .opacity)
-                                    ))
-                                    .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
-                            }
-                        }
+                        
+                        gigCardsView
+                            .padding(.bottom, 80)
+                            .opacity(1.0)
                     }
-                    VStack(spacing: 10) {
-                        ForEach(gigManager.gigs) { gig in
-                            JobCardView2(jobs: [
-                                "$id": gig.id.uuidString,
-                                "job_title": gig.jobRole,
-                                "companyName": gig.companyName,
-                                "location": gig.location,
-                                "salary": gig.hoursPerWeek,
-                                "job_trait": gig.specialization,
-                                "job_type": gig.isRemote ? "Remote" : "On-Site"
-                            ], flnID: "asdf")
-                        }
-                    }
-                    .padding(.bottom, 80)
-                    .opacity(1.0)
                 }
             }
             
-            // Show empty state if no gigs
             if gigManager.gigs.isEmpty && jobresult.isEmpty {
-                VStack {
-                    WebClientHomeView(url: Bundle.main.url(forResource: "empty-jobs", withExtension: "gif") ?? URL.desktopDirectory)
-                    .frame(width: 300, height: 300)
-
-                    Text("Post your Gigs here!")
-                        .font(.system(size: 23))
-                        .fontWeight(.bold)
-                        .foregroundColor(Theme.onPrimaryColor)
-                }
-                .position(
-                    x: UIScreen.main.bounds.width / 2,
-                    y: UIScreen.main.bounds.height / 2 - 50
-                )
-                .padding(.bottom, 50)
+                emptyStateView
             }
             
-            // Floating Action Button
-            VStack {
-                Spacer()
-                Button(action: {
-                    showGigLister = true
-                }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Theme.primaryColor)
-                        .clipShape(Circle())
-                        .shadow(radius: 5)
-                }
-                .padding(.bottom, 20)
-            }
+            floatingActionButton
             
-            // Navigation to Login Screen after Logout
             NavigationLink(
-                destination: RegisterView(), // Replace with your actual login view
+                destination: RegisterView(),
                 isActive: $navigateToLogin
-            ) {
-                EmptyView()
-            }
+            ) { EmptyView() }
         }
-        .onAppear(){
-            Task{
-                do{
-                    let result = try await getClientJob.fetchClientJob()
-                    jobresult = result
-                }catch{
-                    print(error)
-                }
-            }
-        }
+        .onAppear(perform: loadJobs)
         .sheet(isPresented: $showGigLister) {
             GigDetailsScreen(gigManager: gigManager)
         }
         .navigationBarBackButtonHidden(true)
-        .onChange(of: gigManager.gigs) { newGigs in
-            print("Gigs updated: \(newGigs.count) gigs") // Debug log
+    }
+    
+    private func loadJobs() {
+        Task {
+            do {
+                let result = try await getClientJob.fetchClientJob()
+                jobresult = result
+            } catch {
+                print(error)
+            }
         }
     }
-}
-
-// Preview
-struct HomeClientView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            HomeClientView()
+    
+    private func logout() {
+        Task {
+            let userDefault = UserDefaults.standard
+            userDefault.set("", forKey: "status")
+            print(UserDefaults.standard.string(forKey: "status") ?? "")
+            RegisterViewModel(service: AppService()).isLoading = false
+            navigateToLogin = true
         }
     }
 }
