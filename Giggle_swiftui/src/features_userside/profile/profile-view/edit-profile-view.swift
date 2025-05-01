@@ -67,10 +67,9 @@ struct edit_profile_view: View {
                                     .padding(8)
                             }
                             
-                            Spacer()
                             
                             Text("Edit Profile")
-                                .font(.headline)
+                                .font(.title)
                                 .foregroundColor(Theme.onPrimaryColor)
                             
                             Spacer()
@@ -87,9 +86,7 @@ struct edit_profile_view: View {
                             ZStack(alignment: .bottomTrailing) {
                                 // Profile Image with improved styling
                                 ZStack {
-                                    Circle()
-                                        .fill(Theme.primaryColor.opacity(0.1))
-                                        .frame(width: 120, height: 120)
+                                    
                                     
                                     if let selectedImage = selectedImage {
                                         Image(uiImage: selectedImage)

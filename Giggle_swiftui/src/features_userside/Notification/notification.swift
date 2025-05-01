@@ -19,128 +19,192 @@ struct Notification: Identifiable {
 
 struct NotificationScreen: View {
     let jobs: [[String: Any]]
+    @StateObject var flnInfo = FLNInfo(appService: AppService())
+    @State private var flnID: String? = nil
+    @State private var isLoading = true
+    @State private var navigateToLiteracy = false
     @State private var notifications: [Notification] = []
-
+    @State private var contentOpacity: Double = 0 // For fade-in animation
+    @State private var showEmptyState: Bool = false
+    
     var body: some View {
         NavigationView {
             ZStack {
+                // Background with subtle gradient overlay
                 Theme.backgroundColor
                     .ignoresSafeArea()
                 
-                VStack {
-                    // Header
-                    HStack(alignment: .firstTextBaseline) {
-                        Text("Giggle")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Theme.primaryColor)
+                VStack(spacing: 0) {
+                    // Enhanced Header
+                    VStack(spacing: 8) {
+                        HStack(alignment: .center) {
+                            Text("Giggle")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(Theme.primaryColor)
+                            
+                            Text("Notifications")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(Theme.onPrimaryColor)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(Theme.primaryColor)
+                                .padding(8)
+                                .background(
+                                    Circle()
+                                        .fill(Theme.primaryColor.opacity(0.2))
+                                )
+                        }
                         
-                        Text("Notifications🔔")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(Theme.onPrimaryColor)
-                        
-                        Spacer()
+                        Rectangle()
+                            .fill(LinearGradient(
+                                gradient: Gradient(colors: [Theme.primaryColor.opacity(0.6), Theme.primaryColor.opacity(0.2)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
+                            .frame(height: 2)
                     }
                     .padding(.horizontal)
-                    .padding(.top, 24)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+                    .opacity(contentOpacity)
+                    .animation(.easeIn(duration: 0.3), value: contentOpacity)
                     
-                    // Notifications List
-                    List {
-                        ForEach(notifications) { notification in
-                            HStack(alignment: .top, spacing: 12) {
-                                // Avatar
-                                ZStack(alignment: .topLeading) {
-//                                    Circle()
-//                                        .frame(width: 40, height: 40)
-//                                        .foregroundColor(.gray.opacity(0.3))
-//                                        .overlay(
-//                                            Group {
-//                                                if let initials = notification.avatarInitials {
-//                                                    Text(initials)
-//                                                        .font(.system(size: 16))
-//                                                        .fontWeight(.bold)
-//                                                        .foregroundColor(.white)
-//                                                } else if let icon = notification.avatarIcon {
-//                                                    Image(systemName: icon)
-//                                                        .foregroundColor(.white)
-//                                                        .font(.system(size: 20))
-//                                                }
-//                                            }
-//                                        )
-                                    
-//                                    if notification.hasActions {
-//                                        Circle()
-//                                            .frame(width: 12, height: 12)
-//                                            .foregroundColor(Theme.primaryColor)
-//                                    }
-                                }
-                                
-                                // Notification content
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        Text(notification.title)
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 16))
-                                            .lineLimit(2)
-                                        
-                                        Spacer()
-                                        
-                                        Text(notification.timestamp)
-                                            .foregroundColor(.gray)
-                                            .font(.system(size: 14))
-                                        
-                                    }
-                                    
-                                    if let subtitle = notification.subtitle {
-                                        Text(subtitle)
-                                            .foregroundColor(.gray)
-                                            .font(.system(size: 14))
-                                            .lineLimit(1)
-                                    }
-                                    
-                                    if notification.hasActions {
-                                        HStack(spacing: 12) {
-                                            // Your button code can be uncommented here if needed
-                                        }
-                                    }
+                    if isLoading {
+                        Spacer()
+                        ProgressView()
+                            .onAppear {
+                                Task {
+                                    await fetchFlnID()
                                 }
                             }
-                            .listRowBackground(Theme.backgroundColor)
-                            .listRowSeparatorTint(.gray)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    if let index = notifications.firstIndex(where: { $0.id == notification.id }) {
-                                        notifications.remove(at: index)
-                                    }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
+                        Spacer()
+                    } else if flnID == nil {
+                        // FLN not taken yet view
+                        VStack(spacing: 16) {
+                            Spacer()
+                            
+                            Image("desk")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity, maxHeight: 200)
+                            
+                            Text("Take FLN")
+                                .font(.headline)
+                                .foregroundColor(Theme.secondaryColor)
+                            
+                            Text("To start applying for gigs you need to take the FLN test first.")
+                                .font(.system(size: 16))
+                                .foregroundColor(Theme.tertiaryColor)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 24)
+                            
+                            CustomButton(
+                                title: "NEXT",
+                                backgroundColor: Theme.primaryColor,
+                                action: { navigateToLiteracy = true },
+                                width: 200,
+                                height: 50,
+                                cornerRadius: 6
+                            )
+                            
+                            NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
+                                EmptyView()
                             }
+                            
+                            Spacer()
                         }
+                        .opacity(contentOpacity)
+                        .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
+                    } else if showEmptyState && notifications.isEmpty {
+                        // Empty state view
+                        VStack(spacing: 20) {
+                            Spacer()
+                            
+                            Image(systemName: "bell.slash")
+                                .font(.system(size: 60))
+                                .foregroundColor(Theme.primaryColor.opacity(0.7))
+                            
+                            Text("No Notifications Yet")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
+                            
+                            Text("When you receive notifications, they'll appear here")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
+                            
+                            Spacer()
+                        }
+                        .opacity(contentOpacity)
+                        .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
+                    } else {
+                        // Enhanced Notifications List
+                        ScrollView {
+                            LazyVStack(spacing: 16) {
+                                ForEach(notifications.indices, id: \.self) { index in
+                                    NotificationCard(
+                                        notification: notifications[index],
+                                        job: index < jobs.count ? jobs[index] : [:],
+                                        flnID: flnID,
+                                        onDelete: {
+                                            if let idx = notifications.firstIndex(where: { $0.id == notifications[index].id }) {
+                                                withAnimation {
+                                                    notifications.remove(at: idx)
+                                                }
+                                            }
+                                        }
+                                    )
+                                    .transition(.opacity.combined(with: .move(edge: .trailing)))
+                                }
+                                .padding(.horizontal)
+                            }
+                            .padding(.vertical, 8)
+                        }
+                        .opacity(contentOpacity)
+                        .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
                     }
-                    .listStyle(PlainListStyle())
-                    .padding(.top, 10)
                 }
             }
             .navigationBarHidden(true)
             .onAppear {
-                // Convert jobs to notifications
-                notifications = jobs.map { job in
-                    let timestamp = job["$createdAt"] as? String ?? ""
-                    let formattedTime = timeAgo(from: timestamp)
+                // Animate content appearance
+                withAnimation {
+                    contentOpacity = 1
+                }
+                
+                if !isLoading && flnID != nil {
+                    // Convert jobs to notifications
+                    notifications = jobs.map { job in
+                        let timestamp = job["$createdAt"] as? String ?? ""
+                        let formattedTime = timeAgo(from: timestamp)
+                        
+                        return Notification(
+                            avatarInitials: String(describing: job["companyName"] ?? "").prefix(2).uppercased(),
+                            avatarIcon: "briefcase.fill",
+                            title: "New job has been posted for role \(job["job_title"] ?? "") at \(job["companyName"] ?? "")",
+                            subtitle: "\(job["location"] ?? "NA")",
+                            timestamp: formattedTime,
+                            hasActions: true
+                        )
+                    }
                     
-                    return Notification(
-                        avatarInitials: "",
-                        avatarIcon: nil,
-                        title: "New job has been posted for role \(job["job_title"]!) at \(job["companyName"]!)",
-                        subtitle: "Location: \(job["location"]!)",
-                        timestamp: formattedTime,
-                        hasActions: true
-                    )
+                    // Show empty state if needed (after a short delay to allow data loading)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showEmptyState = true
+                    }
                 }
             }
         }
+    }
+    
+    func fetchFlnID() async {
+        flnID = await flnInfo.getFlnInfo()
+        isLoading = false
     }
     
     private func timeAgo(from isoDateString: String) -> String {
@@ -169,11 +233,142 @@ struct NotificationScreen: View {
             return "Just now"
         }
     }
+}
+
+// New component for notification cards
+struct NotificationCard: View {
+    let notification: Notification
+    let job: [String: Any]
+    let flnID: String?
+    let onDelete: () -> Void
+    @State private var offset: CGFloat = 0
+    @State private var isSwiping = false
+    @State private var navigateToGigInfo = false
     
-    private func getCurrentTimestamp() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: Date())
+    var body: some View {
+        ZStack {
+            
+            // Card content
+            HStack(alignment: .top, spacing: 16) {
+                // Avatar with improved styling
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(
+                            gradient: Gradient(colors: [Theme.primaryColor, Theme.primaryColor.opacity(0.7)]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 50, height: 50)
+                        .shadow(color: Theme.primaryColor.opacity(0.3), radius: 3)
+                    
+                    if let initials = notification.avatarInitials, !initials.isEmpty {
+                        Text(initials)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(.white)
+                    } else if let icon = notification.avatarIcon {
+                        Image(systemName: icon)
+                            .foregroundColor(.white)
+                            .font(.system(size: 22))
+                    }
+                    
+                    if notification.hasActions {
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.white)
+                            .overlay(
+                                Circle()
+                                    .frame(width: 10, height: 10)
+                                    .foregroundColor(.green)
+                            )
+                            .offset(x: 20, y: -20)
+                    }
+                }
+                
+                // Notification content with improved styling
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top) {
+                        Text(notification.title)
+                            .foregroundColor(.white)
+                            .font(.system(size: 16, weight: .medium))
+                            .lineLimit(3)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Spacer()
+                        
+                        Text(notification.timestamp)
+                            .foregroundColor(.gray)
+                            .font(.system(size: 14))
+                    }
+                    
+                    if let subtitle = notification.subtitle {
+                        HStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .foregroundColor(Theme.primaryColor.opacity(0.8))
+                                .font(.system(size: 14))
+                            
+                            Text(subtitle)
+                                .foregroundColor(.gray)
+                                .font(.system(size: 14))
+                                .lineLimit(1)
+                        }
+                    }
+                    
+                    if notification.hasActions {
+                        HStack(spacing: 12) {
+                            NavigationLink(destination: 
+                                GigInfoView(
+                                    fln: flnID,
+                                    jobId: job["$id"] as? String ?? "",
+                                    jobs: job,
+                                    base64Image: job["base64Image"] as? String
+                                ),
+                                isActive: $navigateToGigInfo
+                            ) {
+                                Button(action: {
+                                    navigateToGigInfo = true
+                                }) {
+                                    Text("View Details")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .padding(.vertical, 6)
+                                        .padding(.horizontal, 12)
+                                        .background(Theme.primaryColor)
+                                        .cornerRadius(20)
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                        .padding(.top, 4)
+                    }
+                }
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(hex: "343434").opacity(0.6))
+                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            )
+            .offset(x: offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        if gesture.translation.width < 0 {
+                            isSwiping = true
+                            offset = gesture.translation.width
+                        }
+                    }
+                    .onEnded { gesture in
+                        withAnimation(.spring()) {
+                            if gesture.translation.width < -100 {
+                                onDelete()
+                            } else {
+                                offset = 0
+                            }
+                            isSwiping = false
+                        }
+                    }
+            )
+        }
     }
 }
 
