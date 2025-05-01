@@ -25,6 +25,7 @@ struct SplashScreen: View {
     @State private var smileWidth: CGFloat = 200
     @State private var animationStarted = false
     @State private var logoBottomPosition: CGFloat = 0
+    @State private var textOpacity: Double = 0 // New state for text opacity
     
     private func determineDestination() -> AnyView {
         let status = UserDefaults.standard.string(forKey: "status")
@@ -69,8 +70,17 @@ struct SplashScreen: View {
                     Spacer()
                     
                     Text("Make your Story!!!")
-                        .font(.custom("Borel-Regular", size: 28))
-
+                        .font(.custom("Borel-Regular", size: 16))
+                        .foregroundColor(Theme.onPrimaryColor)
+                        .opacity(textOpacity) // Apply opacity
+                        .onAppear {
+                            // Animate the text fade in after the smile animation
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                withAnimation(.easeIn(duration: 1.0)) {
+                                    textOpacity = 1.0
+                                }
+                            }
+                        }
                 }
                 
                 // Smile line - positioned just below the logo
@@ -88,13 +98,13 @@ struct SplashScreen: View {
                         
                         // Animate up to just below the logo
                         withAnimation(.easeOut(duration: 1.0)) {
-                            smileYPosition = logoBottomPosition + 380 // 30 points below logo
+                            smileYPosition = logoBottomPosition + 410 // 30 points below logo
                         }
                         
                         // Then resize
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                             withAnimation(.easeInOut(duration: 0.5)) {
-                                smileWidth = 140 // Final width
+                                smileWidth = 120 // Final width
                             }
                         }
                         

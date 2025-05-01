@@ -9,17 +9,21 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var navigate: Bool = false
+    @State private var isAnimating = false
     
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-
+            
             VStack {
                 Image("logo") // Replace with your actual logo asset name
                     .resizable()
                     .frame(width: 200, height: 120)
                     .padding(.top, 60)
                     .padding(.bottom, 80)
+                    .opacity(isAnimating ? 1 : 0)
+                    .offset(y: isAnimating ? 0 : -20)
+                    .animation(.easeOut(duration: 0.8).delay(0.2), value: isAnimating)
                 
                 VStack(spacing: 20) {
                     FeatureItem(
@@ -71,23 +75,29 @@ struct OnboardingView: View {
         }
         .tint(Theme.primaryColor) // Customize back button color (iOS 16+)
         .navigationBarBackButtonHidden(true)
-    }
-}
-
-struct Feature1OnboardItem: View {  // Renamed to match your naming convention
-    let emoji: String
-    let text: String
-    
-    
-    var body: some View {
-        HStack {
-            Text(emoji)
-            Text(text)
-                .foregroundColor(.white)
-            Spacer()
+        .onAppear {
+            withAnimation {
+                isAnimating = true
+            }
         }
-        .padding(.leading)
         
+    }
+    
+    struct Feature1OnboardItem: View {  // Renamed to match your naming convention
+        let emoji: String
+        let text: String
+        
+        
+        var body: some View {
+            HStack {
+                Text(emoji)
+                Text(text)
+                    .foregroundColor(.white)
+                Spacer()
+            }
+            .padding(.leading)
+            
+        }
     }
 }
 
