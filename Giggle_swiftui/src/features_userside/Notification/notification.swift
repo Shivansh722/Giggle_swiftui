@@ -47,24 +47,10 @@ struct NotificationScreen: View {
                                 .foregroundColor(Theme.onPrimaryColor)
                             
                             Spacer()
+                            EmptyView()
                             
-                            Image(systemName: "bell.fill")
-                                .font(.system(size: 22))
-                                .foregroundColor(Theme.primaryColor)
-                                .padding(8)
-                                .background(
-                                    Circle()
-                                        .fill(Theme.primaryColor.opacity(0.2))
-                                )
                         }
-                        
-                        Rectangle()
-                            .fill(LinearGradient(
-                                gradient: Gradient(colors: [Theme.primaryColor.opacity(0.6), Theme.primaryColor.opacity(0.2)]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            ))
-                            .frame(height: 2)
+
                     }
                     .padding(.horizontal)
                     .padding(.top, 16)
@@ -81,44 +67,7 @@ struct NotificationScreen: View {
                                 }
                             }
                         Spacer()
-                    } else if flnID == nil {
-                        // FLN not taken yet view
-                        VStack(spacing: 16) {
-                            Spacer()
-                            
-                            Image("desk")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity, maxHeight: 200)
-                            
-                            Text("Take FLN")
-                                .font(.headline)
-                                .foregroundColor(Theme.secondaryColor)
-                            
-                            Text("To start applying for gigs you need to take the FLN test first.")
-                                .font(.system(size: 16))
-                                .foregroundColor(Theme.tertiaryColor)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 24)
-                            
-                            CustomButton(
-                                title: "NEXT",
-                                backgroundColor: Theme.primaryColor,
-                                action: { navigateToLiteracy = true },
-                                width: 200,
-                                height: 50,
-                                cornerRadius: 6
-                            )
-                            
-                            NavigationLink(destination: FluencyIntroView(), isActive: $navigateToLiteracy) {
-                                EmptyView()
-                            }
-                            
-                            Spacer()
-                        }
-                        .opacity(contentOpacity)
-                        .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
-                    } else if showEmptyState && notifications.isEmpty {
+                    } else if showEmptyState && notifications.isEmpty{
                         // Empty state view
                         VStack(spacing: 20) {
                             Spacer()
@@ -315,7 +264,7 @@ struct NotificationCard: View {
                     
                     if notification.hasActions {
                         HStack(spacing: 12) {
-                            NavigationLink(destination: 
+                            NavigationLink(destination:
                                 GigInfoView(
                                     fln: flnID,
                                     jobId: job["$id"] as? String ?? "",
@@ -371,4 +320,3 @@ struct NotificationCard: View {
         }
     }
 }
-
