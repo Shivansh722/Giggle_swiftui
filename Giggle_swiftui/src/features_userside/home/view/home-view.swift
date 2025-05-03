@@ -159,13 +159,15 @@ struct HomeView: View {
                                 .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
                             
                             // Job cards with gentle transitions
-                            ForEach(jobresult.indices, id: \.self) { index in
-                                JobCardView(jobs: jobresult[index], flnID: flnID)
-                                    .transition(.asymmetric(
-                                        insertion: .move(edge: .leading).combined(with: .opacity),
-                                        removal: .move(edge: .trailing).combined(with: .opacity)
-                                    ))
-                                    .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                            LazyVStack(spacing: 16){
+                                ForEach(jobresult.indices, id: \.self) { index in
+                                    JobCardView(jobs: jobresult[index], flnID: flnID)
+                                        .transition(.asymmetric(
+                                            insertion: .move(edge: .leading).combined(with: .opacity),
+                                            removal: .move(edge: .trailing).combined(with: .opacity)
+                                        ))
+                                        .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                                }
                             }
                         }
                         .padding(.bottom, 8) // Add padding to avoid content being hidden by tab indicator
@@ -257,12 +259,12 @@ struct FLNGradeCardView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 22)
-                .stroke(Color.white, lineWidth: 1)
+                .stroke(Theme.onPrimaryColor, lineWidth: 1)
                 .cornerRadius(20)
             VStack(alignment: .leading, spacing: 10) {
                 Text("Your FLN Grade:")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                 Text(grade ?? "")
                     .font(.title2)
                     .bold()
@@ -276,7 +278,7 @@ struct FLNGradeCardView: View {
                             .frame(maxWidth: .infinity, maxHeight: 10)
                             .padding()
                             .background(Theme.primaryColor)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(8)
                     }
                     Spacer()
@@ -286,7 +288,7 @@ struct FLNGradeCardView: View {
                             .foregroundColor(.gray)
                         Text(lastUpdate)
                             .font(.caption)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                     }
                     NavigationLink(destination: FLNScoreView(), isActive: $navigate) {
                         EmptyView()

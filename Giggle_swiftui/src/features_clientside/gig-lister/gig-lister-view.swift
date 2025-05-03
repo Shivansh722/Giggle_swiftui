@@ -71,7 +71,7 @@ struct BulletPointInput: View {
                     Text("•")
                         .foregroundColor(.red)
                     TextField("", text: $items[index])
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .frame(height: 44)
                         .padding(.horizontal, 8)
                         .background(Color.gray.opacity(0.2))
@@ -87,7 +87,7 @@ struct BulletPointInput: View {
                 Text("•")
                     .foregroundColor(.red)
                 TextField(placeholder, text: $newItem)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .frame(height: 44)
                     .padding(.horizontal, 8)
                     .background(Color.gray.opacity(0.2))
@@ -170,7 +170,7 @@ struct GigDetailsScreen: View {
                         Text("Basic Information")
                             .font(.headline)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal,20)
                         
@@ -180,7 +180,7 @@ struct GigDetailsScreen: View {
                         CustomTextField(placeholder: "Location", isSecure: false, text: $location, icon: "map.fill")
                         Toggle("Remote Work", isOn: $isRemote)
                             .padding(.horizontal, 23)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                         DatePicker("Posted Date", selection: $postedDate, displayedComponents: .date)
                             .padding(.horizontal, 23)
                             .datePickerStyle(.compact)
@@ -192,7 +192,7 @@ struct GigDetailsScreen: View {
                         Text("Job Description (max 60 words)")
                             .font(.headline)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 20)
                         
@@ -218,7 +218,7 @@ struct GigDetailsScreen: View {
                             Text("Basic Requirements")
                                 .font(.headline)
                                 .fontWeight(.bold)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .padding(.horizontal, 20)
                             CustomTextField(placeholder: "Position", isSecure: false, text: $position, icon: "person.fill")
                             CustomTextField(placeholder: "Qualification", isSecure: false, text: $qualification, icon: "graduationcap.fill")
@@ -229,7 +229,7 @@ struct GigDetailsScreen: View {
                                 Text("Job Type")
                                     .font(.headline)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                 
                                 Spacer()
                                 
@@ -240,7 +240,7 @@ struct GigDetailsScreen: View {
                                     }
                                 }
                                 .pickerStyle(MenuPickerStyle())
-                                .accentColor(.white)
+                                .accentColor(Theme.onPrimaryColor)
                                 .padding(8)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(8)
@@ -250,7 +250,7 @@ struct GigDetailsScreen: View {
                                 Text("Required Giggle Grade")
                                     .font(.headline)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                 
                                 Spacer()
                                 
@@ -261,7 +261,7 @@ struct GigDetailsScreen: View {
                                     }
                                 }
                                 .pickerStyle(MenuPickerStyle())
-                                .accentColor(.white)
+                                .accentColor(Theme.onPrimaryColor)
                                 .padding(8)
                                 .background(Color.gray.opacity(0.2))
                                 .cornerRadius(8)
@@ -272,7 +272,7 @@ struct GigDetailsScreen: View {
                                     .font(.headline)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                 BulletPointInput(items: $requirements, placeholder: "Add requirement")
                             }
                             .padding(.horizontal, 20)
@@ -284,7 +284,7 @@ struct GigDetailsScreen: View {
                             Text("Facilities")
                                 .font(.headline)
                                 .fontWeight(.semibold)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                             BulletPointInput(items: $facilities, placeholder: "Add facility")
                         }
                         .padding(.horizontal, 20)

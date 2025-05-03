@@ -62,7 +62,7 @@ struct edit_profile_view: View {
                                 dismiss()
                             }) {
                                 Image(systemName: "chevron.left")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                     .imageScale(.large)
                                     .padding(8)
                             }
@@ -114,7 +114,7 @@ struct edit_profile_view: View {
                                         .frame(width: 30, height: 30)
                                         .background(
                                             Circle()
-                                                .fill(Color.white)
+                                                .fill(Theme.onPrimaryColor)
                                                 .shadow(color: Color.black.opacity(0.2), radius: 2)
                                         )
                                         .offset(x: 5, y: 5)
@@ -384,7 +384,7 @@ struct edit_profile_view: View {
                             Text("SAVE")
                                 .font(.headline)
                                 .fontWeight(.bold)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(width: geometry.size.width * 0.8, height: 50)
                                 .background(
                                     LinearGradient(

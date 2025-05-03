@@ -28,7 +28,7 @@ struct JobCardView2: View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text("$\(jobs["salary"]!)")
                 .font(.system(size: 28, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.onPrimaryColor)
             Text("/Mo")
                 .font(.system(size: 16))
                 .foregroundColor(Color.gray)
@@ -40,7 +40,7 @@ struct JobCardView2: View {
             HStack(spacing: 8) {
                 Text("\(jobs["job_trait"]!)")
                     .font(.system(size: 14))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding(.vertical, 6)
                     .padding(.horizontal, 12)
                     .background(Color.gray.opacity(0.2))
@@ -48,7 +48,7 @@ struct JobCardView2: View {
 
                 Text("\(jobs["job_type"]!)")
                     .font(.system(size: 14))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding(.vertical, 6)
                     .padding(.horizontal, 12)
                     .background(Color.gray.opacity(0.2))
@@ -89,7 +89,7 @@ struct JobCardView2: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(jobTitle)
                                 .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                             companyInfo
                         }
                         

@@ -47,7 +47,7 @@ struct FluencyIntroView: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .imageScale(.large)
                     }
                     
@@ -99,7 +99,7 @@ struct FluencyIntroView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .frame(alignment: .center)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .fontWeight(.bold)
                 }
                 .frame(width: 323)

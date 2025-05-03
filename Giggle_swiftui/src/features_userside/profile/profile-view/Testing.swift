@@ -26,7 +26,7 @@ struct Testing: View {
                 Text("Generate Questions")
                     .padding()
                     .background(Color.blue)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .cornerRadius(10)
             }
             

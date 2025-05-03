@@ -71,7 +71,7 @@ struct FlnIntroView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .frame(alignment: .center)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .fontWeight(.bold)
                 }
                 .frame(width: 323)

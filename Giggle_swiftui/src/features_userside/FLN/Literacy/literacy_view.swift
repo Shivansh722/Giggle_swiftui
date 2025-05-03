@@ -45,7 +45,7 @@ struct LiteracyView: View {
                         Text(currentQuestion.question)
                             .font(.title3)
                             .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .padding()
                         Spacer()
                     }
@@ -69,7 +69,7 @@ struct LiteracyView: View {
                                         .frame(width: 24, height: 24)
                                     
                                     Text(currentQuestion.options[index])
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Theme.onPrimaryColor)
                                         .fontWeight(.semibold)
                                     
                                     Spacer()
@@ -102,7 +102,7 @@ struct LiteracyView: View {
                         Text("NEXT")
                             .frame(width: geometry.size.width * 0.8, height: 50)
                             .background(selectedOption == nil ? Color.gray : Theme.primaryColor) // Disable look
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }
@@ -121,7 +121,7 @@ struct LiteracyView: View {
                         Text("FINISH")
                             .frame(width: geometry.size.width * 0.8, height: 50)
                             .background(selectedOption == nil ? Color.gray : Theme.primaryColor) // Disable look
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }

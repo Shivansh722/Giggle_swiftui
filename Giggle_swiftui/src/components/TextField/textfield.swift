@@ -12,7 +12,7 @@ struct CustomTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) { // Use VStack to stack text field and error message
             ZStack {
-                Color.white
+                Theme.onPrimaryColor
                     .cornerRadius(6)
                     .shadow(color: Color.gray.opacity(0.3), radius: 4, x: 0, y: 2)
                 

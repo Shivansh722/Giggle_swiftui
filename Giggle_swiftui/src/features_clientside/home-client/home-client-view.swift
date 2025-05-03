@@ -42,7 +42,7 @@ struct HomeClientView: View {
             Button(action: logout) {
                 Text("Logout")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 16)
                     .background(Theme.primaryColor)

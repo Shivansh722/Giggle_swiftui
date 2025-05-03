@@ -36,7 +36,7 @@ struct FluencyScoreView: View {
                         Text("Result")
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .padding(.top, 15)
                         Spacer()
                     }
@@ -94,11 +94,11 @@ struct FluencyScoreView: View {
                                         .fill(category.color)
                                         .frame(width: 10, height: 10)
                                     Text(category.name)
-                                        .foregroundColor(.white.opacity(0.7))
+                                        .foregroundColor(Theme.onPrimaryColor.opacity(0.7))
                                         .font(.subheadline)
                                     Spacer()
                                     Text("\(Int(category.percentage))%")
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Theme.onPrimaryColor)
                                         .font(.subheadline)
                                 }
                             }
@@ -129,7 +129,7 @@ struct FluencyScoreView: View {
 //                    }) {
 //                        Text("RETEST")
 //                            .fontWeight(.bold)
-//                            .foregroundColor(.white)
+//                            .foregroundColor(Theme.onPrimaryColor)
 //                            .frame(maxWidth: .infinity)
 //                            .padding()
 //                            .background(Theme.primaryColor)
@@ -141,7 +141,7 @@ struct FluencyScoreView: View {
                     }) {
                         Text("NEXT")
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Theme.primaryColor)
@@ -219,12 +219,12 @@ struct ContainerView: View {
         VStack(alignment: .center, spacing: 10) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.white)
+                .foregroundColor(Theme.onPrimaryColor)
                 .multilineTextAlignment(.center)
             
             Text(content)
                 .font(.body)
-                .foregroundColor(.white)
+                .foregroundColor(Theme.onPrimaryColor)
                 .padding(.horizontal)
                 .padding(.bottom, 10)
                 .multilineTextAlignment(.center)
@@ -235,7 +235,7 @@ struct ContainerView: View {
         .cornerRadius(20)
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white, lineWidth: 1)
+                .stroke(Theme.onPrimaryColor, lineWidth: 1)
         )
         .padding(.horizontal, 16)
     }

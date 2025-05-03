@@ -23,7 +23,7 @@ struct ClientOnboardingView: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .imageScale(.large)
                     }
                     
@@ -73,7 +73,7 @@ struct ClientOnboardingView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 44)
                         .frame(alignment: .center)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                 }
                 .frame(width: 323)
                 .background(Color(Theme.primaryColor))
@@ -118,7 +118,7 @@ struct FeatureOnboardItem: View {
         HStack {
             Text(emoji)
             Text(text)
-                .foregroundColor(.white)
+                .foregroundColor(Theme.onPrimaryColor)
             Spacer()
         }
     }
