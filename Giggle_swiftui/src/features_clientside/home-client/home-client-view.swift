@@ -17,6 +17,7 @@ struct WebClientHomeView: UIViewRepresentable {
 }
 
 struct HomeClientView: View {
+    @EnvironmentObject var viewModel: RegisterViewModel
     @ObservedObject var gigManager = GigManager.shared
     @StateObject private var appService = AppService()
     @State private var showGigLister = false
@@ -169,9 +170,8 @@ struct HomeClientView: View {
     
     private func logout() {
         Task {
-            let userDefault = UserDefaults.standard
+            viewModel.isLoggedIn = false
             UserDefaults.standard.removeObject(forKey: "status")
-            RegisterViewModel(service: AppService()).isLoading = false
             navigateToLogin = true
         }
     }
