@@ -88,6 +88,30 @@ struct NotificationScreen: View {
                         }
                         .opacity(contentOpacity)
                         .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
+                    } else if flnID == nil {
+                        // Empty state view
+                        VStack(spacing: 20) {
+                            Spacer()
+                            
+                            Image(systemName: "bell.slash")
+                                .font(.system(size: 60))
+                                .foregroundColor(.gray)
+                            
+                            Text("Give FLN First")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Theme.onPrimaryColor)
+                            
+                            Text("Please give the FLN Test, to view your notifications")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
+                            
+                            Spacer()
+                        }
+                        .opacity(contentOpacity)
+                        .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
                     } else {
                         // LinkedIn-style Notifications List
                         ScrollView {

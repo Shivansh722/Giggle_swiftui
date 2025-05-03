@@ -8,28 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
-		19B825472DC69AF300DF92F1 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 19B825462DC69AF300DF92F1 /* Lottie */; };
 		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
 		357088BA2D8DEE0800CDED8F /* mic.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088B92D8DEE0800CDED8F /* mic.gif */; };
 		357088C02D8DFA6100CDED8F /* empty-jobs.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088BF2D8DFA6100CDED8F /* empty-jobs.gif */; };
 		357088C22D8DFAD600CDED8F /* jobs-list.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C12D8DFAD600CDED8F /* jobs-list.gif */; };
 		357088C42D8DFB0700CDED8F /* block 2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C32D8DFB0700CDED8F /* block 2.gif */; };
-		3FBA222F2DC654B600AAA093 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 3FBA222E2DC654B600AAA093 /* Lottie */; };
+		35B554042DC69DE100C74C0F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 35B554032DC69DE100C74C0F /* Lottie */; };
+		35B557D22DC6A13600C74C0F /* Borel-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35B557CF2DC6A13600C74C0F /* Borel-Regular.ttf */; };
+		35B557D32DC6A13600C74C0F /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 35B557D02DC6A13600C74C0F /* OFL.txt */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		35B54F222DC51A9F00C74C0F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giggle_swiftui.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,14 +25,11 @@
 		357088BF2D8DFA6100CDED8F /* empty-jobs.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "empty-jobs.gif"; sourceTree = "<group>"; };
 		357088C12D8DFAD600CDED8F /* jobs-list.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "jobs-list.gif"; sourceTree = "<group>"; };
 		357088C32D8DFB0700CDED8F /* block 2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "block 2.gif"; sourceTree = "<group>"; };
+		35B557CF2DC6A13600C74C0F /* Borel-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Borel-Regular.ttf"; sourceTree = "<group>"; };
+		35B557D02DC6A13600C74C0F /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		190D7B062DBFF1C500181991 /* Borel */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Borel;
-			sourceTree = "<group>";
-		};
 		19E9A9932CD20FA5009F768B /* Giggle_swiftui */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Giggle_swiftui;
@@ -60,8 +45,7 @@
 				350EE9892D25629000F083D5 /* Popovers in Frameworks */,
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
 				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
-				19B825472DC69AF300DF92F1 /* Lottie in Frameworks */,
-				3FBA222F2DC654B600AAA093 /* Lottie in Frameworks */,
+				35B554042DC69DE100C74C0F /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +55,7 @@
 		19E9A9882CD20FA5009F768B = {
 			isa = PBXGroup;
 			children = (
-				190D7B062DBFF1C500181991 /* Borel */,
+				35B557D12DC6A13600C74C0F /* Borel */,
 				357088C32D8DFB0700CDED8F /* block 2.gif */,
 				357088C12D8DFAD600CDED8F /* jobs-list.gif */,
 				357088BF2D8DFA6100CDED8F /* empty-jobs.gif */,
@@ -89,6 +73,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		35B557D12DC6A13600C74C0F /* Borel */ = {
+			isa = PBXGroup;
+			children = (
+				35B557CF2DC6A13600C74C0F /* Borel-Regular.ttf */,
+				35B557D02DC6A13600C74C0F /* OFL.txt */,
+			);
+			path = Borel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,14 +92,12 @@
 				19E9A98D2CD20FA5009F768B /* Sources */,
 				19E9A98E2CD20FA5009F768B /* Frameworks */,
 				19E9A98F2CD20FA5009F768B /* Resources */,
-				35B54F222DC51A9F00C74C0F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				190D7B062DBFF1C500181991 /* Borel */,
 				19E9A9932CD20FA5009F768B /* Giggle_swiftui */,
 			);
 			name = Giggle_swiftui;
@@ -114,8 +105,7 @@
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
 				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
 				350EE9882D25629000F083D5 /* Popovers */,
-				19B825462DC69AF300DF92F1 /* Lottie */,
-				3FBA222E2DC654B600AAA093 /* Lottie */,
+				35B554032DC69DE100C74C0F /* Lottie */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -149,8 +139,7 @@
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */,
-				19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				35B554022DC69DE100C74C0F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -170,6 +159,8 @@
 				357088C42D8DFB0700CDED8F /* block 2.gif in Resources */,
 				357088BA2D8DEE0800CDED8F /* mic.gif in Resources */,
 				357088C22D8DFAD600CDED8F /* jobs-list.gif in Resources */,
+				35B557D22DC6A13600C74C0F /* Borel-Regular.ttf in Resources */,
+				35B557D32DC6A13600C74C0F /* OFL.txt in Resources */,
 				357088C02D8DFA6100CDED8F /* empty-jobs.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,14 +405,6 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.1;
-			};
-		};
 		19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
@@ -438,7 +421,7 @@
 				minimumVersion = 1.3.2;
 			};
 		};
-		3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+		35B554022DC69DE100C74C0F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
 			requirement = {
@@ -454,11 +437,6 @@
 			package = 1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
 			productName = Appwrite;
 		};
-		19B825462DC69AF300DF92F1 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
-		};
 		19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
@@ -469,9 +447,9 @@
 			package = 350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */;
 			productName = Popovers;
 		};
-		3FBA222E2DC654B600AAA093 /* Lottie */ = {
+		35B554032DC69DE100C74C0F /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = 35B554022DC69DE100C74C0F /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
