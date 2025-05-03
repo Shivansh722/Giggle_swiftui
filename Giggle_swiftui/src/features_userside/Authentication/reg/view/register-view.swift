@@ -14,6 +14,7 @@ struct RegisterView: View {
     @State private var showPasswordMismatchAlert: Bool = false
     @State private var emailError: String? = nil
     @State private var passwordError: String? = nil
+    @State private var isVisible: Bool = false
     
     // Add FocusState to manage keyboard focus
     @FocusState private var focusedField: Field?
@@ -41,7 +42,12 @@ struct RegisterView: View {
                                 .foregroundColor(Theme.primaryColor)
                                 .padding(.leading, geometry.size.width * 0.08)
                                 .padding(.top, geometry.size.height * 0.02)
+                                .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                                .animation(.easeInOut(duration: 0.8), value: isVisible)
                             Spacer()
+                        }
+                        .onAppear {
+                            isVisible = true // Trigger animation on view appearance
                         }
 
                         Image("logo")

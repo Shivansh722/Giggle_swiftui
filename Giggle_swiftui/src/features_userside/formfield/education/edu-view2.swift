@@ -9,6 +9,7 @@ struct eduView2: View {
     @State private var universityName = ""
     @State private var navigateToskillView = false
     @State private var showAlert = false
+    @State private var isVisible: Bool = false
     
     // Add FocusState to manage keyboard focus
     @FocusState private var focusedField: Field?
@@ -39,6 +40,9 @@ struct eduView2: View {
                                     .foregroundColor(Theme.onPrimaryColor)
                             }
                             .padding(.leading, 30) // Fixed padding
+                            .padding(.bottom, 10)
+                            .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                                .animation(.easeInOut(duration: 0.8), value: isVisible)
                         }
                         Spacer()
                     }
@@ -159,6 +163,9 @@ struct eduView2: View {
                     }
                     .padding(.top, 20) // Fixed padding
                 }
+                .onAppear {
+                        isVisible = true // Trigger animation on view appearance
+                    }
                 .alert(isPresented: $showAlert) {
                     Alert(
                         title: Text("Missing Information"),

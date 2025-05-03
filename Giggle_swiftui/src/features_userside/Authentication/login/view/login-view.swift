@@ -9,6 +9,7 @@ struct LoginSimpleView: View {
     @State private var isValidPassword = true
     @State private var navigateToNextScreen = false
     @State private var destinationView: AnyView?
+    @State private var isVisible = false
     
     // Add FocusState to manage keyboard focus
     @FocusState private var focusedField: Field?
@@ -33,14 +34,21 @@ struct LoginSimpleView: View {
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .foregroundColor(Theme.primaryColor)
+                                       
                                     Text("Back!")
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .foregroundColor(Theme.onPrimaryColor)
                                 }
+                                .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                .animation(.easeInOut(duration: 0.8), value: isVisible) // Smooth animation
                                 .padding(.leading, geometry.size.width * 0.08)
                             }
                             Spacer()
+                        }
+                        .padding(.top, geometry.size.height * 0.02)
+                        .onAppear {
+                            isVisible = true // Trigger animation on view appearance
                         }
                         .padding(.top, geometry.size.height * 0.02)
 

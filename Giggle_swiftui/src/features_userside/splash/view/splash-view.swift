@@ -56,8 +56,9 @@ struct SplashScreen: View {
                     
                     Image("logo2")
                         .resizable()
+                        .padding(.trailing, 10)
                         .scaledToFit()
-                        .frame(width: 280, height: 150)
+                        .frame(width: 260, height: 150)
                         .background(GeometryReader { geo in
                             Color.clear
                                 .onAppear {
@@ -70,7 +71,8 @@ struct SplashScreen: View {
                     Spacer()
                     
                     Text("Make your Story!!!")
-                        .font(.custom("Borel-Regular", size: 16))
+                        .font(.custom("Borel-Regular", size: 20))
+                        .padding(.bottom, 10)
                         .foregroundColor(Theme.onPrimaryColor)
                         .opacity(textOpacity) // Apply opacity
                         .onAppear {
@@ -98,7 +100,7 @@ struct SplashScreen: View {
                         
                         // Animate up to just below the logo
                         withAnimation(.easeOut(duration: 1.0)) {
-                            smileYPosition = logoBottomPosition + 410 // 30 points below logo
+                            smileYPosition = logoBottomPosition + 420 // 30 points below logo
                         }
                         
                         // Then resize

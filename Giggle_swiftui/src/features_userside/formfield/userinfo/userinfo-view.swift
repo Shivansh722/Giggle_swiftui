@@ -14,6 +14,7 @@ struct UserInfoView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var navigateToLocation: Bool = false
+    @State private var isVisible: Bool = false
     
     // Add FocusState to manage keyboard focus
     @FocusState private var focusedField: Field?
@@ -43,6 +44,8 @@ struct UserInfoView: View {
                                         .fontWeight(.bold)
                                         .foregroundColor(Theme.onPrimaryColor)
                                 }
+                                .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                                    .animation(.easeInOut(duration: 0.8), value: isVisible)
                                 .padding(.leading, geometry.size.width * 0.08)
                             }
                             Spacer()
@@ -171,6 +174,9 @@ struct UserInfoView: View {
                         .padding(.horizontal, geometry.size.width * 0.08)
                         .padding(.bottom, geometry.size.height * 0.02)
                     }
+                    .onAppear {
+                            isVisible = true // Trigger animation on view appearance
+                        }
                     .frame(minHeight: geometry.size.height) // Ensure content fills screen height
                 }
                 .scrollDismissesKeyboard(.interactively) // Optional: Dismiss keyboard on scroll

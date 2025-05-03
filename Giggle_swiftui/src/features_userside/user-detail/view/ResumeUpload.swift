@@ -14,6 +14,7 @@ struct ResumeUpload: View {
     @State private var isProcessingComplete = false
     @State private var isSkipped = false
     @State private var navigate = false
+    @State private var isVisible: Bool  = false
 
     var body: some View {
         ZStack {
@@ -32,6 +33,8 @@ struct ResumeUpload: View {
                             .fontWeight(.bold)
                             .foregroundColor(Theme.onPrimaryColor)
                     }
+                    .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                        .animation(.easeInOut(duration: 0.8), value: isVisible)
                     .padding(.leading, 24)
                     .padding(.top, 6)
                     Spacer()
@@ -165,6 +168,9 @@ struct ResumeUpload: View {
                 }
                 .padding()
             }
+            .onAppear {
+                    isVisible = true // Trigger animation on view appearance
+                }
             .sheet(isPresented: $isFilePickerPresented) {
                 DocumentPicker { url in
                     if let url = url {
