@@ -64,7 +64,7 @@ struct OnboardingView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 44)
                         .frame(alignment: .center)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                 }
                 .frame(width: 323)
                 .background(Color(Theme.primaryColor))
@@ -93,7 +93,7 @@ struct OnboardingView: View {
             HStack {
                 Text(emoji)
                 Text(text)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                 Spacer()
             }
             .padding(.leading)

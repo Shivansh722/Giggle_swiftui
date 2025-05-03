@@ -57,7 +57,7 @@ struct ProfileScreen: View {
                                 dismiss()
                             }) {
                                 Image(systemName: "chevron.left")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                     .imageScale(.large)
                                     .padding(8)
                             }
@@ -91,6 +91,13 @@ struct ProfileScreen: View {
                                             handleLogout()
                                         }
                                     }
+                                    .foregroundStyle(.red)
+                                    Templates.MenuButton(title: "Delete Account") {
+                                        Task {
+                                            
+                                        }
+                                    }
+                                    .foregroundStyle(.red)
                                 } label: { _ in
                                     Color.clear
                                         .frame(width: 0, height: 0)
@@ -382,7 +389,7 @@ struct ProfileScreen: View {
                     }
                 }
                 
-                NavigationLink(destination: RegisterView(), isActive: $navigate) {
+                NavigationLink(destination: LoginSimpleView(), isActive: $navigate) {
                     EmptyView()
                 }
             }

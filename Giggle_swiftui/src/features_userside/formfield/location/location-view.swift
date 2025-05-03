@@ -113,7 +113,7 @@ struct LocationView: View {
                 }) {
                     Text(isLocationPicked ? "NEXT" : "PICK YOUR CURRENT LOCATION")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .frame(width: 320, height: 50)
                         .background(Theme.primaryColor)
                         .cornerRadius(6)

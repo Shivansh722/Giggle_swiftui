@@ -10,7 +10,7 @@ struct PreferenceView: View {
             .lineLimit(1)
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
-            .foregroundColor(isSelected ? .white : .white)
+            .foregroundColor(isSelected ? Theme.onPrimaryColor : Theme.onPrimaryColor)
             .background(
                 RoundedRectangle(cornerRadius: 100)
                     .fill(isSelected ? Theme.primaryColor : .clear)  // Transparent when unselected

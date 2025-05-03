@@ -25,6 +25,7 @@ struct HomeClientView: View {
     @StateObject var getClientJob = ClientHandlerUserInfo(appService: AppService())
     @State private var jobresult: [[String: Any]] = []
     @State private var flnID: String? = nil
+    @State private var showDisabledAlert = false
     
     private var headerView: some View {
         HStack {
@@ -41,7 +42,7 @@ struct HomeClientView: View {
             Button(action: logout) {
                 Text("Logout")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 16)
                     .background(Theme.primaryColor)
@@ -71,16 +72,24 @@ struct HomeClientView: View {
     private var floatingActionButton: some View {
         VStack {
             Spacer()
-            Button(action: { showGigLister = true }) {
-                Image(systemName: "plus")
-                    .font(.system(size: 30))
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Theme.primaryColor)
-                    .clipShape(Circle())
-                    .shadow(radius: 5)
-            }
-            .padding(.bottom, 20)
+            Image(systemName: "plus")
+                .font(.system(size: 30))
+                .foregroundColor(.white)
+                .padding()
+                .background(Theme.primaryColor)
+                .clipShape(Circle())
+                .shadow(radius: 5)
+                .padding(.bottom, 20)
+                .onTapGesture {
+                    if jobresult.isEmpty {
+                        showGigLister = true
+                    } else {
+                        showDisabledAlert = true
+                    }
+                }
+                .alert("You already have a job posted.", isPresented: $showDisabledAlert) {
+                    Button("OK", role: .cancel) { }
+                }
         }
     }
     

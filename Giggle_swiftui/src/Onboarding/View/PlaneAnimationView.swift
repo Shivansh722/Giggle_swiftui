@@ -34,7 +34,7 @@ struct PlaneAnimationView: View {
                     Path { path in
                         path.addLines(trailPoints)
                     },
-                    with: .color(.white),
+                    with: .color(Theme.onPrimaryColor),
                     style: StrokeStyle(lineWidth: 6, lineCap: .round, dash: [10, 10])
                 )
             }
@@ -60,7 +60,7 @@ struct PlaneAnimationView: View {
                 .renderingMode(.template)
                 .resizable()
                 .frame(width: 30, height: 30)
-                .foregroundColor(.white)
+                .foregroundColor(Theme.onPrimaryColor)
                 .tag(1)
         }
         .frame(width: .infinity, height: .infinity)

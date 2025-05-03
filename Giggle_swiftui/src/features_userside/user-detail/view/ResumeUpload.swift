@@ -52,7 +52,7 @@ struct ResumeUpload: View {
                     }) {
                         Text("Skip")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 16)
                             .background(Theme.primaryColor)
@@ -79,13 +79,13 @@ struct ResumeUpload: View {
 
                 List {
                     if !uploadManager.selectedResumes.isEmpty {
-                        Section(header: Text("Selected Resumes").foregroundColor(.white)) {
+                        Section(header: Text("Selected Resumes").foregroundColor(Theme.onPrimaryColor)) {
                             ForEach(uploadManager.selectedResumes) { resume in
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(resume.fileName)
                                             .font(.headline)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Theme.onPrimaryColor)
                                         Text("\(resume.fileSize / 1024) KB")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -104,12 +104,12 @@ struct ResumeUpload: View {
                     }
 
                     if !uploadManager.uploadedResumes.isEmpty {
-                        Section(header: Text("Uploaded Resumes").foregroundColor(.white)) {
+                        Section(header: Text("Uploaded Resumes").foregroundColor(Theme.onPrimaryColor)) {
                             ForEach(uploadManager.uploadedResumes) { resume in
                                 VStack(alignment: .leading) {
                                     Text(resume.fileName)
                                         .font(.headline)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Theme.onPrimaryColor)
                                     Text("\(resume.fileSize / 1024) KB")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
@@ -143,8 +143,8 @@ struct ResumeUpload: View {
                             .padding()
                             .background(Color.clear)
                             .overlay(RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.white, lineWidth: 1))
-                            .foregroundColor(.white)
+                                .stroke(Theme.onPrimaryColor, lineWidth: 1))
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(8)
                     }
 
@@ -153,7 +153,7 @@ struct ResumeUpload: View {
                     }) {
                         if uploadManager.isProcessingUpload {
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .progressViewStyle(CircularProgressViewStyle(tint: Theme.onPrimaryColor))
                         } else {
                             Text("Upload All")
                                 .frame(maxWidth: .infinity)
@@ -162,7 +162,7 @@ struct ResumeUpload: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(uploadManager.selectedResumes.isEmpty ? Color.gray : Theme.primaryColor)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .cornerRadius(8)
                     .disabled(uploadManager.isProcessingUpload || uploadManager.selectedResumes.isEmpty)
                 }

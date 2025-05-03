@@ -64,7 +64,7 @@ struct ClientInfoView: View {
                                     .scaledToFill()
                                     .frame(width: 100, height: 100)
                                     .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    .overlay(Circle().stroke(Theme.onPrimaryColor, lineWidth: 2))
                             } else {
                                 Circle()
                                     .fill(Color.gray)
@@ -74,7 +74,7 @@ struct ClientInfoView: View {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 50, height: 50)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Theme.onPrimaryColor)
                                     )
                             }
                         }
@@ -174,7 +174,7 @@ struct ClientInfoView: View {
                         }) {
                             Text("NEXT")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Theme.primaryColor)

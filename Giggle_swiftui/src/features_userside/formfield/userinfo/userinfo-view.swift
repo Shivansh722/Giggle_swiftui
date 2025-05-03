@@ -64,7 +64,7 @@ struct UserInfoView: View {
                                     .scaledToFill()
                                     .frame(width: geometry.size.width * 0.25, height: geometry.size.width * 0.25)
                                     .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    .overlay(Circle().stroke(Theme.onPrimaryColor, lineWidth: 2))
                                     .padding(.bottom, geometry.size.height * 0.02)
                             } else {
                                 Circle()
@@ -75,7 +75,7 @@ struct UserInfoView: View {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: geometry.size.width * 0.15, height: geometry.size.width * 0.15)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Theme.onPrimaryColor)
                                     )
                                     .padding(.bottom, geometry.size.height * 0.02)
                             }
@@ -112,7 +112,7 @@ struct UserInfoView: View {
                             DateViewPicker(
                                 selectedDate: $dateOfBirth,
                                 title: "Date of Birth",
-                                BackgroundColor: Color.white,
+                                BackgroundColor: Theme.onPrimaryColor,
                                 textColor: Theme.onPrimaryColor,
                                 padding: geometry.size.width * 0.03
                             )
@@ -165,7 +165,7 @@ struct UserInfoView: View {
                         }) {
                             Text("NEXT")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Theme.primaryColor)

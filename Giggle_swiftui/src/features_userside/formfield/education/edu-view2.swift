@@ -69,7 +69,7 @@ struct eduView2: View {
                         .pickerStyle(MenuPickerStyle())
                         .frame(maxWidth: .infinity, maxHeight: 15)
                         .padding()
-                        .background(Color.white)
+                        .background(Theme.onPrimaryColor)
                         .cornerRadius(6)
                         .shadow(color: Color.gray.opacity(0.3), radius: 4, x: 0, y: 2)
                         .padding(.horizontal, 30) // Fixed padding
@@ -151,7 +151,7 @@ struct eduView2: View {
                         }) {
                             Text("NEXT")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(width: 300, height: 50) // Approximate 80% of typical screen width
                                 .background(Theme.primaryColor)
                                 .cornerRadius(6)
