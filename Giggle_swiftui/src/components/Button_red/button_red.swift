@@ -30,7 +30,7 @@ struct CustomButton: View {
                 }
 
                 Text(title)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .fontWeight(.bold)
             }
             .frame(width: width ?? 200, height: height ?? 50)

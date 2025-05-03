@@ -87,7 +87,7 @@ struct user_detail_auto: View {
                                     .fontWeight(.bold)
                                     .padding()
                                     .background(Theme.primaryColor)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                     .cornerRadius(8)
                             }
                         }

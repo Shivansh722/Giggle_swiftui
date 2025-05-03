@@ -44,7 +44,7 @@ struct userCardCustomView: View {
                     .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.8) // Adjusted for screen
                 Text(title)
                     .font(.system(size: geometry.size.width * 0.1, weight: .medium)) // Responsive font size
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
             }
             .frame(width: geometry.size.width * 0.8, height: geometry.size.height * 0.5) // Responsive frame size
             .padding()

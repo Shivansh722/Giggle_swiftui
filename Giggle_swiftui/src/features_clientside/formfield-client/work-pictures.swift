@@ -26,7 +26,7 @@ struct WorkPitcher: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .imageScale(.large)
                     }
                     
@@ -36,20 +36,20 @@ struct WorkPitcher: View {
                 Text("Upload Your Company Logo")
                     .font(.title)
                     .bold()
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 20)
                     .padding(.top, 10)
 
                 List {
                     if !uploadManager.selectedResumes.isEmpty {
-                        Section(header: Text("Selected Images").foregroundColor(.white)) {
+                        Section(header: Text("Selected Images").foregroundColor(Theme.onPrimaryColor)) {
                             ForEach(uploadManager.selectedResumes) { resume in
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(resume.fileName)
                                             .font(.headline)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Theme.onPrimaryColor)
                                         Text("\(resume.fileSize / 1024) KB")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -68,12 +68,12 @@ struct WorkPitcher: View {
                     }
 
                     if !uploadManager.uploadedResumes.isEmpty {
-                        Section(header: Text("Uploaded Images").foregroundColor(.white)) {
+                        Section(header: Text("Uploaded Images").foregroundColor(Theme.onPrimaryColor)) {
                             ForEach(uploadManager.uploadedResumes) { resume in
                                 VStack(alignment: .leading) {
                                     Text(resume.fileName)
                                         .font(.headline)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Theme.onPrimaryColor)
                                     Text("\(resume.fileSize / 1024) KB")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
@@ -108,8 +108,8 @@ struct WorkPitcher: View {
                             .padding()
                             .background(Color.clear)
                             .overlay(RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.white, lineWidth: 1))
-                            .foregroundColor(.white)
+                                .stroke(Theme.onPrimaryColor, lineWidth: 1))
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(8)
                     }
 
@@ -127,7 +127,7 @@ struct WorkPitcher: View {
                                 uploadManager.isProcessingUpload
                                 ? Color.gray : Theme.primaryColor
                             )
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(8)
                     }
                     .disabled(

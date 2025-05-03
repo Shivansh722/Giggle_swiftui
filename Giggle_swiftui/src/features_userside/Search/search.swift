@@ -34,10 +34,6 @@ struct SearchScreen: View {
                                 .font(.system(size: 28, weight: .bold))
                                 .foregroundColor(Theme.onPrimaryColor)
                             
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(Theme.primaryColor)
-                                .font(.system(size: 20))
-                            
                             Spacer()
                             
                             Button(action: {
@@ -84,7 +80,7 @@ struct SearchScreen: View {
                                 }
                             }
                         }
-                        .background(Color.white)
+                        .background(Theme.onPrimaryColor)
                         .cornerRadius(10)
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
@@ -193,7 +189,7 @@ struct SearchScreen: View {
                                     }) {
                                         Text("Apply")
                                             .font(.system(size: 16, weight: .medium))
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Theme.onPrimaryColor)
                                             .padding(.vertical, 12)
                                             .frame(maxWidth: .infinity)
                                             .background(Theme.primaryColor)
@@ -262,7 +258,6 @@ struct SearchScreen: View {
                                 LazyVStack(spacing: 16) {
                                     ForEach(filteredJobs.indices, id: \.self) { index in
                                         JobCardView(jobs: filteredJobs[index], flnID: flnID)
-                                            .padding(.horizontal, 16)
                                     }
                                 }
                                 .padding(.top, 16)
@@ -394,7 +389,7 @@ struct FilterChipView: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(isSelected ? Theme.primaryColor : Color.gray.opacity(0.2))
                 )
-                .foregroundColor(isSelected ? .white : Theme.onPrimaryColor)
+                .foregroundColor(isSelected ? Theme.onPrimaryColor : Theme.onPrimaryColor)
         }
     }
 }
