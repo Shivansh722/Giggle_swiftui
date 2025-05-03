@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ProfileScreen: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var viewModel: RegisterViewModel
     @State private var isPopoverPresented = false
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     @State private var resumeFiles: [[String]] = []
@@ -428,9 +429,8 @@ struct ProfileScreen: View {
 
     private func handleLogout() {
         let userDefault = UserDefaults.standard
-        userDefault.set("", forKey: "status")
-        let status = UserDefaults.standard.string(forKey: "status")
-        print(status!)
+        viewModel.isLoggedIn = false
+        UserDefaults.standard.removeObject(forKey: "status")
         navigate = true
     }
 }
