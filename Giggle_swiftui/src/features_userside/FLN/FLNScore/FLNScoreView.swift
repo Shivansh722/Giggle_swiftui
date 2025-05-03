@@ -34,7 +34,7 @@ struct FLNScoreView: View {
                                 Text("Fluency")
                                     .font(.title)
                                     .bold()
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                             }
                             Spacer()
                             Text("\(FlnDataManager.shared.flnData.fluencyScore)%")
@@ -103,7 +103,7 @@ struct FLNScoreView: View {
                     }) {
                         Text("RETEST")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .frame(maxWidth: .infinity, maxHeight: 50)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6)
@@ -120,7 +120,7 @@ struct FLNScoreView: View {
                     }) {
                         Text("APPLY WITH GIGGLE")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .frame(maxWidth: .infinity, maxHeight: 50)
                             .background(Theme.primaryColor)
                             .cornerRadius(6)

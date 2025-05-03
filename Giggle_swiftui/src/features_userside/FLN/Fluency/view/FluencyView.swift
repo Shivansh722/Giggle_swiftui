@@ -94,7 +94,7 @@ struct FluencyView: View {
                     Text("CONTINUE")
                         .frame(width: 300, height: 50)
                         .background(Theme.primaryColor)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .cornerRadius(6)
                         .font(.headline)
                 }

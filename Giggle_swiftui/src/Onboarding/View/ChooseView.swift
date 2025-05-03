@@ -63,7 +63,7 @@ struct ChooseView: View {
                                     trail.addLine(to: point)
                                 }
                             }
-                            .stroke(Color.white, style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [10, 10]))
+                            .stroke(Theme.onPrimaryColor, style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [10, 10]))
                         }
 
                         let dx = planePoint.x - previousPoint.x
@@ -73,7 +73,7 @@ struct ChooseView: View {
                         Image(systemName: "paperplane.fill")
                             .resizable()
                             .frame(width: 60, height: 60)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .rotationEffect(
                                 // Calculate angle using ternary operator directly here
                                 Angle(radians: (planePoint.x != previousPoint.x || planePoint.y != previousPoint.y) ? atan2(planePoint.y - previousPoint.y, planePoint.x - previousPoint.x) : 0 )
@@ -83,43 +83,69 @@ struct ChooseView: View {
                             .position(planePoint)
                     }
                     .onChange(of: progress) { newProgress in
-                        if newProgress < previousProgress {
-                            trailPoints = []
-                        }
-                        
-                        // Only add points if we have a valid previous point
-                        if previousPoint != .zero || trailPoints.isEmpty {
+                        // Only add points if progress is actively increasing and > 0
+                        // and we have a valid previous point to draw from
+                        if newProgress > previousProgress && newProgress > 0.0 && previousPoint != .zero {
                             trailPoints.append(planePoint)
+
+                            if trailPoints.count > 300 { // Limit trail length
+                                trailPoints.removeFirst()
+                            }
+                        } else if newProgress < previousProgress {
+                            // If progress decreases (e.g., view reappears and resets), clear trail
+                            trailPoints = []
+                            previousPoint = .zero // Reset previous point as well
+                        }
+
+                        // Update previous point only if progress is increasing
+                        if newProgress > previousProgress {
+                             previousPoint = planePoint
                         }
                         
-                        if trailPoints.count > 300 {
-                            trailPoints.removeFirst()
-                        }
-                        previousPoint = planePoint
+                        // Always update previousProgress to track changes
                         previousProgress = newProgress
                     }
                 }
                 .frame(height: 200)
                 .onAppear {
-                    // Reset everything when view appears
-                    trailPoints = []
-                    previousPoint = .zero
-                    previousProgress = 0.0
-                    progress = 0.0
+                    // --- More Robust Reset ---
+                    timer?.invalidate() // Ensure any lingering timer is stopped
+                    timer = nil
+                    trailPoints = []      // Clear trail points
+                    previousPoint = .zero // Reset the starting previous point
+                    progress = 0.0        // Reset animation progress
+                    previousProgress = 0.0 // Reset previous progress tracking
                     animationFinished = false
-                    
-                    // Delay starting the animation slightly to ensure clean state
+                    // Reset other relevant states if needed
+                    chooseAnimationProgress = 0.0
+                    chooseAnimationFinished = false
+                    shouldNavigate = false
+                    // --- End Reset ---
+
+                    // Delay starting the animation slightly
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         let duration: TimeInterval = 1.0
                         let fps: Double = 60
                         var timeElapsed: TimeInterval = 0
 
-                        timer?.invalidate() // Cancel any existing timer
-                        
+                        // Re-initialize previousPoint just before timer starts, using initial path position
+                        // This ensures the first trail segment calculation is correct
+                        let initialPath = Path { path in
+                            let width = UIScreen.main.bounds.width // Use screen width for approximation if geo isn't available here
+                            let height = 200.0 - 100 // Use frame height
+                            let midY = height * 0.5
+                            path.move(to: CGPoint(x: 0, y: midY))
+                            path.addQuadCurve(to: CGPoint(x: width * 0.18, y: midY), control: CGPoint(x: width * 0.1, y: midY - 40))
+
+                        }
+                        previousPoint = initialPath.trimmedPath(from: 0, to: 0.01).currentPoint ?? .zero
+
+
                         timer = Timer.scheduledTimer(withTimeInterval: 1.0 / fps, repeats: true) { timer in
                             timeElapsed += 1.0 / fps
                             let newProgress = min(CGFloat(timeElapsed / duration), 1.0)
 
+                            // Directly update progress state variable
                             progress = newProgress
 
                             if newProgress >= 1.0 {
@@ -134,6 +160,12 @@ struct ChooseView: View {
                     // Cancel timer if view disappears
                     timer?.invalidate()
                     timer = nil
+                    // Optionally reset progress here too if you want the animation
+                    // to always restart from the beginning when returning
+                    // progress = 0.0
+                    // previousProgress = 0.0
+                    // trailPoints = []
+                    // previousPoint = .zero
                 }
                 VStack {
                     Text("Are you looking for gigs or providing one?")
@@ -154,10 +186,10 @@ struct ChooseView: View {
                         }) {
                             Text("Gig Provider")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
-                                .background(isGigProviderSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64))
+                                .background(isGigProviderSelected ? Theme.primaryColor : Color(red: 0.64, green: 0.64, blue: 0.64))
                                 .cornerRadius(16)
                         }
                         .disabled(chooseAnimationProgress > 0 && !chooseAnimationFinished)
@@ -172,10 +204,10 @@ struct ChooseView: View {
                         }) {
                             Text("Gig Seeker")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(Theme.onPrimaryColor)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
-                                .background(isGigSeekerSelected ? Color.red : Color(red: 0.64, green: 0.64, blue: 0.64))
+                                .background(isGigSeekerSelected ? Theme.primaryColor : Color(red: 0.64, green: 0.64, blue: 0.64))
                                 .cornerRadius(16)
                         }
                         .disabled(chooseAnimationProgress > 0 && !chooseAnimationFinished)

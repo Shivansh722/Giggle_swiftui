@@ -41,7 +41,7 @@ struct HomeClientView: View {
             Button(action: logout) {
                 Text("Logout")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 16)
                     .background(Theme.primaryColor)
@@ -74,7 +74,7 @@ struct HomeClientView: View {
             Button(action: { showGigLister = true }) {
                 Image(systemName: "plus")
                     .font(.system(size: 30))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .padding()
                     .background(Theme.primaryColor)
                     .clipShape(Circle())

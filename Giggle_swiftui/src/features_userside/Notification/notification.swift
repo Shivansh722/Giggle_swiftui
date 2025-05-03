@@ -37,11 +37,13 @@ struct NotificationScreen: View {
                 VStack(spacing: 0) {
                     // Header
                     HStack(alignment: .center) {
-                        Text("Giggle ")
-                            .font(.system(size: 28, weight: .bold))
+                        Text("Giggle")
+                            .font(.title)
+                            .fontWeight(.bold)
                             .foregroundColor(Theme.primaryColor)
-                        Text("Notifications")
-                            .font(.system(size: 28, weight: .bold))
+                        Text("Alerts")
+                            .font(.title)
+                            .fontWeight(.bold)
                             .foregroundColor(Theme.onPrimaryColor)
                         
                         Spacer()
@@ -55,7 +57,7 @@ struct NotificationScreen: View {
                     if isLoading {
                         Spacer()
                         ProgressView()
-                            .tint(.white)
+                            .tint(Theme.onPrimaryColor)
                             .onAppear {
                                 Task {
                                     await fetchFlnID()

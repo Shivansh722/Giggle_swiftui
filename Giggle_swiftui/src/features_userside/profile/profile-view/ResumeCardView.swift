@@ -5,7 +5,7 @@ struct ResumeCardView: View {
     var body: some View {
         HStack {
             Image(systemName: "doc.text.fill")
-                .foregroundColor(.red)
+                .foregroundColor(Theme.primaryColor)
                 .font(.largeTitle)
             VStack(alignment: .leading) {
                 Text(ResumeName)

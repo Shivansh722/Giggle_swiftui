@@ -45,7 +45,7 @@ struct NumeracyView: View {
                         Text(currentQuestion.question)
                             .font(.title3)
                             .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .padding()
                         Spacer()
                     }
@@ -68,7 +68,7 @@ struct NumeracyView: View {
                                         .frame(width: 24, height: 24)
                                     
                                     Text(currentQuestion.options[index])
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Theme.onPrimaryColor)
                                         .fontWeight(.semibold)
                                     
                                     Spacer()
@@ -101,7 +101,7 @@ struct NumeracyView: View {
                         Text("NEXT")
                             .frame(width: geometry.size.width * 0.8, height: 50)
                             .background(selectedOption == nil ? Color.gray : Theme.primaryColor)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }
@@ -123,7 +123,7 @@ struct NumeracyView: View {
                         Text("FINISH")
                             .frame(width: geometry.size.width * 0.8, height: 50)
                             .background(selectedOption == nil ? Color.gray : Theme.primaryColor)
-                            .foregroundColor(.white)
+                            .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }

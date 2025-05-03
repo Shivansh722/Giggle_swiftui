@@ -22,7 +22,7 @@ struct ResumeUploadView: View {
                 // Title
                 Text("Resume & Portfolio")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.onPrimaryColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 20)
                 
@@ -41,7 +41,7 @@ struct ResumeUploadView: View {
                                     .foregroundColor(Color(hex: "424242"))
                                     .padding()
                                     .frame(maxWidth: geometry.size.width * 0.7, maxHeight: geometry.size.height * 0.1)
-                                    .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.white))
+                                    .background(RoundedRectangle(cornerRadius: 12).foregroundColor(Theme.onPrimaryColor))
                                     .padding(.top, 35)
                             } else {
                                 ForEach(viewModel.files) { file in
@@ -69,7 +69,7 @@ struct ResumeUploadView: View {
                                         }
                                     }
                                     .padding()
-                                    .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.white))
+                                    .background(RoundedRectangle(cornerRadius: 12).foregroundColor(Theme.onPrimaryColor))
                                     .frame(maxWidth: geometry.size.width * 0.7)
                                     .padding(.top, 35)
                                 }
@@ -82,7 +82,7 @@ struct ResumeUploadView: View {
                                     .padding()
                                     .frame(maxWidth: geometry.size.width * 0.5)
                                     .background(Theme.primaryColor)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Theme.onPrimaryColor)
                                     .cornerRadius(8)
                                     .padding(.vertical, 20)
                             }
@@ -106,7 +106,7 @@ struct ResumeUploadView: View {
                 VStack(spacing: 16) {
                     Text("Portfolio (Optional)")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     VStack(alignment: .leading, spacing: 8) {
@@ -159,7 +159,7 @@ struct ResumeUploadView: View {
                         .padding()
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(Theme.primaryColor)
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .cornerRadius(8)
                 }
                 .padding(.top, 15)
