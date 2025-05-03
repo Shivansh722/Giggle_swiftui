@@ -20,7 +20,7 @@ struct OnboardingView: View {
                     .resizable()
                     .frame(width: 200, height: 120)
                     .padding(.top, 60)
-                    .padding(.bottom, 80)
+                    .padding(.bottom, 40)
                     .opacity(isAnimating ? 1 : 0)
                     .offset(y: isAnimating ? 0 : -20)
                     .animation(.easeOut(duration: 0.8).delay(0.2), value: isAnimating)
@@ -38,7 +38,7 @@ struct OnboardingView: View {
                     )
                     FeatureItem(
                         emoji: "💵",
-                        text: "Earn money and have experience",
+                        text: "Earn money",
                         delay: 0.3
                     )
                     FeatureItem(
@@ -71,6 +71,7 @@ struct OnboardingView: View {
                 .cornerRadius(8)
                 .padding()
             }
+            .padding(.top, 40)
             .padding(.horizontal, 50)
         }
         .tint(Theme.primaryColor) // Customize back button color (iOS 16+)

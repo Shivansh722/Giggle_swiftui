@@ -143,3 +143,5 @@ struct JobDetailView: View {
             .padding()
     }
 }
+
+

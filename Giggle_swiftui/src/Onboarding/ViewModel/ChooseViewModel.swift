@@ -26,8 +26,9 @@ struct FeatureItem: View {
     @State private var isVisible = false
     
     var body: some View {
-        HStack(spacing: 40) {
+        HStack(spacing: 20) {
             Text(emoji)
+                .font(.system(size: 32))
                 .opacity(isVisible ? 1 : 0)
                 .offset(x: isVisible ? 0 : -20)
                 .animation(.easeOut(duration: 0.5).delay(delay), value: isVisible)
@@ -40,7 +41,7 @@ struct FeatureItem: View {
                 .offset(x: isVisible ? 0 : 20)
                 .animation(.easeOut(duration: 0.5).delay(delay + 0.1), value: isVisible)
         }
-        .padding([.leading, .trailing], 60)
+        .padding(.leading, 40)
         .onAppear {
             withAnimation {
                 isVisible = true
