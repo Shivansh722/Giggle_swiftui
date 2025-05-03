@@ -1,5 +1,5 @@
 import SwiftUI
-//import Lottie
+import Lottie
 import CoreGraphics
 
 struct ChooseView: View {
@@ -181,8 +181,8 @@ struct ChooseView: View {
                         .disabled(chooseAnimationProgress > 0 && !chooseAnimationFinished)
                     }
                     .padding(.horizontal, 26)
-//                    LottieView(name: "choose_view_animation", progress: $chooseAnimationProgress)
-//                                        .frame(height: 150)
+                    LottieView(name: "choose_view_animation", progress: $chooseAnimationProgress)
+                                        .frame(height: 150)
 
                     if selectedRole == .user {
                         NavigationLink(
@@ -240,108 +240,108 @@ struct ChooseView: View {
 }
 
 // Lottie View to display the animation
-//struct LottieView: UIViewRepresentable {
-//    var name: String
-//    @Binding var progress: CGFloat
-//    
-//    func makeUIView(context: Context) -> UIView {
-//        LottieConfiguration.shared.renderingEngine = .mainThread
-//        let view = UIView(frame: .zero)
-//        
-//        // Create the animation view
-//        let animationView = LottieAnimationView()
-//        animationView.animation = LottieAnimation.named(name)
-//        animationView.contentMode = .scaleAspectFit
-//        
-//        // Add animation view to container
-//        animationView.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(animationView)
-//        
-//        NSLayoutConstraint.activate([
-//            animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
-//        ])
-//        
-//        // Store the animation view for updates
-//        context.coordinator.animationView = animationView
-//        
-//        return view
-//    }
-//    
-//    func updateUIView(_ uiView: UIView, context: Context) {
-//        // Update the animation progress
-//        context.coordinator.animationView?.currentProgress = Double(progress)
-//    }
-//    
-//    func makeCoordinator() -> Coordinator {
-//        Coordinator()
-//    }
-//    
-//    class Coordinator {
-//        var animationView: LottieAnimationView?
-//    }
-//}
-//
-//extension CGPath {
-//    var length: CGFloat {
-//        var length: CGFloat = 0.0
-//        var currentPoint: CGPoint = .zero
-//
-//        applyWithBlock { elementPointer in
-//            let element = elementPointer.pointee
-//            switch element.type {
-//            case .moveToPoint:
-//                currentPoint = element.points[0]
-//            case .addLineToPoint:
-//                let nextPoint = element.points[0]
-//                length += currentPoint.distance(to: nextPoint)
-//                currentPoint = nextPoint
-//            case .addQuadCurveToPoint:
-//                // Approximate curve with line segments
-//                let nextPoint = element.points[1]
-//                length += currentPoint.distance(to: nextPoint) // simple approximation
-//                currentPoint = nextPoint
-//            case .addCurveToPoint:
-//                let nextPoint = element.points[2]
-//                length += currentPoint.distance(to: nextPoint)
-//                currentPoint = nextPoint
-//            default:
-//                break
-//            }
-//        }
-//        return length
-//    }
-//
-//    func point(at distance: CGFloat) -> CGPoint? {
-//        var total: CGFloat = 0.0
-//        var currentPoint: CGPoint = .zero
-//        var result: CGPoint?
-//
-//        applyWithBlock { elementPointer in
-//            let element = elementPointer.pointee
-//            switch element.type {
-//            case .moveToPoint:
-//                currentPoint = element.points[0]
-//            case .addLineToPoint:
-//                let nextPoint = element.points[0]
-//                let segmentLength = currentPoint.distance(to: nextPoint)
-//                if total + segmentLength >= distance {
-//                    let ratio = (distance - total) / segmentLength
-//                    result = CGPoint(
-//                        x: currentPoint.x + (nextPoint.x - currentPoint.x) * ratio,
-//                        y: currentPoint.y + (nextPoint.y - currentPoint.y) * ratio
-//                    )
-//                }
-//                total += segmentLength
-//                currentPoint = nextPoint
-//            default:
-//                break
-//            }
-//        }
-//
-//        return result
-//    }
-//}
+struct LottieView: UIViewRepresentable {
+    var name: String
+    @Binding var progress: CGFloat
+    
+    func makeUIView(context: Context) -> UIView {
+        LottieConfiguration.shared.renderingEngine = .mainThread
+        let view = UIView(frame: .zero)
+        
+        // Create the animation view
+        let animationView = LottieAnimationView()
+        animationView.animation = LottieAnimation.named(name)
+        animationView.contentMode = .scaleAspectFit
+        
+        // Add animation view to container
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(animationView)
+        
+        NSLayoutConstraint.activate([
+            animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
+        ])
+        
+        // Store the animation view for updates
+        context.coordinator.animationView = animationView
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // Update the animation progress
+        context.coordinator.animationView?.currentProgress = Double(progress)
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    class Coordinator {
+        var animationView: LottieAnimationView?
+    }
+}
+
+extension CGPath {
+    var length: CGFloat {
+        var length: CGFloat = 0.0
+        var currentPoint: CGPoint = .zero
+
+        applyWithBlock { elementPointer in
+            let element = elementPointer.pointee
+            switch element.type {
+            case .moveToPoint:
+                currentPoint = element.points[0]
+            case .addLineToPoint:
+                let nextPoint = element.points[0]
+                length += currentPoint.distance(to: nextPoint)
+                currentPoint = nextPoint
+            case .addQuadCurveToPoint:
+                // Approximate curve with line segments
+                let nextPoint = element.points[1]
+                length += currentPoint.distance(to: nextPoint) // simple approximation
+                currentPoint = nextPoint
+            case .addCurveToPoint:
+                let nextPoint = element.points[2]
+                length += currentPoint.distance(to: nextPoint)
+                currentPoint = nextPoint
+            default:
+                break
+            }
+        }
+        return length
+    }
+
+    func point(at distance: CGFloat) -> CGPoint? {
+        var total: CGFloat = 0.0
+        var currentPoint: CGPoint = .zero
+        var result: CGPoint?
+
+        applyWithBlock { elementPointer in
+            let element = elementPointer.pointee
+            switch element.type {
+            case .moveToPoint:
+                currentPoint = element.points[0]
+            case .addLineToPoint:
+                let nextPoint = element.points[0]
+                let segmentLength = currentPoint.distance(to: nextPoint)
+                if total + segmentLength >= distance {
+                    let ratio = (distance - total) / segmentLength
+                    result = CGPoint(
+                        x: currentPoint.x + (nextPoint.x - currentPoint.x) * ratio,
+                        y: currentPoint.y + (nextPoint.y - currentPoint.y) * ratio
+                    )
+                }
+                total += segmentLength
+                currentPoint = nextPoint
+            default:
+                break
+            }
+        }
+
+        return result
+    }
+}
 
 extension CGPoint {
     func distance(to: CGPoint) -> CGFloat {

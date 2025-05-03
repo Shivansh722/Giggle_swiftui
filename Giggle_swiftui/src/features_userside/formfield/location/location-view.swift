@@ -12,6 +12,7 @@ struct LocationView: View {
     @State private var showLocationEditIcon = false
     @State private var navigateToEduView1 = false
     @State private var address: String = "Fetching address..."
+    @State private var isVisible: Bool = false
     
     // Add FocusState for potential future text fields
     @FocusState private var focusedField: Field?
@@ -38,6 +39,8 @@ struct LocationView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.onPrimaryColor)
                         }
+                        .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                            .animation(.easeInOut(duration: 0.8), value: isVisible)
                         .padding(.leading, 30)
                     }
                     Spacer()
@@ -118,6 +121,9 @@ struct LocationView: View {
                 .frame(maxWidth: .infinity, alignment: .center) // Center the button
                 .padding(.bottom, 20)
             }
+            .onAppear {
+                    isVisible = true // Trigger animation on view appearance
+                }
             
             // Progress Indicator Overlay
             if !isLocationPicked && locationManager.isLoading {

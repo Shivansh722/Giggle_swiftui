@@ -5,6 +5,7 @@ struct skillView: View {
     @StateObject private var viewModel = PreferenceViewModel()
     @State private var skillName = ""
     @State private var navigateToHome = false
+    @State private var isVisible = false
     let userDetailAutoView = UserDetailAutoView()
     @StateObject var saveUserInfo = SaveUserInfo(appService: AppService())
     
@@ -29,14 +30,18 @@ struct skillView: View {
                                     .foregroundColor(Theme.onPrimaryColor)
                             }
                             .padding(.leading, 30)
+                            .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                                .animation(.easeInOut(duration: 0.8), value: isVisible)
                         }
                         Spacer()
                     }
                     .padding(.top, 20)
                     
+                    
                     ProgressView(value: 100, total: 100)
                         .accentColor(Theme.primaryColor)
                         .padding(.horizontal, 30)
+                        .padding(.top, -5)
                     
                     // Animation
                     WebSkillHomeView(
@@ -120,6 +125,9 @@ struct skillView: View {
                     }
                     .padding(.top, 20)
                 }
+                .onAppear {
+                        isVisible = true // Trigger animation on view appearance
+                    }
             }
         }
         .navigationBarHidden(true)

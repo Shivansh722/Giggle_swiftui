@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */ = {isa = PBXBuildFile; productRef = 1976F9D42CDA2AFF006361DE /* Appwrite */; };
+		19B825472DC69AF300DF92F1 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 19B825462DC69AF300DF92F1 /* Lottie */; };
 		19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */; };
 		350EE9892D25629000F083D5 /* Popovers in Frameworks */ = {isa = PBXBuildFile; productRef = 350EE9882D25629000F083D5 /* Popovers */; };
 		357088BA2D8DEE0800CDED8F /* mic.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088B92D8DEE0800CDED8F /* mic.gif */; };
@@ -58,6 +59,7 @@
 				350EE9892D25629000F083D5 /* Popovers in Frameworks */,
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
 				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
+				19B825472DC69AF300DF92F1 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +112,7 @@
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
 				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
 				350EE9882D25629000F083D5 /* Popovers */,
+				19B825462DC69AF300DF92F1 /* Lottie */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -143,6 +146,7 @@
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */,
+				19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -406,6 +410,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 		19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
@@ -429,6 +441,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */;
 			productName = Appwrite;
+		};
+		19B825462DC69AF300DF92F1 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19B825452DC69AF300DF92F1 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;
