@@ -14,6 +14,7 @@
 		357088C02D8DFA6100CDED8F /* empty-jobs.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088BF2D8DFA6100CDED8F /* empty-jobs.gif */; };
 		357088C22D8DFAD600CDED8F /* jobs-list.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C12D8DFAD600CDED8F /* jobs-list.gif */; };
 		357088C42D8DFB0700CDED8F /* block 2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 357088C32D8DFB0700CDED8F /* block 2.gif */; };
+		3FBA222F2DC654B600AAA093 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 3FBA222E2DC654B600AAA093 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,7 @@
 				350EE9892D25629000F083D5 /* Popovers in Frameworks */,
 				1976F9D52CDA2AFF006361DE /* Appwrite in Frameworks */,
 				19CD9EDC2D0FF84500D4905C /* GoogleGenerativeAI in Frameworks */,
+				3FBA222F2DC654B600AAA093 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +112,7 @@
 				1976F9D42CDA2AFF006361DE /* Appwrite */,
 				19CD9EDB2D0FF84500D4905C /* GoogleGenerativeAI */,
 				350EE9882D25629000F083D5 /* Popovers */,
+				3FBA222E2DC654B600AAA093 /* Lottie */,
 			);
 			productName = Giggle_swiftui;
 			productReference = 19E9A9912CD20FA5009F768B /* Giggle_swiftui.app */;
@@ -143,6 +146,7 @@
 				1976F9D32CDA2AFF006361DE /* XCRemoteSwiftPackageReference "sdk-for-apple" */,
 				19CD9EDA2D0FF84500D4905C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */,
+				3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 19E9A9922CD20FA5009F768B /* Products */;
@@ -422,6 +426,14 @@
 				minimumVersion = 1.3.2;
 			};
 		};
+		3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -439,6 +451,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 350EE9872D25629000F083D5 /* XCRemoteSwiftPackageReference "Popovers" */;
 			productName = Popovers;
+		};
+		3FBA222E2DC654B600AAA093 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FBA222D2DC654B600AAA093 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

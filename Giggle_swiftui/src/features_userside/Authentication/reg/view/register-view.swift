@@ -111,9 +111,9 @@ struct RegisterView: View {
                                 } else if isFormValid {
                                     Task {
                                         await registerUser()
-                                        if viewModel.isLoggedIn {
+//                                        if viewModel.isLoggedIn {
                                             navigateToUserDetail = true
-                                        }
+//                                        }
                                     }
                                 }
                             },

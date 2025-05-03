@@ -382,7 +382,7 @@ struct ProfileScreen: View {
                     }
                 }
                 
-                NavigationLink(destination: RegisterView(), isActive: $navigate) {
+                NavigationLink(destination: LoginSimpleView(), isActive: $navigate) {
                     EmptyView()
                 }
             }
