@@ -91,22 +91,35 @@ struct LoginSimpleView: View {
                             backgroundColor: Theme.primaryColor,
                             action: {
                                 Task {
-                                    guard !viewModel.isLoading else { return }
                                     do {
+                                        // Reset navigation state
+                                        destinationView = nil
+                                        navigateToNextScreen = false
+                                        
+                                        // Perform login
                                         try await viewModel.login(email: email, password: password)
                                         if viewModel.isLoggedIn {
                                             let userExists = try await SaveUserInfo(appService: AppService()).checkForUserExistence()
+                                            print("User exists: \(userExists)")
+                                            
                                             if userExists {
                                                 UserDefaults.standard.set("completed user", forKey: "status")
                                                 destinationView = AnyView(HomeView())
+                                                navigateToNextScreen = true
                                             } else {
-                                                let clientExists = try await ClientHandlerUserInfo(appService: AppService()).checkForCleintExixtence()
+                                                let clientExists = try await ClientHandlerUserInfo(appService: AppService()).checkForCleintExixtence() // Fixed typo
+                                                print("Client exists: \(clientExists)")
+                                                
                                                 if clientExists {
                                                     UserDefaults.standard.set("completed client", forKey: "status")
+                                                    destinationView = AnyView(HomeClientView())
+                                                } else {
+                                                    destinationView = AnyView(ChooseView())
                                                 }
-                                                destinationView = clientExists ? AnyView(HomeClientView()) : AnyView(ChooseView())
+                                                navigateToNextScreen = true
                                             }
-                                            navigateToNextScreen = true
+                                            print("Destination view: \(destinationView)")
+                                            print("UserDefaults status: \(UserDefaults.standard.string(forKey: "status") ?? "none")")
                                         }
                                     } catch {
                                         viewModel.alertMessage = "Login failed. Please try again."

@@ -170,8 +170,7 @@ struct HomeClientView: View {
     private func logout() {
         Task {
             let userDefault = UserDefaults.standard
-            userDefault.set("", forKey: "status")
-            print(UserDefaults.standard.string(forKey: "status") ?? "")
+            UserDefaults.standard.removeObject(forKey: "status")
             RegisterViewModel(service: AppService()).isLoading = false
             navigateToLogin = true
         }
