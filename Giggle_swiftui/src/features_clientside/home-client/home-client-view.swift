@@ -1,5 +1,7 @@
 import SwiftUI
 import WebKit
+import Popovers
+
 struct WebClientHomeView: UIViewRepresentable {
     let url: URL
     
@@ -26,6 +28,9 @@ struct HomeClientView: View {
     @State private var jobresult: [[String: Any]] = []
     @State private var flnID: String? = nil
     @State private var showDisabledAlert = false
+    @State private var isPopoverPresented = false
+    @State private var showDeleteConfirmation: Bool = false // Add this state variable
+    @State private var isDeleting: Bool = false // Add this to track deletion process
     
     private var headerView: some View {
         HStack {
@@ -39,14 +44,32 @@ struct HomeClientView: View {
             
             Spacer()
             
-            Button(action: logout) {
-                Text("Logout")
-                    .font(.headline)
-                    .foregroundColor(Theme.onPrimaryColor)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
-                    .background(Theme.primaryColor)
-                    .cornerRadius(8)
+            VStack {
+                Button(action: {
+                    isPopoverPresented.toggle()
+                }) {
+                    Image(systemName: "ellipsis")
+                        .resizable()
+                        .foregroundStyle(Theme.onPrimaryColor)
+                        .scaledToFit()
+                        .frame(width: 25, height: 19)
+                        .padding(8)
+                }
+                Templates.Menu(present: $isPopoverPresented) {
+                    Templates.MenuButton(title: "Logout") {
+                        Task {
+                            logout()
+                        }
+                    }
+                    .foregroundStyle(.red)
+                    Templates.MenuButton(title: "Delete Account") {
+                        showDeleteConfirmation = true
+                    }
+                    .foregroundStyle(.red)
+                } label: { _ in
+                    Color.clear
+                        .frame(width: 0, height: 0)
+                }
             }
             .padding(.trailing)
         }
@@ -147,7 +170,6 @@ struct HomeClientView: View {
                     }
                 }
             }
-            
             if gigManager.gigs.isEmpty && jobresult.isEmpty {
                 emptyStateView
             }
@@ -159,6 +181,63 @@ struct HomeClientView: View {
                 isActive: $navigateToLogin
             ) { EmptyView() }
         }
+        .alert(isPresented: $showDeleteConfirmation) {
+            Alert(
+                title: Text("Delete Account"),
+                message: Text("Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost."),
+                primaryButton: .destructive(Text("Delete")) {
+                    isDeleting = true
+                    Task {
+                        do {
+                            try await appService.deleteUserAccount()
+                            // After successful deletion, navigate to login screen
+                            DispatchQueue.main.async {
+                                viewModel.isLoggedIn = false
+                                UserDefaults.standard.removeObject(forKey: "status")
+                                isDeleting = false
+                                navigateToLogin = true
+                            }
+                        } catch {
+                            // Handle error
+                            DispatchQueue.main.async {
+                                isDeleting = false
+                                // You could add another alert here to show the error
+                            }
+                            print("Error deleting account: \(error.localizedDescription)")
+                        }
+                    }
+                },
+                secondaryButton: .cancel()
+            )
+        }
+        // Add a loading overlay when deletion is in progress
+        .overlay(
+            Group {
+                if isDeleting {
+                    ZStack {
+                        Color.black.opacity(0.4)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .scaleEffect(1.5)
+                                .tint(Theme.primaryColor)
+                            
+                            Text("Deleting account...")
+                                .foregroundColor(.white)
+                                .font(.headline)
+                        }
+                        .padding(24)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(hex: "343434"))
+                        )
+                        .shadow(radius: 10)
+                    }
+                }
+            }
+        )
+
         .onAppear(perform: loadJobs)
         .sheet(isPresented: $showGigLister) {
             GigDetailsScreen(gigManager: gigManager)

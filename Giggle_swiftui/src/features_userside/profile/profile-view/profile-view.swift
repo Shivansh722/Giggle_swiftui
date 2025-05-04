@@ -29,6 +29,8 @@ struct ProfileScreen: View {
     @State private var bioGraphy:String = ""
     @State private var GiggleGrade:String = "No Grade"
     @State private var contentOpacity: Double = 0 // For fade-in animation
+    @State private var showDeleteConfirmation: Bool = false // Add this state variable
+    @State private var isDeleting: Bool = false // Add this to track deletion process
     
     var body: some View {
         GeometryReader { geometry in
@@ -93,9 +95,7 @@ struct ProfileScreen: View {
                                     }
                                     .foregroundStyle(.red)
                                     Templates.MenuButton(title: "Delete Account") {
-                                        Task {
-                                            
-                                        }
+                                        showDeleteConfirmation = true
                                     }
                                     .foregroundStyle(.red)
                                 } label: { _ in
@@ -405,6 +405,63 @@ struct ProfileScreen: View {
                     await loadBioGraphy()
                 }
             }
+            // Add the alert here
+            .alert(isPresented: $showDeleteConfirmation) {
+                Alert(
+                    title: Text("Delete Account"),
+                    message: Text("Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost."),
+                    primaryButton: .destructive(Text("Delete")) {
+                        isDeleting = true
+                        Task {
+                            do {
+                                try await logout.deleteUserAccount()
+                                // After successful deletion, navigate to login screen
+                                DispatchQueue.main.async {
+                                    viewModel.isLoggedIn = false
+                                    UserDefaults.standard.removeObject(forKey: "status")
+                                    isDeleting = false
+                                    navigate = true
+                                }
+                            } catch {
+                                // Handle error
+                                DispatchQueue.main.async {
+                                    isDeleting = false
+                                    // You could add another alert here to show the error
+                                }
+                                print("Error deleting account: \(error.localizedDescription)")
+                            }
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+            // Add a loading overlay when deletion is in progress
+            .overlay(
+                Group {
+                    if isDeleting {
+                        ZStack {
+                            Color.black.opacity(0.4)
+                                .edgesIgnoringSafeArea(.all)
+                            
+                            VStack(spacing: 16) {
+                                ProgressView()
+                                    .scaleEffect(1.5)
+                                    .tint(Theme.primaryColor)
+                                
+                                Text("Deleting account...")
+                                    .foregroundColor(.white)
+                                    .font(.headline)
+                            }
+                            .padding(24)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(hex: "343434"))
+                            )
+                            .shadow(radius: 10)
+                        }
+                    }
+                }
+            )
         }
     }
     
@@ -435,7 +492,6 @@ struct ProfileScreen: View {
     }
 
     private func handleLogout() {
-        let userDefault = UserDefaults.standard
         viewModel.isLoggedIn = false
         UserDefaults.standard.removeObject(forKey: "status")
         navigate = true

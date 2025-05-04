@@ -195,4 +195,28 @@ class AppService: ObservableObject {
             return .error(error.localizedDescription)
         }
     }
+    func deleteUserAccount() async throws {
+        let userDefaults = UserDefaults.standard
+        let storedUserId = userDefaults.string(forKey: "userID")
+        do {
+            let functions = Functions(AppService().client)
+
+            let execution = try await functions.createExecution(
+                functionId: "68173161003691c13cec",
+                body: """
+                {
+                    "userId": "\(storedUserId!)"
+                }
+                """,
+                async: false,
+                method: .pOST
+            )
+
+            print("Delete account execution: \(execution.status)")
+            UserDefaults.standard.removeObject(forKey: "status")
+        } catch {
+            print("Failed to delete account: \(error.localizedDescription)")
+            throw error
+        }
+    }
 }

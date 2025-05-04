@@ -90,7 +90,7 @@ struct NotificationScreen: View {
                         .animation(.easeIn(duration: 0.5).delay(0.2), value: contentOpacity)
                     } else if flnID == nil {
                         // Empty state view
-                        VStack(spacing: 20) {
+                        VStack {
                             Spacer()
                             
                             Image(systemName: "bell.slash")
@@ -101,6 +101,7 @@ struct NotificationScreen: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(Theme.onPrimaryColor)
+                                .padding(.top, 20)
                             
                             Text("Please give the FLN Test, to view your notifications")
                                 .font(.body)
