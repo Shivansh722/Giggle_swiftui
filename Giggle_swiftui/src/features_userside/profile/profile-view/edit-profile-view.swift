@@ -66,11 +66,12 @@ struct edit_profile_view: View {
                                     .imageScale(.large)
                                     .padding(8)
                             }
-                            
+                            Spacer()
                             
                             Text("Edit Profile")
-                                .font(.title)
+                                .font(.headline)
                                 .foregroundColor(Theme.onPrimaryColor)
+                                .padding(.leading, 4)
                             
                             Spacer()
                             
@@ -94,7 +95,10 @@ struct edit_profile_view: View {
                                             .scaledToFill()
                                             .frame(width: 110, height: 110)
                                             .clipShape(Circle())
-                                            .shadow(color: Theme.primaryColor.opacity(0.3), radius: 5)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Theme.primaryColor.opacity(0.6), lineWidth: 2)
+                                            )
                                     } else {
                                         Image(systemName: "person.crop.circle")
                                             .resizable()
@@ -138,6 +142,7 @@ struct edit_profile_view: View {
                                 .padding(.horizontal)
                                 .padding(.bottom, 8)
                         }
+                        .padding(.top, 8)
                         
                         // Skills Section (New)
                         VStack(alignment: .leading, spacing: 12) {
@@ -398,7 +403,7 @@ struct edit_profile_view: View {
                         }
                         .padding(.vertical, 16)
                     }
-                    .padding(.vertical)
+                    .padding(.vertical,4)
                 }
             }
             .navigationBarBackButtonHidden(true)

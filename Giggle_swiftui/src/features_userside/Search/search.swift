@@ -66,9 +66,10 @@ struct SearchScreen: View {
                                 .foregroundColor(.gray)
                                 .padding(.leading, 12)
                             
-                            TextField("Search by job title, company, or keywords...", text: $searchText)
+                            TextField("Search by job title, company, or keywords", text: $searchText)
                                 .padding(.vertical, 12)
                                 .foregroundColor(.black)
+                                .font(.system(size: 16))
                             
                             if !searchText.isEmpty {
                                 Button(action: {

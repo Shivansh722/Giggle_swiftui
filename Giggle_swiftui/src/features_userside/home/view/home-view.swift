@@ -147,27 +147,54 @@ struct HomeView: View {
                                     }
                                 }
                             }
-                            
-                            Text("Recommendations")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .foregroundColor(Theme.onPrimaryColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal)
-                                .padding(.top, 8)
-                                .opacity(contentOpacity)
-                                .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
+                            if flnID == nil{
+                                Text("Recommendations")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top, -62)
+                                    .opacity(contentOpacity)
+                                    .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
+                            }
+                            else{
+                                Text("Recommendations")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top, 8)
+                                    .opacity(contentOpacity)
+                                    .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
+                            }
                             
                             // Job cards with gentle transitions
-                            LazyVStack(spacing: 16){
-                                ForEach(jobresult.indices, id: \.self) { index in
-                                    JobCardView(jobs: jobresult[index], flnID: flnID)
-                                        .transition(.asymmetric(
-                                            insertion: .move(edge: .leading).combined(with: .opacity),
-                                            removal: .move(edge: .trailing).combined(with: .opacity)
-                                        ))
-                                        .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                            if flnID == nil {
+                                LazyVStack(spacing: 8){
+                                    ForEach(jobresult.indices, id: \.self) { index in
+                                        JobCardView(jobs: jobresult[index], flnID: flnID)
+                                            .transition(.asymmetric(
+                                                insertion: .move(edge: .leading).combined(with: .opacity),
+                                                removal: .move(edge: .trailing).combined(with: .opacity)
+                                            ))
+                                            .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                                    }
                                 }
+                                .padding(.top, -24)
+                            }else{
+                                LazyVStack(spacing: 16){
+                                    ForEach(jobresult.indices, id: \.self) { index in
+                                        JobCardView(jobs: jobresult[index], flnID: flnID)
+                                            .transition(.asymmetric(
+                                                insertion: .move(edge: .leading).combined(with: .opacity),
+                                                removal: .move(edge: .trailing).combined(with: .opacity)
+                                            ))
+                                            .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
+                                    }
+                                }
+                                .padding(.top, -24)
                             }
                         }
                         .padding(.bottom, 8) // Add padding to avoid content being hidden by tab indicator

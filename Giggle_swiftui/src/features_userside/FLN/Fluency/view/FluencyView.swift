@@ -21,6 +21,7 @@ struct FluencyView: View {
     @State private var remainingTime: Int = 10
     @State private var navigateToHome: Bool = false
     @State private var isScore: Bool = false
+    @State private var isVisible: Bool = false
     
     @StateObject var SaveFLNdetails = FLNInfo(appService: AppService())
 
@@ -34,54 +35,56 @@ struct FluencyView: View {
                         .font(.title)
                         .bold()
                         .foregroundColor(Theme.tertiaryColor)
+                        .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                        .animation(.easeInOut(duration: 0.8), value: isVisible)
                     Spacer()
                 }
                 .padding(.leading, 20)
-
+                
                 Spacer()
-
+                
                 VStack {
                     Text("Hey " + FormManager.shared.formData.name + "!")
                         .font(.system(size: 22, weight: .semibold))
                         .foregroundColor(.gray)
-
+                    
                     Text(textValue)
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.gray)
                 }
-
+                
                 Button {
                     startRecording()
-
+                    
                 } label: {
                     Image(isRecording ? "FLN_MIC2" : "FLN_MIC")
                         .resizable()
                         .frame(width: 151, height: 151)
                 }
                 .disabled(isButtonDisabled)
-
+                
                 Text(timerText)
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.gray)
                     .padding(.top, 8)
-
+                
                 Spacer()
-
-//                if let score = classificationScore {
-//                    Text(
-//                        "Classification Score: \(String(format: "%.2f", score))%"
-//                    )
-//                    .font(.system(size: 18, weight: .medium))
-//                    .foregroundColor(Theme.tertiaryColor)
-//                    .padding(.top, 8)
-//                }
-
+                
+                //                if let score = classificationScore {
+                //                    Text(
+                //                        "Classification Score: \(String(format: "%.2f", score))%"
+                //                    )
+                //                    .font(.system(size: 18, weight: .medium))
+                //                    .foregroundColor(Theme.tertiaryColor)
+                //                    .padding(.top, 8)
+                //                }
+                
                 Spacer()
-
+                
                 Button(action: {
                     if let score = classificationScore {
-//                        FlnDataManager.shared.flnData.fluencyScore = String(
-//                            format: "%.2f", score)
+                        //                        FlnDataManager.shared.flnData.fluencyScore = String(
+                        //                            format: "%.2f", score)
                         DispatchQueue.main.async{
                             Task{
                                 try await FluencyResult().getFluencyResult()
@@ -98,12 +101,15 @@ struct FluencyView: View {
                         .cornerRadius(6)
                         .font(.headline)
                 }
-
+                
                 NavigationLink(
                     destination: FlnIntroView(), isActive: $navigateToHome
                 ) {
                     EmptyView()
                 }
+            }
+            .onAppear{
+                isVisible = true
             }
             .navigationBarHidden(true)  // Hide the navigation bar
             .navigationBarBackButtonHidden(true)

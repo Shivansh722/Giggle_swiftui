@@ -37,6 +37,7 @@ struct FluencyIntroView: View {
     @Environment(\.dismiss) var dismiss
     @State private var navigate: Bool = false
     
+    
     var body: some View {
         ZStack {
             Theme.backgroundColor.edgesIgnoringSafeArea(.all)
@@ -60,6 +61,11 @@ struct FluencyIntroView: View {
                         .bold()
                         .foregroundColor(Theme.tertiaryColor)
                         .padding(.top, 20)
+                    Text("Test")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(Theme.tertiaryColor)
+                        .padding(.top, 20)
                     Spacer()
                 }
                 .padding(.leading, 20)
@@ -75,11 +81,11 @@ struct FluencyIntroView: View {
                     )
                     IntroItem(
                         icon: "Clock",
-                        text: "Your time will start immediately after clicking on the button"
+                        text: "Your time will start immediately after clicking"
                     )
                     IntroItem(
                         icon: "microphone",
-                        text: "You have to speak about yourself as fluent as possible"
+                        text: "You have to speak about yourself fluently"
                     )
                     IntroItem(
                         icon: "proctor",

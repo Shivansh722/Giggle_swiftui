@@ -69,6 +69,7 @@ struct ProfileScreen: View {
                             Text("Profile")
                                 .font(.headline)
                                 .foregroundColor(Theme.onPrimaryColor)
+                                .padding(.leading, 4)
                             
                             Spacer()
                             
@@ -132,7 +133,6 @@ struct ProfileScreen: View {
                                             Circle()
                                                 .stroke(Theme.primaryColor.opacity(0.6), lineWidth: 2)
                                         )
-                                        .shadow(color: Theme.primaryColor.opacity(0.3), radius: 5)
                                 } else {
                                     Image(systemName: "person.crop.circle")
                                         .resizable()
