@@ -8,6 +8,7 @@ struct LiteracyView: View {
     @State private var timeLeft: CGFloat = 300.0 // 5 minutes
     @State private var timer: Timer? = nil
     @State private var navigate: Bool = false
+    @State private var animateOptions: Bool = false // For option appearance animation
     
     let totalTime: CGFloat = 300.0
     let optionButtonSize: CGSize = CGSize(width: 360, height: 80)
@@ -20,7 +21,7 @@ struct LiteracyView: View {
                     Text("Literacy")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                     Spacer()
                     Text("\(currentQuestionIndex + 1)/\(viewModel.literacyQuestions.count)")
                         .foregroundColor(.gray)
@@ -41,7 +42,7 @@ struct LiteracyView: View {
                 if !viewModel.literacyQuestions.isEmpty {
                     let currentQuestion = viewModel.literacyQuestions[currentQuestionIndex]
                     
-                    HStack{
+                    HStack {
                         Text(currentQuestion.question)
                             .font(.title3)
                             .fontWeight(.semibold)
@@ -51,11 +52,11 @@ struct LiteracyView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Options List
+                    // Options List with Animation
                     VStack {
-                        ForEach(currentQuestion.options.indices, id: \ .self) { index in
+                        ForEach(currentQuestion.options.indices, id: \.self) { index in
                             Button(action: {
-                                withAnimation {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                     selectedOption = index
                                     if currentQuestion.options[index] == currentQuestion.correctAnswer {
                                         score += 1
@@ -78,11 +79,35 @@ struct LiteracyView: View {
                                 .frame(width: optionButtonSize.width, height: optionButtonSize.height)
                                 .background(Color(UIColor.darkGray))
                                 .cornerRadius(20)
+                                .scaleEffect(selectedOption == index ? 1.05 : 1.0) // Scale when selected
+                                .shadow(color: selectedOption == index ? Color.red.opacity(0.3) : Color.clear, radius: 5)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .opacity(animateOptions ? 1.0 : 0.0)
+                            .scaleEffect(animateOptions ? 1.0 : 0.8)
+                            .animation(
+                                .easeInOut(duration: 0.5).delay(Double(index) * 0.1),
+                                value: animateOptions
+                            )
                         }
                     }
                     .padding()
+                    .onAppear {
+                        animateOptions = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                animateOptions = true
+                            }
+                        }
+                    }
+                    .onChange(of: currentQuestionIndex) { _ in
+                        animateOptions = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                animateOptions = true
+                            }
+                        }
+                    }
                 } else {
                     Text("Loading questions...")
                         .foregroundColor(.gray)
@@ -94,22 +119,22 @@ struct LiteracyView: View {
                 // Next / Finish Button
                 if currentQuestionIndex < viewModel.literacyQuestions.count - 1 {
                     Button(action: {
-                        if selectedOption != nil { // Prevent next if no option is selected
+                        if selectedOption != nil {
                             selectedOption = nil
                             currentQuestionIndex += 1
                         }
                     }) {
                         Text("NEXT")
                             .frame(width: geometry.size.width * 0.8, height: 50)
-                            .background(selectedOption == nil ? Color.gray : Theme.primaryColor) // Disable look
+                            .background(selectedOption == nil ? Color.gray : Theme.primaryColor)
                             .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }
-                    .disabled(selectedOption == nil) // Disable button when no option is selected
+                    .disabled(selectedOption == nil)
                 } else {
                     Button(action: {
-                        if selectedOption != nil { // Prevent finish if no option is selected
+                        if selectedOption != nil {
                             timer?.invalidate()
                             timer = nil
                             DispatchQueue.main.async {
@@ -120,12 +145,12 @@ struct LiteracyView: View {
                     }) {
                         Text("FINISH")
                             .frame(width: geometry.size.width * 0.8, height: 50)
-                            .background(selectedOption == nil ? Color.gray : Theme.primaryColor) // Disable look
+                            .background(selectedOption == nil ? Color.gray : Theme.primaryColor)
                             .foregroundColor(Theme.onPrimaryColor)
                             .cornerRadius(6)
                             .font(.headline)
                     }
-                    .disabled(selectedOption == nil) // Disable button when no option is selected
+                    .disabled(selectedOption == nil)
                     .background(
                         NavigationLink("", destination: NumeracyView(), isActive: $navigate)
                             .hidden()
@@ -142,7 +167,7 @@ struct LiteracyView: View {
                     Skills: Development - FastAPI, Express.js, Node.js, MongoDB + VectorDB, LangChain, AWS Bedrock, CrewAI, SwiftUI, Next.js. 
                     Programming Languages: Python, Swift, JavaScript, C++. 
                     """
-                    await viewModel.getQuestion(resume) // Replace with actual data
+                    await viewModel.getQuestion(resume)
                 }
             }
             .onDisappear {

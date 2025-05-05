@@ -34,7 +34,7 @@ struct FluencyView: View {
                     Text("Fluency")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.primaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .padding(.top, 20)
                     Text("Test")
                         .font(.title)
