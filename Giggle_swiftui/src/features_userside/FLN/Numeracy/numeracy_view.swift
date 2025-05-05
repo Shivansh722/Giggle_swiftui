@@ -8,6 +8,7 @@ struct NumeracyView: View {
     @State private var timeLeft: CGFloat = 300.0 // 5 minutes
     @State private var timer: Timer? = nil
     @State private var navigate: Bool = false
+    @State private var animateOptions: Bool = false // For option appearance animation
     
     let totalTime: CGFloat = 300.0
     let optionButtonSize: CGSize = CGSize(width: 360, height: 80)
@@ -20,7 +21,7 @@ struct NumeracyView: View {
                     Text("Numeracy")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                     Spacer()
                     Text("\(currentQuestionIndex + 1)/\(viewModel.numeracyQuestions.count)")
                         .foregroundColor(.gray)
@@ -41,7 +42,7 @@ struct NumeracyView: View {
                 if !viewModel.numeracyQuestions.isEmpty {
                     let currentQuestion = viewModel.numeracyQuestions[currentQuestionIndex]
                     
-                    HStack{
+                    HStack {
                         Text(currentQuestion.question)
                             .font(.title3)
                             .fontWeight(.semibold)
@@ -50,11 +51,11 @@ struct NumeracyView: View {
                         Spacer()
                     }
                     
-                    // Options List
+                    // Options List with Animation
                     VStack {
                         ForEach(currentQuestion.options.indices, id: \.self) { index in
                             Button(action: {
-                                withAnimation {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                     selectedOption = index
                                     if currentQuestion.options[index] == currentQuestion.correctAnswer {
                                         score += 1
@@ -77,11 +78,37 @@ struct NumeracyView: View {
                                 .frame(width: optionButtonSize.width, height: optionButtonSize.height)
                                 .background(Color(UIColor.darkGray))
                                 .cornerRadius(20)
+                                .scaleEffect(selectedOption == index ? 1.05 : 1.0) // Scale when selected
+                                .shadow(color: selectedOption == index ? Color.red.opacity(0.3) : Color.clear, radius: 5)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .opacity(animateOptions ? 1.0 : 0.0)
+                            .scaleEffect(animateOptions ? 1.0 : 0.8)
+                            .animation(
+                                .easeInOut(duration: 0.5).delay(Double(index) * 0.1),
+                                value: animateOptions
+                            )
                         }
                     }
                     .padding()
+                    .onAppear {
+                        animateOptions = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                animateOptions = true
+                            }
+                        }
+                    }
+                    .onChange(of: currentQuestionIndex) { _ in
+                        animateOptions = false
+                        DispatchQueue.main.asyncAfter(
+                         
+                            deadline: .now() + 0.1) {
+                            withAnimation {
+                                animateOptions = true
+                            }
+                        }
+                    }
                 } else {
                     Text("Loading questions...")
                         .foregroundColor(.gray)
@@ -114,7 +141,7 @@ struct NumeracyView: View {
                             DispatchQueue.main.async {
                                 FlnDataManager.shared.flnData.numeracyScore = score
                             }
-                            Task{
+                            Task {
                                 await FLNInfo(appService: AppService()).saveFlnInfo()
                             }
                             navigate = true

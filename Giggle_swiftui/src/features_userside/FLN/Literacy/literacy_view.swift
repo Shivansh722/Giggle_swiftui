@@ -21,7 +21,7 @@ struct LiteracyView: View {
                     Text("Literacy")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                     Spacer()
                     Text("\(currentQuestionIndex + 1)/\(viewModel.literacyQuestions.count)")
                         .foregroundColor(.gray)

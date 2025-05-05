@@ -20,7 +20,7 @@ struct FLNScoreView: View {
                     + Text(" Score")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                     Spacer()
                 }
                 .padding(.leading, 20)
@@ -48,7 +48,7 @@ struct FLNScoreView: View {
                                 Text("Literacy & Numeracy")
                                     .font(.title)
                                     .bold()
-                                    .foregroundColor(Theme.tertiaryColor)
+                                    .foregroundColor(Theme.onPrimaryColor)
                             }
                             Spacer()
                             // Compute averageScore inline here
@@ -70,7 +70,7 @@ struct FLNScoreView: View {
                 Text("Giggle Grading")
                     .font(.title)
                     .bold()
-                    .foregroundColor(Theme.tertiaryColor)
+                    .foregroundColor(Theme.onPrimaryColor)
 
                 ZStack {
                     Text(FlnDataManager.shared.flnData.giggleGrade)
