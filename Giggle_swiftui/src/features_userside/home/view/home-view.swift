@@ -184,7 +184,7 @@ struct HomeView: View {
                                 }
                                 .padding(.top, -24)
                             }else{
-                                LazyVStack(spacing: 16){
+                                LazyVStack(spacing: 12){
                                     ForEach(jobresult.indices, id: \.self) { index in
                                         JobCardView(jobs: jobresult[index], flnID: flnID)
                                             .transition(.asymmetric(
@@ -194,7 +194,7 @@ struct HomeView: View {
                                             .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(Double(index) * 0.05))
                                     }
                                 }
-                                .padding(.top, -24)
+                                .padding(.top, -8)
                             }
                         }
                         .padding(.bottom, 8) // Add padding to avoid content being hidden by tab indicator

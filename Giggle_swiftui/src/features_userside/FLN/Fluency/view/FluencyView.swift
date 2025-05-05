@@ -22,6 +22,7 @@ struct FluencyView: View {
     @State private var navigateToHome: Bool = false
     @State private var isScore: Bool = false
     @State private var isVisible: Bool = false
+    @State private var isEngineReady: Bool = false // Add this state variable
     
     @StateObject var SaveFLNdetails = FLNInfo(appService: AppService())
 
@@ -34,12 +35,12 @@ struct FluencyView: View {
                     Text("Fluency")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.onPrimaryColor)
+                        .foregroundColor(Theme.primaryColor)
                         .padding(.top, 20)
                     Text("Test")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.onPrimaryColor)
                         .padding(.top, 20)
                        
                     Spacer()
@@ -127,17 +128,32 @@ struct FluencyView: View {
     private func startRecording() {
         isRecording = true
         isButtonDisabled = true
-        speechRecognizer.record(to: $textValue)
-
-        remainingTime = 10
-        timerText = "00:\(String(format: "%02d", remainingTime))"
-
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if remainingTime > 0 {
-                remainingTime -= 1
-                timerText = "00:\(String(format: "%02d", remainingTime))"
+        
+        // Update the text to show we're preparing
+        textValue = "Preparing audio engine..."
+        
+        // Start recording but don't start the timer yet
+        speechRecognizer.record(to: $textValue) { engineReady in
+            // This closure will be called when the engine is ready
+            if engineReady {
+                // Now start the timer
+                self.isEngineReady = true
+                self.remainingTime = 30
+                self.timerText = "00:\(String(format: "%02d", self.remainingTime))"
+                
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                    if self.remainingTime > 0 {
+                        self.remainingTime -= 1
+                        self.timerText = "00:\(String(format: "%02d", self.remainingTime))"
+                    } else {
+                        self.stopRecording()
+                    }
+                }
             } else {
-                stopRecording()
+                // Handle the case where engine setup failed
+                self.textValue = "Failed to start recording. Please try again."
+                self.isRecording = false
+                self.isButtonDisabled = false
             }
         }
     }
@@ -145,6 +161,7 @@ struct FluencyView: View {
     private func stopRecording() {
         isRecording = false
         isButtonDisabled = false
+        isEngineReady = false
         speechRecognizer.stopRecording()
         timer?.invalidate()
         timer = nil

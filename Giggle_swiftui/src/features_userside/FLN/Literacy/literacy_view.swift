@@ -5,12 +5,12 @@ struct LiteracyView: View {
     @State private var currentQuestionIndex: Int = 0
     @State private var selectedOption: Int? = nil
     @State private var score: Int = 0
-    @State private var timeLeft: CGFloat = 300.0 // 5 minutes
+    @State private var timeLeft: CGFloat = 90.0 // 1.5 minutes
     @State private var timer: Timer? = nil
     @State private var navigate: Bool = false
     @State private var animateOptions: Bool = false // For option appearance animation
     
-    let totalTime: CGFloat = 300.0
+    let totalTime: CGFloat = 90.0
     let optionButtonSize: CGSize = CGSize(width: 360, height: 80)
 
     var body: some View {
@@ -26,7 +26,9 @@ struct LiteracyView: View {
                     Text("\(currentQuestionIndex + 1)/\(viewModel.literacyQuestions.count)")
                         .foregroundColor(.gray)
                     Spacer()
-                    Text(String(format: "%.2f", timeLeft))
+                    
+                    // Formatted time display (minutes:seconds)
+                    Text(formatTimeLeft())
                         .foregroundColor(.gray)
                     Image(systemName: "clock")
                         .foregroundColor(.gray)
@@ -177,6 +179,13 @@ struct LiteracyView: View {
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
         }
+    }
+    
+    // Format time to minutes:seconds
+    private func formatTimeLeft() -> String {
+        let minutes = Int(timeLeft) / 60
+        let seconds = Int(timeLeft) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
     
     private func startTimer() {

@@ -45,13 +45,14 @@ struct SpeechRecognizer {
 
     private let assistant = SpeechAssist()
 
-    func record(to speech: Binding<String>) {
+    func record(to speech: Binding<String>, completion: @escaping (Bool) -> Void = { _ in }) {
         relay(speech, message: "Requesting access")
         assistant.startTime = Date()
         
         canAccess { authorized in
             guard authorized else {
                 relay(speech, message: "Access denied")
+                completion(false)
                 return
             }
 
@@ -100,6 +101,13 @@ struct SpeechRecognizer {
                 relay(speech, message: "Preparing audio engine")
                 audioEngine.prepare()
                 try audioEngine.start()
+                
+                // Engine is ready, call the completion handler
+                DispatchQueue.main.async {
+                    relay(speech, message: "Start speaking now")
+                    completion(true)
+                }
+                
                 assistant.recognitionTask = assistant.speechRecognizer?.recognitionTask(with: recognitionRequest) { (result, error) in
                     var isFinal = false
                     if let result = result {
@@ -134,6 +142,7 @@ struct SpeechRecognizer {
             } catch {
                 print("Error transcribing audio: " + error.localizedDescription)
                 assistant.reset()
+                completion(false)
             }
         }
     }
