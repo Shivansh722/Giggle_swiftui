@@ -34,11 +34,19 @@ struct FluencyView: View {
                     Text("Fluency")
                         .font(.title)
                         .bold()
+                        .foregroundColor(Theme.primaryColor)
+                        .padding(.top, 20)
+                    Text("Test")
+                        .font(.title)
+                        .bold()
                         .foregroundColor(Theme.tertiaryColor)
-                        .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
-                        .animation(.easeInOut(duration: 0.8), value: isVisible)
+                        .padding(.top, 20)
+                       
                     Spacer()
                 }
+                .foregroundColor(Theme.primaryColor)
+                .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                .animation(.easeInOut(duration: 0.8), value: isVisible)
                 .padding(.leading, 20)
                 
                 Spacer()

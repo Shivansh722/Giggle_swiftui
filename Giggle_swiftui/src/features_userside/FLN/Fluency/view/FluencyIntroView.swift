@@ -36,6 +36,7 @@ struct FluencyIntroView: View {
     var selectedRole: ChooseViewModel.Role?
     @Environment(\.dismiss) var dismiss
     @State private var navigate: Bool = false
+    @State private var isVisible: Bool = false
     
     
     var body: some View {
@@ -59,7 +60,7 @@ struct FluencyIntroView: View {
                     Text("Fluency")
                         .font(.title)
                         .bold()
-                        .foregroundColor(Theme.tertiaryColor)
+                        .foregroundColor(Theme.primaryColor)
                         .padding(.top, 20)
                     Text("Test")
                         .font(.title)
@@ -69,6 +70,8 @@ struct FluencyIntroView: View {
                     Spacer()
                 }
                 .padding(.leading, 20)
+                .offset(x: isVisible ? 0 : -UIScreen.main.bounds.width) // Start off-screen to the left
+                                .animation(.easeInOut(duration: 0.8), value: isVisible)
                 // Replace Image with WebView for GIF
                 WebFluencyView(url: Bundle.main.url(forResource: "mic", withExtension: "gif") ?? URL.desktopDirectory)
                     .frame(width: 250, height: 250)
@@ -120,6 +123,10 @@ struct FluencyIntroView: View {
                     EmptyView()
                 }
             }
+            .onAppear {
+                isVisible = true // Trigger animation on view appearance
+            }
+            
         }
         .navigationBarBackButtonHidden(true)
     }
