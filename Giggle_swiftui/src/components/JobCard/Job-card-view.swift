@@ -88,7 +88,7 @@ struct JobCardView: View {
                                 Text(jobTitle) // Use safe unwrapped variable
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundColor(Theme.onPrimaryColor)
-                                    .lineLimit(1)
+                                    .lineLimit(2)
                                 
                                 Spacer() // Push time to the right if needed, or adjust layout
 
@@ -103,7 +103,7 @@ struct JobCardView: View {
                             }
                             
                             HStack(spacing: 4) {
-                                Text(jobs["companyName"] as? String ?? "Company") // Safe unwrapping
+                                Text("\(jobs["companyName"]!)") // Safe unwrapping
                                     .font(.system(size: 14))
                                     .foregroundColor(Color.gray.opacity(0.9))
                                 
@@ -111,7 +111,7 @@ struct JobCardView: View {
                                     .font(.system(size: 14))
                                     .foregroundColor(Color.gray.opacity(0.7))
                                 
-                                Text(jobs["location"] as? String ?? "Location") // Safe unwrapping
+                                Text("\(jobs["location"]!)") // Safe unwrapping
                                     .font(.system(size: 14))
                                     .foregroundColor(Color.gray.opacity(0.9))
                                     .lineLimit(1)

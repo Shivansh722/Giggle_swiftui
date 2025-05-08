@@ -129,5 +129,6 @@ struct SplashScreen: View {
                 destinationView = determineDestination()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
