@@ -89,6 +89,12 @@ struct ProfileScreen: View {
                                     {
                                         navigateToEdit = true
                                     }
+                                    Templates.MenuButton(title: "Privacy Policy")
+                                    {
+                                        if let url = URL(string: "https://www.mygiggle.tech/privacy") {
+                                            UIApplication.shared.open(url)
+                                        }
+                                    }
                                     Templates.MenuButton(title: "Logout") {
                                         Task {
                                             handleLogout()

@@ -143,6 +143,23 @@ struct RegisterView: View {
                             }
                         }
                         .padding(.bottom, 20)
+                        VStack {
+                            Text("By signing up, you agree to our")
+                                .foregroundColor(Color.gray)
+                                .font(.footnote)
+                            Button(action: {
+                                if let url = URL(string: "https://www.mygiggle.tech/privacy") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }) {
+                                Text("Terms & Privacy Policy")
+                                    .foregroundColor(Color.gray)
+                                    .font(.footnote)
+                                    .underline()
+                                    .fontWeight(.bold)
+                            }
+                            .padding(.bottom, 30)
+                        }
                     }
                     .frame(minHeight: geometry.size.height)
                 }
