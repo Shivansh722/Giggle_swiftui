@@ -130,6 +130,18 @@ struct RegisterView: View {
                         .allowsHitTesting(true)
                         .padding(.top, 16)
                         .padding(.bottom, 50)
+                        
+                        HStack {
+                            Button(action: {
+                                navigateToUserDetail = true
+                            }) {
+                                Text("Guest Visit")
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .font(Font.system(size: 14, weight: .medium))
+                            }
+                            .padding(.top, -48)
+                        }
+                        .padding(.trailing)
 
                         Spacer()
 
@@ -165,7 +177,7 @@ struct RegisterView: View {
                 }
                 .scrollDismissesKeyboard(.interactively)
 
-                NavigationLink(destination: ChooseView(), isActive: $navigateToUserDetail) {
+                NavigationLink(destination: GuestHomeView(), isActive: $navigateToUserDetail) {
                     EmptyView()
                 }
                 .hidden()
@@ -229,8 +241,6 @@ struct RegisterView: View {
         passwordError = viewModel.alertMessage
     }
 }
-
-// Rest of the code (AppleSignInDelegate) remains unchanged
 
 #Preview {
     RegisterView()
