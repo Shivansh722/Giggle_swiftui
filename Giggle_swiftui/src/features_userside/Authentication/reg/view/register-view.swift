@@ -117,9 +117,7 @@ struct RegisterView: View {
                                 } else if isFormValid {
                                     Task {
                                         await registerUser()
-//                                        if viewModel.isLoggedIn {
-                                            navigateToUserDetail = true
-//                                        }
+                                        navigateToUserDetail = true
                                     }
                                 }
                             },
@@ -132,16 +130,18 @@ struct RegisterView: View {
                         .padding(.bottom, 50)
                         
                         HStack {
+                            Spacer()
                             Button(action: {
                                 navigateToUserDetail = true
                             }) {
                                 Text("Guest Visit")
                                     .foregroundColor(Theme.onPrimaryColor)
                                     .font(Font.system(size: 14, weight: .medium))
+                                    .italic()
                             }
-                            .padding(.top, -48)
                         }
-                        .padding(.trailing)
+                        .padding(.horizontal, 48)
+                        .padding(.top, -48)
 
                         Spacer()
 

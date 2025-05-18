@@ -34,7 +34,7 @@ struct GuestHomeView: View {
                         // Header with fade-in animation
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Welcome")
+                                Text("Welcome🙋‍♂️")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundColor(Theme.primaryColor)
