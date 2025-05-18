@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct GuestHomeView: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var showLoginAlert = false
     @State private var navigateToRegister = false
     @State private var contentOpacity: Double = 0
@@ -12,7 +13,24 @@ struct GuestHomeView: View {
                 // Home Tab
                 ZStack {
                     Theme.backgroundColor.edgesIgnoringSafeArea(.all)
-                    VStack {
+                    VStack(spacing: 12) {
+                        GeometryReader { geometry in
+                            Color.clear.frame(height: geometry.safeAreaInsets.top)
+                        }
+                        .frame(height: 10)
+                        
+                        HStack {
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .foregroundColor(Theme.onPrimaryColor)
+                                    .imageScale(.large)
+                            }
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        
                         // Header with fade-in animation
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -45,6 +63,28 @@ struct GuestHomeView: View {
                         }
                         
                         ScrollView {
+                            VStack(spacing: 16) { 
+                                Text("Take FLN") 
+                                    .font(.headline) 
+                                    .foregroundColor(Theme.secondaryColor) 
+                                Text("To start applying for gigs you need to take the FLN test first.") 
+                                    .font(.system(size: 16)) 
+                                    .foregroundColor(Theme.tertiaryColor) 
+                                    .multilineTextAlignment(.center) 
+                                    .padding(.horizontal, 24) 
+                                CustomButton( 
+                                    title: "NEXT", 
+                                    backgroundColor: Theme.primaryColor, 
+                                    action: { showLoginAlert = true }, 
+                                    width: 200, 
+                                    height: 50, 
+                                    cornerRadius: 6 
+                                ) 
+                                Spacer() 
+                            } 
+                            .frame(maxWidth: .infinity) 
+                            .padding(.top, 5)
+
                             Image("desk")
                                 .resizable()
                                 .scaledToFit()
@@ -58,14 +98,14 @@ struct GuestHomeView: View {
                                 .foregroundColor(Theme.onPrimaryColor)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
-                                .padding(.top, -62)
+                                .padding(.top, -260)
                                 .opacity(contentOpacity)
                                 .animation(.easeIn(duration: 0.5).delay(0.3), value: contentOpacity)
                             
                             // Sample job cards for demonstration
                             LazyVStack(spacing: 8) {
                                 ForEach(0..<3) { index in
-                                    JobCardView(
+                                    GuestJobCardView(
                                         jobs: [
                                             "$id": "sample\(index)",
                                             "job_title": "Sample Job \(index + 1)",
@@ -75,15 +115,11 @@ struct GuestHomeView: View {
                                             "job_trait": "Technical",
                                             "job_type": "Full-time",
                                             "$createdAt": "2024-03-25T12:00:00.000+00:00"
-                                        ],
-                                        flnID: nil
+                                        ]
                                     )
-                                    .onTapGesture {
-                                        showLoginAlert = true
-                                    }
                                 }
                             }
-                            .padding(.top, -24)
+                            .padding(.top, -220)
                         }
                     }
                 }
@@ -145,5 +181,6 @@ struct GuestHomeView: View {
         } message: {
             Text("Please register or login to access all features")
         }
+        .navigationBarHidden(true)
     }
 }
