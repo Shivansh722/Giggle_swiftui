@@ -132,7 +132,7 @@ struct LoginSimpleView: View {
                                 }
                             }
                         },
-                        width: UIScreen.main.bounds.width * 0.6,
+                        width: 220,
                         height: 50,
                         cornerRadius: 6
                     )
@@ -150,11 +150,11 @@ struct LoginSimpleView: View {
                     Spacer() // Pushes the HStack to the bottom
                     HStack {
                         Text("Not a member?")
-                            .foregroundColor(Theme.onPrimaryColor)
+                            .foregroundColor(Color.gray)
                         NavigationLink(destination: RegisterView()) {
                             Text("Register Now")
                                 .foregroundColor(Theme.primaryColor)
-                                .fontWeight(.bold)
+                                .fontWeight(.medium)
                         }
                     }
                     .padding(.bottom, 30)
