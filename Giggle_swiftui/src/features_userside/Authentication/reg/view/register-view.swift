@@ -15,6 +15,7 @@ struct RegisterView: View {
     @State private var emailError: String? = nil
     @State private var passwordError: String? = nil
     @State private var isVisible: Bool = false
+    @State private var navigateToGuestView:Bool = false
     
     // Add FocusState to manage keyboard focus
     @FocusState private var focusedField: Field?
@@ -132,7 +133,7 @@ struct RegisterView: View {
                         HStack {
                             Spacer()
                             Button(action: {
-                                navigateToUserDetail = true
+                                navigateToGuestView = true
                             }) {
                                 Text("Guest Visit")
                                     .foregroundColor(Theme.onPrimaryColor)
@@ -177,7 +178,12 @@ struct RegisterView: View {
                 }
                 .scrollDismissesKeyboard(.interactively)
 
-                NavigationLink(destination: GuestHomeView(), isActive: $navigateToUserDetail) {
+                NavigationLink(destination: ChooseView(), isActive: $navigateToUserDetail) {
+                    EmptyView()
+                }
+                .hidden()
+                
+                NavigationLink(destination: GuestHomeView(), isActive: $navigateToGuestView) {
                     EmptyView()
                 }
                 .hidden()

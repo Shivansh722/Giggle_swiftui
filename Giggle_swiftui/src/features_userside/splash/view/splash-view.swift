@@ -93,28 +93,32 @@ struct SplashScreen: View {
                     .onAppear {
                         guard !animationStarted else { return }
                         animationStarted = true
-                        
+
                         // Initial values
                         smileYPosition = UIScreen.main.bounds.height + 50 // Start below screen
                         smileWidth = UIScreen.main.bounds.width - 40 // Full width with padding
-                        
-                        // Animate up to just below the logo
+
+                        // Animate up to just below the logo with iPad-specific offset
+                        let isIpad = UIDevice.current.userInterfaceIdiom == .pad
+                        let finalSmileY = logoBottomPosition + (isIpad ? 600 : 420)
+
                         withAnimation(.easeOut(duration: 1.0)) {
-                            smileYPosition = logoBottomPosition + 420 // 30 points below logo
+                            smileYPosition = finalSmileY
                         }
-                        
+
                         // Then resize
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                             withAnimation(.easeInOut(duration: 0.5)) {
                                 smileWidth = 120 // Final width
                             }
                         }
-                        
+
                         // Navigate after delay
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             self.isActive = true
                         }
                     }
+
                 
                 // Navigation Link
                 NavigationLink(

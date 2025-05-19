@@ -52,16 +52,16 @@ struct LoginSimpleView: View {
                     // Plane image
                     Image("plane")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.3)
-                        .padding(.top, -20)
-
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.4)
+                        .padding(.top, -80
+                        )
+                        
                     // Logo image
                     Image("logo")
                         .resizable()
                         .scaledToFit()
                         .frame(width: UIScreen.main.bounds.width * 0.4, height: UIScreen.main.bounds.height * 0.1)
-                        .padding(.top, -20)
+                        .padding(.top, -120)
 
                     // Email and password text fields
                     CustomTextField(
