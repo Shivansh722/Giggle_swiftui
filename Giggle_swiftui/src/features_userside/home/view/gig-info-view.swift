@@ -39,6 +39,10 @@ struct GigInfoView: View {
     @State var isApplied: Bool = false
     @State var flnapply: Bool = true
     @StateObject var checkApplied = SaveUserInfo(appService: AppService())
+    @State private var creditCost: Int = 0
+    @State private var creditBalance: Int = 0
+    @State private var applyError: String?
+    @State private var isApplying = false
     
     var body: some View {
         ZStack(alignment: .bottom) { // Changed alignment to .bottom
@@ -339,25 +343,47 @@ struct GigInfoView: View {
                     } else {
                         CustomButton(
                             title: isApplied ? "APPLIED" : "APPLY NOW",
-                            backgroundColor: isApplied ? Color.gray : Theme.primaryColor,
+                            backgroundColor: (isApplied || isApplying) ? Color.gray : Theme.primaryColor,
                             action: {
                                 Task {
-                                    try await JobPost(appService: AppService()).applyJob(jobId)
+                                    isApplying = true
+                                    do {
+                                        try await JobPost(appService: AppService()).applyJob(jobId)
+                                        let updated = try await CreditService(appService: AppService()).fetchSummary(forceRefresh: true)
+                                        creditBalance = updated.balance
+                                        isApplied = true
+                                        showAppliedAlert = true
+                                    } catch {
+                                        applyError = error.localizedDescription
+                                    }
+                                    isApplying = false
                                 }
-                                isApplied = true
-                                showAppliedAlert = true
                             },
                             width: 283,
                             height: 50,
                             cornerRadius: 10
                         )
-                        .disabled(isApplied)
+                        .disabled(isApplied || isApplying || (creditCost > 0 && creditBalance < CreditConstants.applicationCost))
                         .shadow(color: Color.black.opacity(0.2), radius: 3)
                     }
                 }
                 .padding(.horizontal)
                 .padding(.top, 10) // Add padding above the button
                 .padding(.bottom) // Add padding below the button (respects safe area)
+                if !isApplied {
+                    Text(creditCost == 0 ? "First application is FREE" : "You'll spend \(creditCost) Credits")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 8)
+                    if creditCost > 0 && creditBalance < CreditConstants.applicationCost {
+                        Text("You need 5 credits to apply. You have \(creditBalance) credits. Complete the FLN assessment to earn more credits.")
+                            .font(.caption)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.orange)
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
+                    }
+                }
             }
             .background(Theme.backgroundColor) // Give the button container a background
         }
@@ -368,15 +394,27 @@ struct GigInfoView: View {
         .alert(isPresented: $showAppliedAlert) {
             Alert(
                 title: Text("Application Submitted"),
-                message: Text("Successfully applied for the job!"),
+                message: Text(creditCost == 0 ? "Successfully applied for the job!\nNo credits deducted.\nRemaining balance: \(creditBalance) credits" : "Successfully applied for the job!\n\(creditCost) credits deducted.\nRemaining balance: \(creditBalance) credits"),
                 dismissButton: .default(Text("OK"))
             )
         }
+        .alert("Credits", isPresented: Binding(
+            get: { applyError != nil },
+            set: { if !$0 { applyError = nil } }
+        ), actions: {
+            Button("OK") { applyError = nil }
+        }, message: {
+            Text(applyError ?? "")
+        })
         .onAppear {
             Task {
                 do {
                     let applied = try await checkApplied.jobAppliedCheck(jobId)
                     isApplied = applied
+                    let creditService = CreditService(appService: AppService())
+                    creditCost = try await creditService.previewApplicationCost(jobId: jobId)
+                    let summary = try await creditService.fetchSummary(forceRefresh: true)
+                    creditBalance = summary.balance
                 } catch {
                     print("Error checking application status: \(error)")
                     isApplied = false

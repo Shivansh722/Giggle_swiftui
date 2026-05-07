@@ -31,6 +31,7 @@ struct ProfileScreen: View {
     @State private var contentOpacity: Double = 0 // For fade-in animation
     @State private var showDeleteConfirmation: Bool = false // Add this state variable
     @State private var isDeleting: Bool = false // Add this to track deletion process
+    @State private var creditSummary: CreditWalletSummary = .empty
     
     var body: some View {
         GeometryReader { geometry in
@@ -180,6 +181,32 @@ struct ProfileScreen: View {
                         )
                         .padding(.horizontal)
                         .padding(.top, 8)
+                        
+                        NavigationLink(destination: WalletView()) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Wallet")
+                                        .font(.headline)
+                                        .foregroundColor(Theme.onPrimaryColor)
+                                    Text("⚡ \(creditSummary.balance) credits")
+                                        .font(.system(.body, design: .monospaced))
+                                        .foregroundColor(Theme.secondaryColor)
+                                    Text("Earned \(creditSummary.totalEarned) • Spent \(creditSummary.totalSpent)")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(hex: "343434").opacity(0.4))
+                            )
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                        }
 
                         // Biography Section with improved styling
                         VStack(alignment: .leading, spacing: 12) {
@@ -409,6 +436,7 @@ struct ProfileScreen: View {
                     await loadUserFiles()
                     await loadUserDetails()
                     await loadBioGraphy()
+                    await loadCredits()
                 }
             }
             // Add the alert here
@@ -494,6 +522,14 @@ struct ProfileScreen: View {
             GiggleGrade = grade
         } catch {
             print("Error loading user details: \(error)")
+        }
+    }
+    
+    private func loadCredits() async {
+        do {
+            creditSummary = try await CreditService(appService: AppService()).fetchSummary(forceRefresh: true)
+        } catch {
+            print("Failed to load credits: \(error.localizedDescription)")
         }
     }
 

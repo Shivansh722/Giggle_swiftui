@@ -32,7 +32,7 @@ class SaveUserInfo:ObservableObject {
         let degreeName = dumpToDB()
         
         // Prepare the data to be stored
-        let data: [String: Any] = [
+        var data: [String: Any] = [
 //            "userId": user,
             "degreeName":degreeName,
             "name":formManager.formData.name,
@@ -43,6 +43,10 @@ class SaveUserInfo:ObservableObject {
             "resumeIds":formManager.formData.resumeIds,
             "resume_text":formManager.formData.resume
         ]
+        let bootstrap = CreditService(appService: appService).bootstrapRegistrationCreditsPayload(userId: user)
+        for (key, value) in bootstrap {
+            data[key] = value
+        }
         
         do {
             // Try saving the data as a document in the database

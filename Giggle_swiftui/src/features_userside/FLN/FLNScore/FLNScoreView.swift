@@ -5,6 +5,7 @@ struct FLNScoreView: View {
     @State private var flnID: String? = nil
     @State private var naviagtetoLiteracy: Bool = false
     @State private var fluencyScore = FlnDataManager.shared.flnData.fluencyScore
+    @State private var showRewardMessage = false
     
     var body: some View {
         ZStack {
@@ -98,6 +99,11 @@ struct FLNScoreView: View {
                 Spacer()
 
                 VStack(spacing: 20) {
+                    if showRewardMessage {
+                        Text("🎉 You earned 50 credits!")
+                            .font(.subheadline)
+                            .foregroundColor(.green)
+                    }
                     Button(action: {
                         naviagtetoLiteracy = true
                     }) {
@@ -133,6 +139,7 @@ struct FLNScoreView: View {
             }
             .task {
                 reverse()
+                await checkRewardState()
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -143,6 +150,15 @@ struct FLNScoreView: View {
             store += 20
             fluencyScore = String(store)
             print(fluencyScore)
+        }
+    }
+    
+    private func checkRewardState() async {
+        do {
+            let summary = try await CreditService(appService: AppService()).fetchSummary(forceRefresh: true)
+            showRewardMessage = summary.transactions.first?.type == .flnCompletion
+        } catch {
+            showRewardMessage = false
         }
     }
 }

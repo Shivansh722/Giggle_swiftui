@@ -105,6 +105,7 @@ class JobPost: ObservableObject {
     func applyJob(_ jobId: String) async throws {
         let userDefaults = UserDefaults.standard
         let storedUserId = userDefaults.string(forKey: "userID")
+        let creditService = CreditService(appService: appService)
         
         do {
             let userDoc = try await database.getDocument(
@@ -129,13 +130,19 @@ class JobPost: ObservableObject {
                 currentPeopleApplied.append(storedUserId!)
             }
             
-            let userData: [String: Any] = ["applied_job_id": currentAppliedJobs]
-            let _ = try await database.updateDocument(
-                databaseId: databaseID,
-                collectionId: userCollection,
-                documentId: storedUserId!,
-                data: userData
+            if (userDoc.data["applied_job_id"]?.value as? [String] ?? []).contains(jobId) {
+                return
+            }
+            
+            var userData: [String: Any] = ["applied_job_id": currentAppliedJobs]
+            let creditPayload = try creditService.applicationChargeUpdatePayload(
+                userData: userDoc.data,
+                jobId: jobId,
+                userId: storedUserId!
             )
+            for (key, value) in creditPayload {
+                userData[key] = value
+            }
             
             let jobData: [String: Any] = ["people_applied": currentPeopleApplied]
             let _ = try await database.updateDocument(
@@ -145,8 +152,16 @@ class JobPost: ObservableObject {
                 data: jobData
             )
             
+            let _ = try await database.updateDocument(
+                databaseId: databaseID,
+                collectionId: userCollection,
+                documentId: storedUserId!,
+                data: userData
+            )
+            
         } catch {
             print(error)
+            throw error
         }
     }
     

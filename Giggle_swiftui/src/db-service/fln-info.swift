@@ -156,6 +156,13 @@ class FLNInfo: ObservableObject {
                     documentId: userId,
                     data: updateData
                 )
+                do {
+                    _ = try await CreditService(appService: appService).rewardFLNCompletion(
+                        flnId: String(describing: flnId)
+                    )
+                } catch {
+                    print("Credit reward skipped: \(error.localizedDescription)")
+                }
             } else {
                 print("Error: Unable to extract document ID")
             }
