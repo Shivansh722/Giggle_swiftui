@@ -11,7 +11,7 @@
 //
 //    init() {
 //        self.client = Client()
-//            .setEndpoint("https://cloud.appwrite.io/v1") // Ensure endpoint is correct
+//            .setEndpoint("https://sgp.cloud.appwrite.io/v1") // Ensure endpoint is correct
 //            .setProject("6729f0c60023e865f840")
 //            .setSelfSigned(true)
 //
@@ -62,8 +62,8 @@ class AppService: ObservableObject {
 
     init() {
         self.client = Client()
-            .setEndpoint("https://cloud.appwrite.io/v1")  // Ensure endpoint is correct
-            .setProject("67da77af003e5e94f856")
+            .setEndpoint("https://sgp.cloud.appwrite.io/v1")  // Ensure endpoint is correct
+            .setProject("69fc3bf7001dae8b4d28")
             .setSelfSigned(true)
 
         self.account = Account(client)

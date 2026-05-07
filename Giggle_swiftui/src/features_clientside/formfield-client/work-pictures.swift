@@ -7,8 +7,8 @@ import PhotosUI
 struct WorkPitcher: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var uploadManager = ResumeUploadManager(
-        apiEndpoint: "https://cloud.appwrite.io/v1",
-        projectIdentifier: "67da77af003e5e94f856",
+        apiEndpoint: "https://sgp.cloud.appwrite.io/v1",
+        projectIdentifier: "69fc3bf7001dae8b4d28",
         storageBucketId: "67da7d55000bf31fb062"
     )
 
